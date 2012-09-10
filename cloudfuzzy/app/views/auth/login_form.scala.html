@@ -1,0 +1,41 @@
+@(loginForm: Form[Authentication.Login])
+
+@import helper._
+
+
+@helper.form(routes.Authentication.authenticate) {
+    
+            
+    <legend>Sign in <small>or <a href="@routes.Authentication.register">register</a>.</small></legend>
+    
+    @if(loginForm.hasGlobalErrors) { 
+    
+
+        <div class="clearfix  error" id="global_erros">
+        
+            <div class="input">
+                <span class="help-inline">@loginForm.globalError.message</span>
+            </div>
+        </div>
+    }
+    
+    
+    
+    @inputText(
+        loginForm("email"), 
+        '_label -> "Email", 
+        '_help -> "Enter your email."
+    )
+    
+    @inputPassword(
+        loginForm("password"), 
+        '_label -> "Password", 
+        '_help -> "Enter your password."
+    )
+    
+    
+    <div class="actions">
+        <input type="submit" class="btn primary" value="Login">
+    </div>
+    
+}

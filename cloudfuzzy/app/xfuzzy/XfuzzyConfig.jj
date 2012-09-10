@@ -1,0 +1,388 @@
+/*
+ * @(#)XfslConfig.jj        1.0 2000/05/09
+ *
+ * This file is part of Xfuzzy 3.0, a design environment for fuzzy logic
+ * based systems.
+ *
+ * (c) 2000 IMSE-CNM. The authors may be contacted by the email address:
+ *                    xfuzzy-team@imse.cnm.es
+ *
+ * Xfuzzy is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * Xfuzzy is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * for more details.
+ */
+
+options {
+ LOOKAHEAD = 1;
+ STATIC = false;
+}
+
+PARSER_BEGIN(XfuzzyConfig)
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//   PARSER DE LA CONFIGURACION DE LAS DISTINTAS HERRAMIENTAS	//
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+package xfuzzy;
+
+import xfuzzy.lang.*;
+import xfuzzy.lrn.*;
+import java.io.*;
+import java.util.Vector;
+
+public class XfuzzyConfig {
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//			     VARIABLES				//
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+ private int error;
+ private String errorMsg;
+ private boolean end;
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//			FUNCIONES PUBLICAS			//
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+ public XfuzzyConfig() {
+  this.error = 0;
+  this.errorMsg = "";
+ }
+
+ public XfslConfig parseXfslConfig(File file) {
+  initParse(file);
+  XfslConfig config = new XfslConfig();
+  try { xfslConfiguration(config); }
+  catch(ParseException ex) { return null; }
+  if(error == 0) return config;
+  return null;
+ }
+
+ public boolean parseXfsimConfig(XSystemSimulation xfsim, File file) {
+  initParse(file);
+  try { xfsimConfiguration(xfsim); } catch(ParseException ex) { }
+  return ( error == 0 );
+ }
+
+ public String resume() {
+  String eol = System.getProperty("line.separator", "\n");
+  String msg = this.errorMsg + this.error;
+  if(this.error == 1) msg += " error."; else msg += " errors.";
+  return msg+eol;
+ }
+
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+ //			Funciones auxiliares			//
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+ private void initParse(File file) {
+  error = 0;
+  errorMsg = "";
+
+  InputStream stream;
+  try { stream = new FileInputStream(file); }
+  catch (Exception e) {
+   errorMsg += "Can't open file "+file.getAbsolutePath();
+   error ++;
+   return;
+  }
+
+  jj_input_stream = new ASCII_CharStream(stream, 1, 1);
+  token_source = new XfuzzyConfigTokenManager(jj_input_stream);
+  token = new Token();
+  jj_ntk = -1;
+  jj_gen = 0;
+  for (int i=0; i<jj_la1.length; i++) jj_la1[i] = -1;
+ }
+
+ private double[] getParams(Vector v) {
+  double[] param = new double[v.size()];
+  for(int i=0; i<param.length; i++)
+   param[i] = Double.parseDouble((String) v.elementAt(i) );
+  return param;
+ }
+
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+ //	    FUNCIONES DE EXCRITURA DE LAS EXCEPCIONES		//
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+ private void exception(ParseException e) {
+  String eol = System.getProperty("line.separator", "\n");
+  Token t = e.currentToken.next;
+  this.error ++;
+  this.errorMsg += "Configuration ["+this.error+"]. ";
+  this.errorMsg += "Parse error at line "+t.beginLine+" : ";
+  this.errorMsg += "Encountered \""+t.image+"\""+" while expecting ";
+
+  int expected[] = new int[e.expectedTokenSequences.length];
+  for(int i=0; i<expected.length; i++)
+   expected[i] = e.expectedTokenSequences[i][0];
+  if(expected.length == 1) this.errorMsg += e.tokenImage[expected[0]]+"."+eol;
+  else {
+   this.errorMsg += "one of :\n       "+e.tokenImage[expected[0]];
+   for(int i=1; i<expected.length; i++)
+    this.errorMsg += ",\n       "+e.tokenImage[expected[i]];
+   this.errorMsg += "."+eol;
+  }
+ }
+
+ private void exception(TokenMgrError e) {
+  String eol = System.getProperty("line.separator", "\n");
+  this.error ++;
+  this.errorMsg += "Configuration ["+this.error+"]. "+e.getMessage()+eol;
+ }
+
+ private void exception(Exception e) {
+  String eol = System.getProperty("line.separator", "\n");
+  this.error ++;
+  this.errorMsg += "Configuration ["+this.error+"]. "+e.getMessage()+eol;
+ }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//   Descripcion de la sintaxis del fichero de configuracion	//
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+PARSER_END(XfuzzyConfig)
+
+SKIP :
+{
+  " "
+| "\t"
+| <SINGLE_LINE_COMMENT: "//"> : COMMENT
+| <SINGLE_LINE_COMMENT2: "#"> : COMMENT
+| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+TOKEN : /* palabras clave */
+{
+  <TRAININGFILE: "xfsl_training">
+| <TESTFILE: "xfsl_test">
+| <LOGFILE: "xfsl_log">
+| <OUTPUTFILE: "xfsl_output">
+| <ALGORITHM: "xfsl_algorithm">
+| <OPTION: "xfsl_option">
+| <ERRORFUNCTION: "xfsl_errorfunction">
+| <PREPROCESSING: "xfsl_preprocessing">
+| <POSTPROCESSING:"xfsl_postprocessing">
+| <ENDCONDITION: "xfsl_endcondition">
+| <ENABLE: "xfsl_enable">
+| <DISABLE: "xfsl_disable">
+| <EOL: ("\n"|"\r"|"\r\n")>
+| <XFSIM_PLANT: "xfsim_plant">
+| <XFSIM_INIT: "xfsim_init">
+| <XFSIM_LIMIT: "xfsim_limit">
+| <XFSIM_LOG: "xfsim_log">
+| <XFSIM_PLOT: "xfsim_plot">
+}
+
+<COMMENT> SKIP:
+{
+ <OTHER: ~["\n","\r"]>
+}
+
+<COMMENT> TOKEN:
+{
+ <CEOL: ("\n"|"\r"|"\r\n")> : DEFAULT
+}
+
+TOKEN: /* identificadores */
+{
+  <ID : ["a"-"z","A"-"Z","_"] (["a"-"z","A"-"Z","0"-"9","_"])* >
+| <FILE: "\"" (~["\""])+ "\"">
+| <PARAM: <ID> "." <ID> "." ( "ANY" | <INTEGER>) >
+| <NUMBER : <FLOAT>(["e","E"](["+","-"])?<INTEGER>)? >
+| <#INTEGER: ( ["0"-"9"] )+ >
+| <#FLOAT: ("-")? <INTEGER> | ("-")? <INTEGER>"."<INTEGER> | "."<INTEGER> >
+| <ERROR: ~["a"-"z","A"-"Z","0"-"9","_","(",")",",","/","#","\n","\r","-","&","<",">"]>
+}
+
+
+void endline() :
+{}
+{
+ <EOF> { end = true; } | <EOL> | <CEOL>
+}
+
+void tryXfslDirective(XfslConfig config) :
+{}
+{
+ try { xfslDirective(config) }
+ catch (ParseException e) { exception(e); skipline(); }
+ catch (XflException e) { exception(e); skipline(); }
+}
+
+void xfslDirective(XfslConfig config) throws XflException:
+{
+	Token tid,tn;
+	File file;
+	Vector v = new Vector();
+}
+{
+  <TRAININGFILE> "(" tid = <FILE> ")" endline()
+	{
+	 file = new File(tid.image.substring(1,tid.image.length()-1));
+	 if(!file.exists()) throw new XflException(31);
+	 config.trainingfile = file;
+	}
+| <TESTFILE> "(" tid = <FILE> ")" endline()
+	{
+	 file = new File(tid.image.substring(1,tid.image.length()-1));
+	 if(!file.exists()) throw new XflException(31);
+	 config.testfile = file;
+	}
+| <LOGFILE> "(" tid = <FILE> ")" endline()
+	{
+	 file = new File(tid.image.substring(1,tid.image.length()-1));
+	 config.logfile = file;
+	}
+| <OUTPUTFILE> "(" tid = <FILE> ")" endline()
+	{
+	 file = new File(tid.image.substring(1,tid.image.length()-1));
+	 config.outputfile = file;
+	}
+| <ALGORITHM> "(" tid=<ID> ("," tn=<NUMBER> {v.addElement(tn.image);} )* ")"
+  endline()
+        {
+	 config.algorithm = Algorithm.create(tid.image,getParams(v));
+	}
+| <OPTION> "(" tid=<ID> ("," tn=<NUMBER> {v.addElement(tn.image);} )* ")"
+  endline()
+        {
+	 if(config.algorithm != null)
+	  config.algorithm.setOption(tid.image,getParams(v));
+	 else throw new XflException(30);
+	}
+| <ERRORFUNCTION> "(" tid=<ID> ("," tn=<NUMBER> {v.addElement(tn.image);} )* ")"
+  endline()
+	{
+	 config.errorfunction = new ErrorFunction(tid.image,getParams(v));
+	}
+| <PREPROCESSING> "(" tid=<ID> ("," tn=<NUMBER> {v.addElement(tn.image);} )* ")"
+  endline()
+	{
+	 config.preprocessing.set(tid.image,getParams(v));
+	}
+| <POSTPROCESSING> "(" tid=<ID> ("," tn=<NUMBER> {v.addElement(tn.image);})* ")"
+  endline()
+	{
+	 config.postprocessing.set(tid.image,getParams(v));
+	}
+| <ENDCONDITION> "(" tid=<ID> ("," tn=<NUMBER> {v.addElement(tn.image);} )* ")" 
+  endline()
+	{
+	 config.endcondition.set(tid.image,getParams(v));
+	}
+| <ENABLE> "(" tid=<PARAM> ")" endline()
+	{
+	 config.settings.add(tid.image, true);
+	}
+| <DISABLE> "(" tid=<PARAM> ")" endline()
+	{
+	 config.settings.add(tid.image, false);
+	}
+| endline()
+}
+
+void tryXfsimDirective(XSystemSimulation xfsim):
+{}
+{
+ try { xfsimDirective(xfsim) }
+ catch (ParseException e) { exception(e); skipline(); }
+ catch (Exception e) { exception(e); skipline(); }
+}
+
+void xfsimDirective(XSystemSimulation xfsim) throws Exception:
+{
+	Token tid,tx,ty,tk;
+	double[] param;
+}
+{
+  <XFSIM_PLANT> "(" tid = <FILE> ")" endline()
+	{ 
+         File file = new File(tid.image.substring(1,tid.image.length()-1));
+         if(!file.exists()) throw new XflException(31);
+	 xfsim.config.setPlantModel(file);
+	}
+| <XFSIM_INIT> "(" param = parameters() ")" endline()
+	{
+	 xfsim.config.init = param;
+	}
+| <XFSIM_LIMIT> "(" ( limit(xfsim) ( "&" limit(xfsim) )* )? ")" endline()
+| <XFSIM_LOG> "(" logfile(xfsim) ")" endline()
+| <XFSIM_PLOT> "(" tx=<ID> "," ty=<ID> "," tk=<NUMBER> ")" endline()
+	{
+	 xfsim.config.addPlot(tx.image,ty.image,Integer.parseInt(tk.image));
+	}
+| endline()
+}
+
+double[] parameters() :
+{
+        Token tn;
+        Vector v = new Vector();
+}
+{
+ (tn=<NUMBER> {v.addElement(tn.image);}
+ ("," tn=<NUMBER> {v.addElement(tn.image);} )* )? 
+	{
+	 return getParams(v);
+	}
+}
+
+void limit(XSystemSimulation xfsim) :
+{
+	Token tid,tn;
+	int kind = -1;
+}
+{
+ tid = <ID> ( "<" { kind=0; } | ">" { kind = 1; } ) tn = <NUMBER>
+	{
+	 xfsim.config.limit.add(tid.image,Double.parseDouble(tn.image),kind);
+	}
+}
+
+void logfile(XSystemSimulation xfsim) :
+{
+	Token tfile,tvar;
+	Vector v = new Vector();
+}
+{
+ tfile = <FILE> ( "," tvar = <ID> { v.addElement(tvar.image); } )*
+	{
+	 File log = new File(tfile.image.substring(1,tfile.image.length()-1));
+	 xfsim.config.addLogFile(log,v);
+	}
+}
+
+JAVACODE
+void xfslConfiguration(XfslConfig config) {
+ end = false;
+ while(!end) {
+  try { tryXfslDirective(config); }
+  catch (ParseException e) { exception(e); skipline(); }
+  catch (TokenMgrError e) { exception(e); end = true; }
+ }
+}
+
+JAVACODE
+void xfsimConfiguration(XSystemSimulation xfsim) {
+ end = false;
+ while(!end) {
+  try { tryXfsimDirective(xfsim); }
+  catch (ParseException e) { exception(e); skipline(); }
+  catch (TokenMgrError e) { exception(e); end = true; }
+ }
+}
+
+JAVACODE
+void skipline() {
+ Token t;
+ do { t = getNextToken(); }
+ while(t.kind != EOF && t.kind != EOL && t.kind != CEOL);
+}
+

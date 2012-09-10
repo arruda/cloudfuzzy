@@ -1,0 +1,144 @@
+operatorset wheel_opset {
+ and xfl.prod();
+ or xfl.max();
+}
+
+operatorset dir_opset {
+ and xfl.prod();
+ or xfl.max();
+ defuz xfl.MaxLabel();
+}
+
+operatorset switch_opset {
+ and xfl.prod();
+ or xfl.max();
+ defuz xfl.FuzzyMean();
+}
+
+type TAngle [-180.0,180.0;361] {
+ LB xfl.trapezoid(-185,-180,-95,-85);
+ LE xfl.trapezoid(-95,-85,-60,-40);
+ LS xfl.trapezoid(-60,-40,-10,0);
+ CE xfl.triangle(-10,0,10);
+ RS xfl.trapezoid(0,10,40,60);
+ RI xfl.trapezoid(40,60,85,95);
+ RB xfl.trapezoid(85,95,180,185);
+}
+
+type TX [-50.0,50.0;256] {
+ LB xfl.trapezoid(-55,-50,-35,-25);
+ LE xfl.trapezoid(-35,-25,-10,0);
+ CE xfl.triangle(-10,0,10);
+ RI xfl.trapezoid(0,10,25,35);
+ RB xfl.trapezoid(25,35,50,55);
+}
+
+type TY [0.0,100.0;256] {
+ near xfl.trapezoid(0,10,25,35);
+ far xfl.trapezoid(25,35,90,100);
+}
+
+type TDir [-10.0,10.0;256] {
+ backward xfl.singleton(-10);
+ stop xfl.singleton(0);
+ forward xfl.singleton(10);
+}
+
+type TWheel [-30.0,30.0;256] {
+ NB xfl.singleton(-30);
+ NM xfl.singleton(-20);
+ NS xfl.singleton(-10);
+ ZE xfl.singleton(0);
+ PS xfl.singleton(10);
+ PM xfl.singleton(20);
+ PB xfl.singleton(30);
+}
+
+rulebase direction(TX x,TAngle angle,TY y,TDir olddir : TDir dir) using dir_opset {
+ if(y > far) -> dir = backward;
+ if(y == far & olddir <= stop) -> dir = backward;
+ if(y == far & olddir > stop) -> dir = forward;
+ if(y <= near & x != CE & angle >= LE & angle <= RI) -> dir = forward;
+ if(y <= near & x != CE & (angle < LE | angle > RI)) -> dir = backward;
+ if(x == CE & y == near & angle >= LS & angle <= RS) -> dir = backward;
+ if(x == CE & y == near & (angle < LE | angle > RI)) -> dir = backward;
+ if(x == CE & y == near & angle > CE & angle < RI) -> dir = forward;
+ if(x == CE & y == near & angle < CE & angle > LE) -> dir = forward;
+ if(x == CE & y < near & (angle < LE | angle > RI)) -> dir = backward;
+ if(x == CE & y < near & angle > CE & angle <= RI) -> dir = forward;
+ if(x == CE & y < near & angle < CE & angle >= LE) -> dir = forward;
+ if(x == CE & y<near & angle == CE) -> dir = stop;
+}
+
+rulebase backward(TX x, TAngle angle : TWheel wheel) using wheel_opset {
+ if((x == LB & angle >= RS) |
+    (x == LE & angle >= RI) ) -> wheel = PB;
+ if((x == LB & angle >= LS & angle <= CE) |
+    (x == LE & angle >= CE & angle <= RS) |
+    (x == CE & angle >= RI) |
+    (x == RI & angle == RB) ) -> wheel = PM;
+ if((x == LB & angle == LE) |
+    (x == LE & angle == LS) |
+    (x == CE & angle == RS) |
+    (x == RI & angle == RI) |
+    (x == RB & angle == RB) ) -> wheel = PS;
+ if((x == CE & angle == CE) ) -> wheel = ZE;
+ if((x == LB & angle == LB) |
+    (x == LE & angle == LE) |
+    (x == CE & angle == LS) |
+    (x == RI & angle == RS) |
+    (x == RB & angle == RI) ) -> wheel = NS;
+ if((x == RB & angle >= CE & angle <= RS) |
+    (x == RI & angle >= LS & angle <= CE) |
+    (x == CE & angle <= LE) |
+    (x == LE & angle == LB) ) -> wheel = NM;
+ if((x == RI & angle <= LE ) |
+    (x == RB & angle <= LS) ) -> wheel = NB;
+}
+
+rulebase forward(TX x, TAngle angle : TWheel wheel) using wheel_opset {
+ if((x == LB & angle <= LS) |
+    (x == LE & angle <= LE) ) -> wheel = PB;
+ if((x == LB & angle >= CE & angle <= RS) |
+    (x == LE & angle >= LS & angle <= CE) |
+    (x == CE & angle <= LE) |
+    (x == RI & angle == LB) ) -> wheel = PM;
+ if((x == LB & angle == RI) |
+    (x == LE & angle == RS) |
+    (x == CE & angle == LS) |
+    (x == RI & angle == LE) |
+    (x == RB & angle == LB) ) -> wheel = PS;
+ if((x == CE & angle == CE) ) -> wheel = ZE;
+ if((x == LB & angle == RB) |
+    (x == LE & angle == RI) |
+    (x == CE & angle == RS) |
+    (x == RI & angle == LS) |
+    (x == RB & angle == LE) ) -> wheel = NS;
+ if((x == RB & angle >= LS & angle <= CE) |
+    (x == RI & angle >= CE & angle <= RS) |
+    (x == CE & angle >= RI) |
+    (x == LE & angle == RB) ) -> wheel = NM;
+ if((x == RI & angle >= RI ) |
+    (x == RB & angle >= RS) ) -> wheel = NB;
+}
+
+rulebase switch(TWheel bw, TWheel fw, TDir dd : TWheel wheel, TDir dir)
+using switch_opset {
+ if(dd == stop) -> dir = stop, wheel = ZE;
+ if(dd == backward) -> dir = backward;
+ if(dd == forward) -> dir = forward;
+ if((dd == backward & bw == NB) | (dd == forward & fw == NB)) -> wheel = NB;
+ if((dd == backward & bw == NM) | (dd == forward & fw == NM)) -> wheel = NM;
+ if((dd == backward & bw == NS) | (dd == forward & fw == NS)) -> wheel = NS;
+ if((dd == backward & bw == ZE) | (dd == forward & fw == ZE)) -> wheel = ZE;
+ if((dd == backward & bw == PS) | (dd == forward & fw == PS)) -> wheel = PS;
+ if((dd == backward & bw == PM) | (dd == forward & fw == PM)) -> wheel = PM;
+ if((dd == backward & bw == PB) | (dd == forward & fw == PB)) -> wheel = PB;
+}
+
+system (TX x,TAngle angle,TY y,TDir olddir : TWheel wheel,TDir newdir) {
+ backward( x, angle : bw);
+ forward( x, angle : fw);
+ direction(x, angle, y, olddir : dd);
+ switch( bw, fw, dd : wheel, newdir);
+}

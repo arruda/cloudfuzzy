@@ -1,0 +1,25 @@
+@(user: User)
+
+@main("Account created!") {
+    
+    <h2>Your account:</h2>
+    
+    <h6>Name</h6>
+    
+    <p>
+        @user.name
+    </p>
+    
+    <h6>Email</h6>
+    
+    <p>
+        @user.email
+    </p>
+    
+    <h6>Password</h6>
+    
+    <p>
+        @user.password
+    </p>
+    
+}

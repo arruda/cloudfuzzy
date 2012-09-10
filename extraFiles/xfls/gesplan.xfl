@@ -1,0 +1,133 @@
+operatorset OperadorGesplan {
+  and xfl.min();
+  or xfl.max();
+  imp xfl.min();
+  also xfl.bounded_sum();
+  defuz xfl.CenterOfArea();
+ }
+
+type DemandaMaxT [0.0,8000.0;8000] {
+  mbx xfl.triangle(0.0,0.1,1500.0);
+  bx xfl.triangle(0.0,1500.0,2500.0);
+  qsbx xfl.triangle(1500.0,2500.0,3500.0);
+  pcbx xfl.triangle(2500.0,3500.0,4000.0);
+  md xfl.triangle(3500.0,4000.0,4500.0);
+  pca xfl.triangle(4000.0,4500.0,5500.0);
+  qsa xfl.triangle(4500.0,5500.0,6500.0);
+  alto xfl.triangle(5500.0,6500.0,7500.0);
+  ma xfl.trapezoid(6500.0,7500.0,7999.9,8000.0);
+ }
+
+type VarEstqPercentT [-100.0,400.0;400] {
+  MtGrNg xfl.triangle(-100.0,-99.9,-50.0);
+  MdNg xfl.triangle(-100.0,-50.0,-25.0);
+  PqNg xfl.triangle(-50.0,-25.0,0.0);
+  nula xfl.triangle(-25.0,0.0,25.0);
+  PqPos xfl.triangle(0.0,25.0,50.0);
+  MdPos xfl.triangle(25.0,50.0,100.0);
+  QsGrPos xfl.triangle(50.0,100.0,175.0);
+  GrPos xfl.triangle(100.0,175.0,250.0);
+  MtGrPos xfl.trapezoid(175.0,250.0,399.9,400.0);
+ }
+
+type ProducaoT [0.0,9000.0;9000] {
+  mbx xfl.trapezoid(-750.0,0.0,750.0,1500.0);
+  bx xfl.triangle(750.0,1500.0,2250.0);
+  qsbx xfl.triangle(1500.0,2250.0,3000.0);
+  pcbx xfl.triangle(2250.0,3000.0,3750.0);
+  pcabxmd xfl.triangle(3000.0,3750.0,4500.0);
+  md xfl.triangle(3750.0,4500.0,5250.0);
+  pcacmd xfl.triangle(4500.0,5250.0,6000.0);
+  pca xfl.triangle(5250.0,6000.0,6750.0);
+  qsa xfl.triangle(6000.0,6750.0,7500.0);
+  alto xfl.triangle(6750.0,7500.0,8250.0);
+  ma xfl.trapezoid(7500.0,8250.0,9000.0,9750.0);
+ }
+
+rulebase RBGesplan (DemandaMaxT demanda, VarEstqPercentT estoque : ProducaoT producao) using OperadorGesplan {
+  if(demanda == mbx & estoque == MtGrNg) -> producao = bx;
+  if(demanda == mbx & estoque == MdNg) -> producao = bx;
+  if(demanda == mbx & estoque == PqNg) -> producao = mbx;
+  if(demanda == mbx & estoque == nula) -> producao = mbx;
+  if(demanda == mbx & estoque == PqPos) -> producao = mbx;
+  if(demanda == mbx & estoque == MdPos) -> producao = mbx;
+  if(demanda == mbx & estoque == MtGrNg) -> producao = mbx;
+  if(demanda == mbx & estoque == GrPos) -> producao = mbx;
+  if(demanda == mbx & estoque == MtGrPos) -> producao = mbx;
+  if(demanda == bx & estoque == MtGrNg) -> producao = pcbx;
+  if(demanda == bx & estoque == MdNg) -> producao = qsbx;
+  if(demanda == bx & estoque == PqNg) -> producao = qsbx;
+  if(demanda == bx & estoque == nula) -> producao = qsbx;
+  if(demanda == bx & estoque == PqPos) -> producao = bx;
+  if(demanda == bx & estoque == MdPos) -> producao = bx;
+  if(demanda == bx & estoque == QsGrPos) -> producao = mbx;
+  if(demanda == bx & estoque == GrPos) -> producao = mbx;
+  if(demanda == bx & estoque == MtGrPos) -> producao = mbx;
+  if(demanda == qsbx & estoque == MtGrNg) -> producao = pcabxmd;
+  if(demanda == qsbx & estoque == MdNg) -> producao = pcabxmd;
+  if(demanda == qsbx & estoque == PqNg) -> producao = pcbx;
+  if(demanda == qsbx & estoque == nula) -> producao = pcbx;
+  if(demanda == qsbx & estoque == PqPos) -> producao = pcbx;
+  if(demanda == qsbx & estoque == MdPos) -> producao = qsbx;
+  if(demanda == qsbx & estoque == QsGrPos) -> producao = bx;
+  if(demanda == qsbx & estoque == GrPos) -> producao = bx;
+  if(demanda == qsbx & estoque == MtGrPos) -> producao = mbx;
+  if(demanda == pcbx & estoque == MtGrNg) -> producao = pcacmd;
+  if(demanda == pcbx & estoque == MdNg) -> producao = md;
+  if(demanda == pcbx & estoque == PqNg) -> producao = md;
+  if(demanda == pcbx & estoque == nula) -> producao = pcabxmd;
+  if(demanda == pcbx & estoque == PqPos) -> producao = pcabxmd;
+  if(demanda == pcbx & estoque == MdPos) -> producao = pcbx;
+  if(demanda == pcbx & estoque == QsGrPos) -> producao = pcbx;
+  if(demanda == pcbx & estoque == GrPos) -> producao = qsbx;
+  if(demanda == pcbx & estoque == MtGrPos) -> producao = bx;
+  if(demanda == md & estoque == MtGrNg) -> producao = pcacmd;
+  if(demanda == md & estoque == MdNg) -> producao = pcacmd;
+  if(demanda == md & estoque == PqNg) -> producao = md;
+  if(demanda == md & estoque == nula) -> producao = md;
+  if(demanda == md & estoque == PqPos) -> producao = pcabxmd;
+  if(demanda == md & estoque == MdPos) -> producao = pcabxmd;
+  if(demanda == md & estoque == QsGrPos) -> producao = pcabxmd;
+  if(demanda == md & estoque == GrPos) -> producao = qsbx;
+  if(demanda == md & estoque == MtGrPos) -> producao = bx;
+  if(demanda == pca & estoque == MtGrNg) -> producao = pca;
+  if(demanda == pca & estoque == MdNg) -> producao = pcacmd;
+  if(demanda == pca & estoque == PqNg) -> producao = pcacmd;
+  if(demanda == pca & estoque == nula) -> producao = pcacmd;
+  if(demanda == pca & estoque == PqPos) -> producao = md;
+  if(demanda == pca & estoque == MdPos) -> producao = md;
+  if(demanda == pca & estoque == QsGrPos) -> producao = pcabxmd;
+  if(demanda == pca & estoque == GrPos) -> producao = pcbx;
+  if(demanda == pca & estoque == MtGrPos) -> producao = qsbx;
+  if(demanda == qsa & estoque == MtGrNg) -> producao = alto;
+  if(demanda == qsa & estoque == MdNg) -> producao = qsa;
+  if(demanda == qsa & estoque == PqNg) -> producao = pca;
+  if(demanda == qsa & estoque == nula) -> producao = pca;
+  if(demanda == qsa & estoque == PqPos) -> producao = pca;
+  if(demanda == qsa & estoque == MdPos) -> producao = pcacmd;
+  if(demanda == qsa & estoque == QsGrPos) -> producao = pcacmd;
+  if(demanda == qsa & estoque == GrPos) -> producao = md;
+  if(demanda == qsa & estoque == MtGrPos) -> producao = pcabxmd;
+  if(demanda == alto & estoque == MtGrNg) -> producao = ma;
+  if(demanda == alto & estoque == MdNg) -> producao = alto;
+  if(demanda == alto & estoque == PqNg) -> producao = alto;
+  if(demanda == alto & estoque == nula) -> producao = alto;
+  if(demanda == alto & estoque == PqPos) -> producao = qsa;
+  if(demanda == alto & estoque == MdPos) -> producao = qsa;
+  if(demanda == alto & estoque == QsGrPos) -> producao = pca;
+  if(demanda == alto & estoque == GrPos) -> producao = pcacmd;
+  if(demanda == alto & estoque == MtGrPos) -> producao = md;
+  if(demanda == ma & estoque == MtGrNg) -> producao = ma;
+  if(demanda == ma & estoque == MdNg) -> producao = ma;
+  if(demanda == ma & estoque == PqNg) -> producao = ma;
+  if(demanda == ma & estoque == nula) -> producao = ma;
+  if(demanda == ma & estoque == PqPos) -> producao = alto;
+  if(demanda == ma & estoque == MdPos) -> producao = alto;
+  if(demanda == ma & estoque == QsGrPos) -> producao = alto;
+  if(demanda == ma & estoque == GrPos) -> producao = qsa;
+  if(demanda == ma & estoque == MtGrPos) -> producao = pcacmd;
+ }
+
+system (DemandaMaxT demanda, VarEstqPercentT estoque : ProducaoT producao) {
+  RBGesplan(demanda, estoque : producao);
+ }

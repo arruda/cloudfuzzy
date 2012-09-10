@@ -1,0 +1,20 @@
+
+# Users
+
+users:
+
+    - !!models.User
+        email:      test@test.com
+        name:       Test test
+        password:   test
+    
+    - !!models.User
+        email:      test2@test.com
+        name:       Test 2
+        password:   test2
+    
+    - !!models.User
+        email:      test3@test.com
+        name:       Test 3
+        password:   test3
+    

@@ -1,0 +1,1248 @@
+binary min {
+ alias mamdani;
+ java { return (a<b? a : b); }
+ ansi_c { return (a<b? a : b); }
+ cplusplus { return (a<b? a : b); }
+ derivative {
+  deriv[0] = (a<b? 1: (a==b? 0.5 : 0));
+  deriv[1] = (a>b? 1: (a==b? 0.5 : 0));
+ }
+}
+
+binary prod {
+ alias larsen;
+ java { return a*b; }
+ ansi_c { return a*b; }
+ cplusplus { return a*b; }
+ derivative {
+  deriv[0] = b;
+  deriv[1] = a;
+ }
+}
+
+binary bounded_prod {
+ java { return (a+b-1>0? a+b-1: 0); }
+ ansi_c { return (a+b-1>0? a+b-1: 0); }
+ cplusplus { return (a+b-1>0? a+b-1: 0); }
+ derivative {
+  deriv[0] = (a+b-1>0? 1: (a+b==1? 0.5 : 0));
+  deriv[1] = (a+b-1>0? 1: (a+b==1? 0.5 : 0));
+ }
+}
+
+binary drastic_prod {
+ java { return (a==1? b: (b==1? a : 0) ); }
+ ansi_c { return (a==1? b: (b==1? a : 0) ); }
+ cplusplus { return (a==1? b: (b==1? a : 0) ); }
+ derivative {
+  deriv[0] = (b==1? 1 : 0);
+  deriv[1] = (a==1? 1 : 0);
+ }
+}
+
+binary max {
+ java { return (a>b? a : b); }
+ ansi_c { return (a>b? a : b); }
+ cplusplus { return (a>b? a : b); }
+ derivative {
+  deriv[0] = (a>b? 1 : (a==b? 0.5 : 0));
+  deriv[1] = (b>a? 1 : (a==b? 0.5 : 0));
+ }
+}
+
+binary sum {
+ java { return a+b-a*b; }
+ ansi_c { return a+b-a*b; }
+ cplusplus { return a+b-a*b; }
+ derivative {
+  deriv[0] = 1-b;
+  deriv[1] = 1-a;
+ }
+}
+
+binary bounded_sum {
+ java { return (a+b<1? a+b: 1); }
+ ansi_c { return (a+b<1? a+b: 1); }
+ cplusplus { return (a+b<1? a+b: 1); }
+ derivative {
+  deriv[0] = (a+b<1? 1 : (a+b==1? 0.5 : 0));
+  deriv[1] = (a+b<1? 1 : (a+b==1? 0.5 : 0));
+ }
+}
+
+binary drastic_sum {
+ java { return (a==0? b : (b==0? a : 0) ); }
+ ansi_c { return (a==0? b : (b==0? a : 0) ); }
+ cplusplus { return (a==0? b : (b==0? a : 0) ); }
+ derivative {
+  deriv[0] = (b==0? 1 : 0);
+  deriv[1] = (a==0? 1 : 0);
+ }
+}
+
+binary dienes_resher {
+ alias boolean;
+ java { return (b>1-a? b : 1-a); }
+ ansi_c { return (b>1-a? b : 1-a); }
+ cplusplus { return (b>1-a? b : 1-a); }
+ derivative {
+  deriv[0] = (b<1-a? -1 : (b==(1-a) ? -0.5 : 0));
+  deriv[1] = (b>1-a? 1 : (b==(1-a) ? 0.5 : 0));
+ }
+}
+
+binary mizumoto {
+ java { return 1-a+a*b; }
+ ansi_c { return 1-a+a*b; }
+ cplusplus { return 1-a+a*b; }
+ derivative {
+  deriv[0] = b-1;
+  deriv[1] = a;
+ }
+}
+
+binary lukasiewicz {
+ alias arithmetic;
+ java { return (b<a? 1-a+b : 1); }
+ ansi_c { return (b<a? 1-a+b : 1); }
+ cplusplus { return (b<a? 1-a+b : 1); }
+ derivative {
+  deriv[0] = (b<a? -1 : (a==b? -0.5 : 0));
+  deriv[1] = (b<a? 1 : (a==b? 0.5 : 0));
+ }
+}
+
+binary dubois_prade {
+ java { return (b==0? 1-a : (a==1? b : 1) ); }
+ ansi_c { return (b==0? 1-a : (a==1? b : 1) ); }
+ cplusplus { return (b==0? 1-a : (a==1? b : 1) ); }
+ derivative {
+  deriv[0] = (b==0? -1 : 0);
+  deriv[1] = (a==1? 1 : 0);
+ }
+}
+
+binary zadeh {
+ alias maxmin;
+ java { return (a<0.5 || 1-a>b? 1-a : (a<b? a : b)); }
+ ansi_c { return (a<0.5 || 1-a>b? 1-a : (a<b? a : b)); }
+ cplusplus { return (a<0.5 || 1-a>b? 1-a : (a<b? a : b)); }
+}
+
+binary goguen {
+ java { return (a<b? 1 : b/a); }
+ ansi_c { return (a<b? 1 : b/a); }
+ cplusplus { return (a<b? 1 : b/a); }
+ derivative {
+  deriv[0] = (a>b? -b/(a*a) : (a==b? -0.5/a : 0));
+  deriv[1] = (a>b? 1/a : (a==b? 0.5/a : 0));
+ }
+}
+
+binary godel {
+ java { return (a<=b? 1 : b); }
+ ansi_c { return (a<=b? 1 : b); }
+ cplusplus { return (a<=b? 1 : b); }
+ derivative {
+  deriv[0] = 0;
+  deriv[1] = (b<a? 1 : (b==a? 0.5 : 0));
+ }
+}
+
+binary sharp {
+ java { return (a<=b? 1 : 0); }
+ ansi_c { return (a<=b? 1 : 0); }
+ cplusplus { return (a<=b? 1 : 0); }
+}
+
+unary not {
+ java { return 1-a; }
+ ansi_c { return 1-a; }
+ cplusplus { return 1-a; }
+ derivative { deriv = -1; }
+}
+
+unary sugeno {
+ parameter l;
+ requires { l>-1 }
+ java { return (1-a)/(1+a*l); }
+ ansi_c { return (1-a)/(1+a*l); }
+ cplusplus { return (1-a)/(1+a*l); }
+ derivative { deriv = -(1+l)/((1+l*a)*(1+l*a)); }
+}
+
+unary yager {
+ parameter w;
+ requires { w>0 }
+ java { return Math.pow( ( 1 - Math.pow(a,w) ) , 1/w ); }
+ ansi_c { return pow( ( 1 - pow(a,w) ) , 1/w ); }
+ cplusplus { return pow( ( 1 - pow(a,w) ) , 1/w ); }
+ derivative { deriv = - Math.pow( Math.pow(a,-w) -1, (1-w)/w ); }
+}
+
+unary pow {
+ parameter w;
+ requires { w>0 }
+ java { return Math.pow(a,w); }
+ ansi_c { return pow(a,w); }
+ cplusplus { return pow(a,w); }
+ derivative { deriv = w * Math.pow(a,w-1); }
+}
+
+unary parabola {
+ java { return 4*a*(1-a); }
+ ansi_c { return 4*a*(1-a); }
+ cplusplus { return 4*a*(1-a); }
+ derivative { deriv = 4-8*a; }
+}
+
+defuz CenterOfArea {
+ alias CenterOfGravity, Centroid;
+ java {
+  double num=0, denom=0;
+  for(double x=min; x<=max; x+=step) {
+   double m = mf.compute(x);
+   num += x*m;
+   denom += m;
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+ ansi_c {
+  double x, m, num=0, denom=0;
+  for(x=min; x<=max; x+=step) {
+   m = compute(mf,x);
+   num += x*m;
+   denom += m;
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+ cplusplus {
+  double num=0, denom=0;
+  for(double x=min; x<=max; x+=step) {
+   double m = mf.compute(x);
+   num += x*m;
+   denom += m;
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+
+}
+
+defuz FirstOfMaxima {
+ java {
+  double out=min, maximum = 0;
+  for(double x=min; x<=max; x+=step) {
+   double m= mf.compute(x);
+   if( m > maximum ) { maximum = m; out = x; }
+  }
+  return out;
+ }
+ ansi_c {
+  double x, m, out=min, maximum = 0;
+  for(x=min; x<=max; x+=step) {
+   m = compute(mf,x);
+   if( m > maximum ) { maximum = m; out = x; }
+  }
+  return out;
+ }
+ cplusplus {
+  double out=min, maximum = 0;
+  for(double x=min; x<=max; x+=step) {
+   double m = mf.compute(x);
+   if( m > maximum ) { maximum = m; out = x; }
+  }
+  return out;
+ }
+}
+
+defuz LastOfMaxima {
+ java {
+  double out=min, maximum = 0;
+  for(double x=min; x<=max; x+=step) {
+   double m = mf.compute(x);
+   if(m>=maximum) { maximum = m; out = x; }
+  }
+  return out;
+ }
+ ansi_c {
+  double x, m, out=min, maximum=0;
+  for(x=min; x<=max; x+=step) {
+   m = compute(mf,x);
+   if(m>=maximum) { maximum = m; out = x; }
+  }
+  return out;
+ }
+ cplusplus {
+  double out=min, maximum=0;
+  for(double x=min; x<=max; x+=step) {
+   double m = mf.compute(x);
+   if(m>=maximum) { maximum = m; out = x; }
+  }
+  return out;
+ }
+}
+
+defuz MeanOfMaxima {
+ java {
+  double out = min, maximum = 0;
+  int counter = 1;
+  for(double x=min; x<=max; x+=step) {
+   double m = mf.compute(x);
+   if(m == maximum) { out+=x; counter++; }
+   if(m > maximum) { maximum = m; out = x; counter = 1; }
+  }
+  return out/counter;
+ }
+ ansi_c {
+  double x, m, out=min, maximum=0;
+  int counter = 1;
+  for(x=min; x<=max; x+=step) {
+   m = compute(mf,x);
+   if(m == maximum) { out+=x; counter++; }
+   if(m > maximum) { maximum = m; out = x; counter = 1; }
+  }
+  return out/counter;
+ }
+ cplusplus {
+  double out=min, maximum=0;
+  int counter = 1;
+  for(double x=min; x<=max; x+=step) {
+   double m = mf.compute(x);
+   if(m == maximum) { out+=x; counter++; }
+   if(m > maximum) { maximum = m; out = x; counter = 1; }
+  }
+  return out/counter;
+ }
+}
+
+defuz FuzzyMean {
+ alias Height;
+ definedfor triangle, isosceles, trapezoid, bell, rectangle, singleton;
+ java {
+  double num=0, denom=0;
+  for(int i=0; i<mf.conc.length; i++) {
+   num += mf.conc[i].degree() * mf.conc[i].center();
+   denom += mf.conc[i].degree();
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+ ansi_c {
+  double num=0, denom=0;
+  int i;
+  for(i=0; i<mf.length; i++) {
+   num += mf.degree[i] * center(mf.conc[i]);
+   denom += mf.degree[i];
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+ cplusplus {
+  double num=0, denom=0;
+  for(int i=0; i<mf.length; i++) {
+   num += mf.conc[i]->degree() * mf.conc[i]->center();
+   denom += mf.conc[i]->degree();
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+ source {
+
+//+++++++++++++++++++
+ public void derivative(AggregateMemFunc mf, double derror) {
+   double num=0, denom=0;
+   for(int i=0; i<mf.conc.length; i++) {
+     num += mf.conc[i].degree() * mf.conc[i].center();
+     denom += mf.conc[i].degree();
+    }
+   double y = num/denom;
+   for(int i=0; i<mf.conc.length; i++) {
+     mf.conc[i].setDegreeDeriv(derror*(mf.conc[i].center()-y)/denom);
+     mf.conc[i].setCenterDeriv(derror*mf.conc[i].degree()/denom);
+    }
+  }
+//+++++++++++++++++++
+
+  }
+}
+
+defuz WeightedFuzzyMean {
+ definedfor triangle, isosceles, trapezoid, bell, rectangle;
+ java {
+  double num=0, denom=0;
+  for(int i=0; i<mf.conc.length; i++) {
+   num += mf.conc[i].degree()*mf.conc[i].basis()*mf.conc[i].center();
+   denom += mf.conc[i].degree()*mf.conc[i].basis();
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+ ansi_c {
+  double num=0, denom=0;
+  int i;
+  for(i=0; i<mf.length; i++) {
+   num += mf.degree[i]*basis(mf.conc[i])*center(mf.conc[i]);
+   denom += mf.degree[i]*basis(mf.conc[i]);
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+ cplusplus {
+  double num=0, denom=0;
+  for(int i=0; i<mf.length; i++) {
+   num += mf.conc[i]->degree()*mf.conc[i]->basis()*mf.conc[i]->center();
+   denom += mf.conc[i]->degree()*mf.conc[i]->basis();
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+
+ source {
+
+//+++++++++++++++++++
+ public void derivative(AggregateMemFunc mf, double derror) {
+   double num=0, denom=0;
+   for(int i=0; i<mf.conc.length; i++) {
+     num += mf.conc[i].degree() * mf.conc[i].basis() * mf.conc[i].center();
+     denom += mf.conc[i].degree() * mf.conc[i].basis();
+    }
+   double y = num/denom;
+   for(int i=0; i<mf.conc.length; i++) {
+     mf.conc[i].setDegreeDeriv(derror*mf.conc[i].basis()*(mf.conc[i].center()-y)/denom);
+     mf.conc[i].setCenterDeriv(derror*mf.conc[i].degree()*mf.conc[i].basis()/denom);
+     mf.conc[i].setBasisDeriv(derror*mf.conc[i].degree()*(mf.conc[i].center()-y)/denom);
+    }
+  }
+//+++++++++++++++++++
+
+  }
+}
+
+defuz Quality {
+ definedfor triangle, isosceles, trapezoid, bell, rectangle;
+ java {
+  double num=0, denom=0;
+  for(int i=0; i<mf.conc.length; i++) {
+   num += mf.conc[i].degree() * mf.conc[i].center() / mf.conc[i].basis();
+   denom += mf.conc[i].degree() / mf.conc[i].basis();
+  }
+  if(denom == 0) return (min+max)/2;
+  return num/denom;
+ }
+ ansi_c {
+  double num=0, denom=0;
+  int i;
+  for(i=0; i<mf.length; i++) {
+   num += mf.degree[i] * center(mf.conc[i]) / basis(mf.conc[i]);
+   denom += mf.degree[i] / basis(mf.conc[i]);
+  }
+  if(denom == 0) return (min+max)/2;
+  return num/denom;
+ }
+ cplusplus {
+  double num=0, denom=0;
+  for(int i=0; i<mf.length; i++) {
+   num += mf.conc[i]->degree() * mf.conc[i]->center() / mf.conc[i]->basis();
+   denom += mf.conc[i]->degree() / mf.conc[i]->basis();
+  }
+  if(denom == 0) return (min+max)/2;
+  return num/denom;
+ }
+}
+
+defuz GammaQuality {
+ parameter gamma;
+ definedfor triangle, isosceles, trapezoid, bell, rectangle;
+ requires { gamma>=0 }
+ java {
+  double num=0, denom=0;
+  for(int i=0; i<mf.conc.length; i++) {
+   double w = Math.pow(mf.conc[i].basis(), gamma);
+   num += mf.conc[i].degree() * mf.conc[i].center() / w;
+   denom += mf.conc[i].degree() / w;
+  }
+  if(denom == 0) return (min+max)/2;
+  return num/denom;
+ }
+ ansi_c {
+  double w, num=0, denom=0;
+  int i;
+  for(i=0; i<mf.length; i++) {
+   w = pow( basis(mf.conc[i]), gamma);
+   num += mf.degree[i] * center(mf.conc[i]) / w;
+   denom += mf.degree[i] / w;
+  }
+  if(denom == 0) return (min+max)/2;
+  return num/denom;
+ }
+ cplusplus {
+  double num=0, denom=0;
+  for(int i=0; i<mf.length; i++) {
+   double w = pow( mf.conc[i]->basis(), gamma);
+   num += mf.conc[i]->degree() * mf.conc[i]->center() / w;
+   denom += mf.conc[i]->degree() / w;
+  }
+  if(denom == 0) return (min+max)/2;
+  return num/denom;
+ }
+}
+
+defuz MaxLabel {
+ java {
+  double maxdegree=0, center=0;
+  for(int i=0; i<mf.conc.length; i++)
+   if(mf.conc[i].degree() >= maxdegree)
+    { center = mf.conc[i].center(); maxdegree = mf.conc[i].degree(); }
+  return center;
+ }
+ ansi_c {
+  double mx=0, c=0;
+  int i;
+  for(i=0; i<mf.length; i++)
+   if(mf.degree[i] >= mx) { c = center(mf.conc[i]); mx = mf.degree[i]; }
+  return c;
+ }
+ cplusplus {
+  double maxdegree=0, center=0;
+  for(int i=0; i<mf.length; i++)
+   if(mf.conc[i]->degree() >= maxdegree)
+    { center = mf.conc[i]->center(); maxdegree = mf.conc[i]->degree(); }
+  return center;
+ }
+}
+
+defuz TakagiSugeno {
+ definedfor parametric;
+ java {
+  double denom=0;
+  for(int i=0; i<mf.conc.length; i++) denom += mf.conc[i].degree();
+  if(denom==0) return (min+max)/2;
+
+  double num=0;
+  for(int i=0; i<mf.conc.length; i++) {
+   double f = mf.conc[i].param(0);
+   for(int j=0; j<mf.input.length; j++) f += mf.conc[i].param(j+1)*mf.input[j];
+   num += mf.conc[i].degree()*f;
+  }
+  return num/denom;
+ }
+
+ ansi_c {
+  double f,num=0,denom=0;
+  int i,j;
+  for(i=0; i<mf.length; i++) denom += mf.degree[i];
+  if(denom==0) return (min+max)/2;
+
+  for(i=0; i<mf.length; i++) {
+   f = param(mf.conc[i],0);
+   for(j=0; j<mf.inputlength; j++) f += param(mf.conc[i],j+1)*mf.input[j];
+   num += mf.degree[i]*f;
+  }
+  return num/denom;
+ }
+
+ cplusplus {
+  double num=0,denom=0;
+
+  for(int i=0; i<mf.length; i++) {
+   double f = mf.conc[i]->param(0);
+   for(int j=0; j<mf.inputlength; j++) f += mf.conc[i]->param(j+1)*mf.input[j];
+   num += mf.conc[i]->degree()*f;
+   denom += mf.conc[i]->degree();
+  }
+  if(denom==0) return (min+max)/2;
+  return num/denom;
+ }
+
+ source {
+//+++++++++++++++++++
+ public void derivative(AggregateMemFunc mf, double derror) {
+  double denom=0;
+  for(int i=0; i<mf.conc.length; i++) denom += mf.conc[i].degree();
+  if(denom==0) return;
+
+  double num=0;
+  double f[] = new double[mf.conc.length];
+  for(int i=0; i<mf.conc.length; i++) {
+   f[i] = mf.conc[i].param(0);
+   for(int j=0; j<mf.input.length; j++) f[i]+=mf.conc[i].param(j+1)*mf.input[j];
+   num += mf.conc[i].degree()*f[i];
+  }
+  double y = num/denom;
+
+  for(int i=0; i<mf.conc.length; i++) {
+   mf.conc[i].setDegreeDeriv(derror*(f[i]-y)/denom);
+   mf.conc[i].setParamDeriv(0,derror*mf.conc[i].degree()/denom);
+   for(int j=0; j<mf.input.length; j++)
+    mf.conc[i].setParamDeriv(j+1,derror*mf.conc[i].degree()*mf.input[j]/denom);
+  }
+ }
+//+++++++++++++++++++
+ }
+}
+
+mf trapezoid {
+ parameter a, b, c, d;
+ requires { a<b && b<c && c<d && b>=min && c<=max }
+ java {
+  equal { return (x<a || x>d? 0: (x<b? (x-a)/(b-a) : (x<c?1 : (d-x)/(d-c)))); }
+  greatereq { return (x<a? 0 : (x>b? 1 : (x-a)/(b-a) )); }
+  smallereq { return (x<c? 1 : (x>d? 0 : (d-x)/(d-c) )); }
+  center { return (b+c)/2; }
+  basis { return (d-a); }
+ }
+ ansi_c {
+  equal { return (x<a || x>d? 0: (x<b? (x-a)/(b-a) : (x<c?1 : (d-x)/(d-c)))); }
+  greatereq { return (x<a? 0 : (x>b? 1 : (x-a)/(b-a) )); }
+  smallereq { return (x<c? 1 : (x>d? 0 : (d-x)/(d-c) )); }
+  center { return (b+c)/2; }
+  basis { return (d-a); }
+ }
+ cplusplus {
+  equal { return (x<a || x>d? 0: (x<b? (x-a)/(b-a) : (x<c?1 : (d-x)/(d-c)))); }
+  greatereq { return (x<a? 0 : (x>b? 1 : (x-a)/(b-a) )); }
+  smallereq { return (x<c? 1 : (x>d? 0 : (d-x)/(d-c) )); }
+  center { return (b+c)/2; }
+  basis { return (d-a); }
+ }
+ derivative {
+  equal {
+   deriv[0] = (a<x && x<b ? (x-b)/((b-a)*(b-a)) : (x==a? 0.5/(a-b) : 0));
+   deriv[1] = (a<x && x<b ? (a-x)/((b-a)*(b-a)) : (x==b? 0.5/(a-b) : 0));
+   deriv[2] = (c<x && x<d ? (d-x)/((d-c)*(d-c)) : (x==c? 0.5/(d-c) : 0));
+   deriv[3] = (c<x && x<d ? (x-c)/((d-c)*(d-c)) : (x==d? 0.5/(d-c) : 0));
+  }
+  greatereq {
+   deriv[0] = (a<x && x<b ? (x-b)/((b-a)*(b-a)) : (x==a? 0.5/(a-b) : 0));
+   deriv[1] = (a<x && x<b ? (a-x)/((b-a)*(b-a)) : (x==b? 0.5/(a-b) : 0));
+   deriv[2] = 0;
+   deriv[3] = 0;
+  }
+  smallereq {
+   deriv[0] = 0;
+   deriv[1] = 0;
+   deriv[2] = (c<x && x<d ? (d-x)/((d-c)*(d-c)) : (x==c? 0.5/(d-c) : 0));
+   deriv[3] = (c<x && x<d ? (x-c)/((d-c)*(d-c)) : (x==d? 0.5/(d-c) : 0));
+  }
+  center {
+   deriv[0] = 1;
+   deriv[1] = 1;
+   deriv[2] = 1;
+   deriv[3] = 1;
+  }
+  basis {
+   deriv[0] = -1;
+   deriv[1] = 0;
+   deriv[2] = 0;
+   deriv[3] = 1;
+  }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double[] prev = get();
+  double[] desp = getDesp();
+  boolean[] adj = getAdjustable();
+  double[] pos = sortedUpdate(prev,desp,adj);
+
+  double min = this.u.min();
+  double max = this.u.max();
+  double step = this.u.step();
+
+  if(pos[1]<min) {
+   pos[1]=min;
+   if(pos[2]<=pos[1]) pos[2] = pos[1]+step;
+   if(pos[3]<=pos[2]) pos[3] = pos[2]+step;
+  }
+  if(pos[2]>max) {
+   pos[2]=max;
+   if(pos[1]>=pos[2]) pos[1] = pos[2]-step;
+   if(pos[0]>=pos[1]) pos[0] = pos[1]-step;
+  }
+
+  for(int i=0; i<parameter.length; i++) {
+   parameter[i].value = pos[i];
+   parameter[i].setDesp(0.0);
+   parameter[i].setPrevDesp(pos[i] - prev[i]);
+  }
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf triangle {
+ parameter a, b, c;
+ requires { a<b && b<c && b>=min && b<=max }
+ java {
+  equal { return (a<x && x<=b? (x-a)/(b-a) : (b<x && x<c? (c-x)/(c-b) : 0)); }
+  greatereq { return (x<a? 0 : (x>b? 1 : (x-a)/(b-a) )); }
+  smallereq { return (x<b? 1 : (x>c? 0 : (c-x)/(c-b) )); }
+  center { return b; }
+  basis { return (c-a); }
+ }
+ ansi_c {
+  equal { return (a<x && x<=b? (x-a)/(b-a) : (b<x && x<c? (c-x)/(c-b) : 0)); }
+  greatereq { return (x<a? 0 : (x>b? 1 : (x-a)/(b-a) )); }
+  smallereq { return (x<b? 1 : (x>c? 0 : (c-x)/(c-b) )); }
+  center { return b; }
+  basis { return (c-a); }
+ }
+ cplusplus {
+  equal { return (a<x && x<=b? (x-a)/(b-a) : (b<x && x<c? (c-x)/(c-b) : 0)); }
+  greatereq { return (x<a? 0 : (x>b? 1 : (x-a)/(b-a) )); }
+  smallereq { return (x<b? 1 : (x>c? 0 : (c-x)/(c-b) )); }
+  center { return b; }
+  basis { return (c-a); }
+ }
+ derivative {
+  equal {
+   deriv[0] = (a<x && x<b ? (x-b)/((b-a)*(b-a)) : (x==a? 0.5/(a-b) : 0));
+   deriv[1] = (a<x && x<b ? (a-x)/((b-a)*(b-a)) :
+              (b<x && x<c ? (c-x)/((c-b)*(c-b)) :
+              (x==b? 0.5/(a-b) + 0.5/(c-b) : 0)));
+   deriv[2] = (b<x && x<c ? (x-b)/((c-b)*(c-b)) : (x==c? 0.5/(c-b) : 0));
+  }
+  greatereq {
+   deriv[0] = (a<x && x<b ? (x-b)/((b-a)*(b-a)) : (x==a? 0.5/(a-b) : 0));
+   deriv[1] = (a<x && x<b ? (a-x)/((b-a)*(b-a)) : (x==b? 0.5/(a-b) : 0));
+   deriv[2] = 0;
+  }
+  smallereq {
+   deriv[0] = 0;
+   deriv[1] = (b<x && x<c ? (c-x)/((c-b)*(c-b)) : (x==b? 0.5/(c-b) : 0));
+   deriv[2] = (b<x && x<c ? (x-b)/((c-b)*(c-b)) : (x==c? 0.5/(c-b) : 0));
+  }
+  center {
+   deriv[0] = 1;
+   deriv[1] = 1;
+   deriv[2] = 1;
+  }
+  basis {
+   deriv[0] = -1;
+   deriv[1] = 0;
+   deriv[2] = 1;
+  }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double[] prev = get();
+  double[] desp = getDesp();
+  boolean[] adj = getAdjustable();
+  double[] pos = sortedUpdate(prev,desp,adj);
+
+  double min = this.u.min();
+  double max = this.u.max();
+  double step = this.u.step();
+
+  if(pos[1]<min) {
+   pos[1]=min;
+   if(pos[2]<=pos[1]) pos[2] = pos[1]+step;
+  }
+  if(pos[1]>max) {
+   pos[1]=max;
+   if(pos[0]>=pos[1]) pos[0] = pos[1]-step;
+  }
+
+  for(int i=0; i<parameter.length; i++) {
+   parameter[i].value = pos[i];
+   parameter[i].setDesp(0.0);
+   parameter[i].setPrevDesp(pos[i] - prev[i]);
+  }
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf isosceles {
+ parameter a, b;
+ requires { a>=min && a<=max && b>0 }
+ java {
+  equal { return (x<a-b || x>a+b? 0 : (x<a? (x-a+b)/b : (a-x+b)/b )); }
+  greatereq { return (x<a-b? 0 : (x<a? (x-a)/b +1: 1 )); }
+  smallereq { return (x>a+b? 0 : (x>a? (a-x)/b +1: 1 )); }
+  center { return a; }
+  basis { return b; }
+ }
+ ansi_c {
+  equal { return (x<a-b || x>a+b? 0 : (x<a? (x-a+b)/b : (a-x+b)/b )); }
+  greatereq { return (x<a-b? 0 : (x<a? (x-a)/b +1: 1 )); }
+  smallereq { return (x>a+b? 0 : (x>a? (a-x)/b +1: 1 )); }
+  center { return a; }
+  basis { return b; }
+ }
+ cplusplus {
+  equal { return (x<a-b || x>a+b? 0 : (x<a? (x-a+b)/b : (a-x+b)/b )); }
+  greatereq { return (x<a-b? 0 : (x<a? (x-a)/b +1: 1 )); }
+  smallereq { return (x>a+b? 0 : (x>a? (a-x)/b +1: 1 )); }
+  center { return a; }
+  basis { return b; }
+ }
+ derivative {
+  equal {
+   if(x<a && x>a-b) { deriv[0] = -1/b; deriv[1] = (a-x)/(b*b); }
+   else if(x>a && x<a+b) { deriv[0] = 1/b; deriv[1] = (x-a)/(b*b); }
+   else if(x==a-b) { deriv[0] = -0.5/b; deriv[1] = 0.5/b; }
+   else if(x==a+b) { deriv[0] = 0.5/b; deriv[1] = 0.5/b; }
+   else { deriv[0] = 0; deriv[1] = 0; }
+  }
+  greatereq {
+   if(x<a && x>a-b) { deriv[0] = -1/b; deriv[1] = (a-x)/(b*b); }
+   else if(x==a-b) { deriv[0] = -0.5/b; deriv[1] = 0.5/b; }
+   else if(x==a) { deriv[0] = -0.5/b; deriv[1] = 0; }
+   else { deriv[0] = 0; deriv[1] = 0; }
+  }
+  smallereq {
+   if(x>a && x<a+b) { deriv[0] = 1/b; deriv[1] = (x-a)/(b*b); }
+   else if(x==a+b) { deriv[0] = 0.5/b; deriv[1] = 0.5/b; }
+   else if(x==a)  { deriv[0] = 0.5/b; deriv[1] = 0; }
+   else { deriv[0] = 0; deriv[1] = 0; }
+  }
+  center { deriv[0] = 1; deriv[1] = 0; }
+  basis { deriv[0] = 0; deriv[1] = 1; }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double[] prevvalue = get();
+  double[] desp = getDesp();
+  boolean[] adj = getAdjustable();
+
+  double a = prevvalue[0] + desp[0];
+  double b = prevvalue[1] + desp[1];
+  double min = this.u.min();
+  double max = this.u.max();
+
+  if(a<min) a = min;
+  if(a>max) a = max;
+  if(b<=0) b = prevvalue[1]/2;
+
+  parameter[0].value = a;
+  parameter[0].setDesp(0.0);
+  parameter[0].setPrevDesp(parameter[0].value - prevvalue[0]);
+
+  parameter[1].value = b;
+  parameter[1].setDesp(0.0);
+  parameter[1].setPrevDesp(parameter[1].value - prevvalue[1]);
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf slope {
+ parameter a, m;
+ requires { a>=min && a<=max }
+ java {
+  equal {
+   double out = m*(x-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+  greatereq {
+   double out;
+   if(m>0) out = m*(x-a); else out = m*(min-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+  smallereq {
+   double out;
+   if(m>0) out = m*(max-a); else out = m*(x-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+ }
+ ansi_c {
+  equal {
+   double out = m*(x-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+  greatereq {
+   double out;
+   if(m>0) out = m*(x-a); else out = m*(min-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+  smallereq {
+   double out;
+   if(m>0) out = m*(max-a); else out = m*(x-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+ }
+ cplusplus {
+  equal {
+   double out = m*(x-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+  greatereq {
+   double out;
+   if(m>0) out = m*(x-a); else out = m*(min-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+  smallereq {
+   double out;
+   if(m>0) out = m*(max-a); else out = m*(x-a);
+   return (out>1 ? 1 : (out<0 ? 0 : out));
+  }
+ }
+ derivative {
+  equal {
+   if(x<a && x>a+1/m) { deriv[0] = -m; deriv[1] = (x-a); }
+   else if(x>a && x<a+1/m) { deriv[0] = -m; deriv[1] = (x-a); }
+   else if(x==a) { deriv[0] = -m/2; deriv[1] = 0; }
+   else if(x==a+1/m) { deriv[0] = -m/2; deriv[1] = 0.5/m; }
+   else {  deriv[0] = 0; deriv[1] = 0; }
+  }
+  greatereq {
+   if(m>0) {
+    if(x>a && x<a+1/m) { deriv[0] = -m; deriv[1] = (x-a); }
+    else if(x==a) { deriv[0] = -m/2; deriv[1] = 0; }
+    else if(x==a+1/m) { deriv[0] = -m/2; deriv[1] = 0.5/m; }
+    else { deriv[0] = 0; deriv[1] = 0; }
+   }
+   else if( m*(min-a) <1 ) { deriv[0] = -m; deriv[1] = min-a; }
+   else { deriv[0] = 0; deriv[1] = 0; }
+  }
+  smallereq {
+   if(m<0) {
+    if(x<a && x>a+1/m) { deriv[0] = -m; deriv[1] = (x-a); }
+    else if(x==a) { deriv[0] = -m/2; deriv[1] = 0; }
+    else if(x==a+1/m) { deriv[0] = -m/2; deriv[1] = 0.5/m; }
+    else { deriv[0] = 0; deriv[1] = 0; }
+   }
+   else if( m*(max-a) <1 ) { deriv[0] = -m; deriv[1] = max-a; }
+   else { deriv[0] = 0; deriv[1] = 0; }
+  }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double[] prevvalue = get();
+  double[] desp = getDesp();
+  boolean[] adj = getAdjustable();
+
+  double a = prevvalue[0] + desp[0];
+  double b = prevvalue[1] + desp[1];
+  double min = this.u.min();
+  double max = this.u.max();
+
+  if(a<min) a = min;
+  if(a>max) a = max;
+  if(b/prevvalue[1]<=0) b = prevvalue[1]/2;
+
+  parameter[0].value = a;
+  parameter[0].setDesp(0.0);
+  parameter[0].setPrevDesp(parameter[0].value - prevvalue[0]);
+
+  parameter[1].value = b;
+  parameter[1].setDesp(0.0);
+  parameter[1].setPrevDesp(parameter[1].value - prevvalue[1]);
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf bell {
+ parameter a, b;
+ requires { a>=min && a<=max && b>0 && b<=(max-min)/2 }
+ java {
+  equal { return Math.exp( -(a-x)*(a-x)/(b*b) ); }
+  greatereq { if(x>a) return 1; return Math.exp( - (x-a)*(x-a)/(b*b) ); }
+  smallereq { if(x<a) return 1; return Math.exp( - (x-a)*(x-a)/(b*b) ); }
+  center { return a; }
+  basis { return b; }
+ }
+ ansi_c {
+  equal { return exp( -(a-x)*(a-x)/(b*b) ); }
+  greatereq { if(x>a) return 1; return exp( - (x-a)*(x-a)/(b*b) ); }
+  smallereq { if(x<a) return 1; return exp( - (x-a)*(x-a)/(b*b) ); }
+  center { return a; }
+  basis { return b; }
+ }
+ cplusplus {
+  equal { return exp( -(a-x)*(a-x)/(b*b) ); }
+  greatereq { if(x>a) return 1; return exp( - (x-a)*(x-a)/(b*b) ); }
+  smallereq { if(x<a) return 1; return exp( - (x-a)*(x-a)/(b*b) ); }
+  center { return a; }
+  basis { return b; }
+ }
+ derivative {
+  equal {
+   double aux = (x-a)/b;
+   deriv[0] = 2*aux*Math.exp(-aux*aux)/b;
+   deriv[1] = 2*aux*aux*Math.exp(-aux*aux)/b;
+  }
+  greatereq {
+   if(x>a) { deriv[0] = 0; deriv[1] = 0; }
+   else {
+    double aux = (x-a)/b;
+    deriv[0] = 2*aux*Math.exp(-aux*aux)/b;
+    deriv[1] = 2*aux*aux*Math.exp(-aux*aux)/b;
+   }
+  }
+  smallereq {
+   if(x<a) { deriv[0] = 0; deriv[1] = 0; }
+   else {
+    double aux = (x-a)/b;
+    deriv[0] = 2*aux*Math.exp(-aux*aux)/b;
+    deriv[1] = 2*aux*aux*Math.exp(-aux*aux)/b;
+   }
+  }
+  center { deriv[0] = 1; deriv[1] = 0; }
+  basis { deriv[0] = 0; deriv[1] = 1; }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double grid = 1.0e-10;
+  double[] prevvalue = get();
+  double[] desp = getDesp();
+  boolean[] adj = getAdjustable();
+
+  double a = prevvalue[0] + desp[0];
+  double b = prevvalue[1] + desp[1];
+  double min = this.u.min();
+  double max = this.u.max();
+
+  if(a<min) a = min;
+  if(a>max) a = max;
+  if(b<=0) b = prevvalue[1]/2;
+  if(b<=grid) b = grid;
+  if(b>(max-min)/2) b = (max-min)/2;
+
+  parameter[0].value = a;
+  parameter[0].setDesp(0.0);
+  parameter[0].setPrevDesp(parameter[0].value - prevvalue[0]);
+
+  parameter[1].value = b;
+  parameter[1].setDesp(0.0);
+  parameter[1].setPrevDesp(parameter[1].value - prevvalue[1]);
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf sigma {
+ parameter a, b;
+ requires { a>=min && a<=max }
+ java {
+  equal { return 1/(1+ Math.exp( (a-x)/b )); }
+  greatereq {
+   double y = (b>0? x : min);
+   return 1 / (1+ Math.exp( (a-y)/b ));
+  }
+  smallereq {
+   double y = (b<0? x : max);
+   return 1 / (1+ Math.exp( (a-y)/b ));
+  }
+ }
+ ansi_c {
+  equal { return 1/(1+ exp( (a-x)/b )); }
+  greatereq {
+   double y = (b>0? x : min);
+   return 1 / (1+ exp( (a-y)/b ));
+  }
+  smallereq {
+   double y = (b<0? x : max);
+   return 1 / (1+ exp( (a-y)/b ));
+  }
+ }
+ cplusplus {
+  equal { return 1/(1+ exp( (a-x)/b )); }
+  greatereq {
+   double y = (b>0? x : min);
+   return 1 / (1+ exp( (a-y)/b ));
+  }
+  smallereq {
+   double y = (b<0? x : max);
+   return 1 / (1+ exp( (a-y)/b ));
+  }
+ }
+ derivative {
+  equal {
+   double aux1 = Math.exp((a-x)/b);
+   double aux2 = aux1/((1+aux1)*(1+aux1));
+   deriv[0] = - aux2/b;
+   deriv[1] = aux2*(a-x)/(b*b);
+  }
+  greatereq {
+   double y = (b>0? x : min);
+   double aux1 = Math.exp((a-y)/b);
+   double aux2 = aux1/((1+aux1)*(1+aux1));
+   deriv[0] = - aux2/b;
+   deriv[1] = aux2*(a-y)/(b*b);
+  }
+  smallereq {
+   double y = (b<0? x : max);
+   double aux1 = Math.exp((a-y)/b);
+   double aux2 = aux1/((1+aux1)*(1+aux1));
+   deriv[0] = - aux2/b;
+   deriv[1] = aux2*(a-y)/(b*b);
+  }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double[] prevvalue = get();
+  double[] desp = getDesp();
+  boolean[] adj = getAdjustable();
+
+  double a = prevvalue[0] + desp[0];
+  double b = prevvalue[1] + desp[1];
+  double min = this.u.min();
+  double max = this.u.max();
+
+  if(a<min) a = min;
+  if(a>max) a = max;
+  if(b/prevvalue[1]<=0) b = prevvalue[1]/2;
+
+  parameter[0].value = a;
+  parameter[0].setDesp(0.0);
+  parameter[0].setPrevDesp(parameter[0].value - prevvalue[0]);
+
+  parameter[1].value = b;
+  parameter[1].setDesp(0.0);
+  parameter[1].setPrevDesp(parameter[1].value - prevvalue[1]);
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf rectangle {
+ parameter a, b;
+ requires { a<b && a>=min && b<=max }
+ java {
+  equal { return (a<=x && x<=b? 1 : 0); }
+  greatereq { return (x>=a? 1 : 0); }
+  smallereq { return (x<=b? 1 : 0); }
+  center { return (a+b)/2; }
+  basis { return (b-a); }
+ }
+ ansi_c {
+  equal { return (a<=x && x<=b? 1 : 0); }
+  greatereq { return (x>=a? 1 : 0); }
+  smallereq { return (x<=b? 1 : 0); }
+  center { return (a+b)/2; }
+  basis { return (b-a); }
+ }
+ cplusplus {
+  equal { return (a<=x && x<=b? 1 : 0); }
+  greatereq { return (x>=a? 1 : 0); }
+  smallereq { return (x<=b? 1 : 0); }
+  center { return (a+b)/2; }
+  basis { return (b-a); }
+ }
+ derivative {
+  center { deriv[0] = 1; deriv[1] = 1; }
+  basis { deriv[0] = -1; deriv[1] = 1; }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double[] prevvalue = get();
+  double[] desp = getDesp();
+  boolean[] adj = getAdjustable();
+
+  double a = prevvalue[0] + desp[0];
+  double b = prevvalue[1] + desp[1];
+  double min = this.u.min();
+  double max = this.u.max();
+  double step = this.u.step();
+
+  if(a<min) a = min;
+  if(b>max) b = max;
+
+  if(a>=b) {
+   if(!adj[0]) b = a + step;
+   else if(!adj[1]) a = b - step;
+   else { a = (a+b-step)/2; b = a+step; }
+  }
+
+  parameter[0].value = a;
+  parameter[0].setDesp(0.0);
+  parameter[0].setPrevDesp(parameter[0].value - prevvalue[0]);
+
+  parameter[1].value = b;
+  parameter[1].setDesp(0.0);
+  parameter[1].setPrevDesp(parameter[1].value - prevvalue[1]);
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf singleton {
+ parameter a;
+ requires { a>=min && a<=max }
+ java {
+  equal { return (x==a? 1 : 0); }
+  greatereq { return (x>=a? 1 : 0); }
+  smallereq { return (x<=a? 1 : 0); }
+  center { return a; }
+ }
+ ansi_c {
+  equal { return (x==a? 1 : 0); }
+  greatereq { return (x>=a? 1 : 0); }
+  smallereq { return (x<=a? 1 : 0); }
+  center { return a; }
+ }
+ cplusplus {
+  equal { return (x==a? 1 : 0); }
+  greatereq { return (x>=a? 1 : 0); }
+  smallereq { return (x<=a? 1 : 0); }
+  center { return a; }
+ }
+ derivative {
+  center { deriv[0] = 1; }
+ }
+ source {
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ public void update() {
+  if(!isAdjustable()) return;
+  double min = this.u.min();
+  double max = this.u.max();
+  double prev = parameter[0].value;
+  parameter[0].value += parameter[0].getDesp();
+
+  if(parameter[0].value<min) parameter[0].value = min;
+  if(parameter[0].value>max) parameter[0].value = max;
+  parameter[0].setDesp(0.0);
+  parameter[0].setPrevDesp(parameter[0].value - prev);
+ }
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+ }
+}
+
+mf parametric {
+ java {
+  equal { return 0; }
+  greatereq { return 0; }
+  smallereq { return 0; }
+ }
+ ansi_c {
+  equal { return 0; }
+  greatereq { return 0; }
+  smallereq { return 0; }
+ }
+ cplusplus {
+  equal { return 0; }
+  greatereq { return 0; }
+  smallereq { return 0; }
+ }
+ source {
+//+++++++++++++++++++
+ public void set(double p[]) throws XflException {
+  super.parameter = new Parameter[p.length];
+  for(int i=0;i<super.parameter.length;i++) {
+   super.parameter[i] = new Parameter("p"+i);
+   super.parameter[i].value = p[i];
+  }
+ }
+//+++++++++++++++++++
+ }
+}
+

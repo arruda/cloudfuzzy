@@ -1,0 +1,80 @@
+@(title: String)(content: Html)
+
+@***
+@cloudFuzzyDesc = "CloudFuzzy - The Online Fuzzy Toolbox Solution."
+@cloudFuzzyDesc() = "CloudFuzzy - The Online Fuzzy Toolbox Solution."
+***@
+
+
+@cssExtra = {
+    @**<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-responsive.min.css")"> **@
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+}
+
+@jsExtra = {
+    <script src="@routes.Assets.at("javascripts/bootstrap-button.js")" type="text/javascript"></script>
+    
+<!--  
+<script src="@routes.Assets.at("javascripts/jquery-cookie/jquery.cookie.js")" type="text/javascript"></script>
+-->
+    @***
+    JS routing
+    <script type="text/javascript" src='@routes.Application.javascriptRoutes()'></script>
+    ***@
+
+}
+
+@footer = {
+    <p>CloudFuzzy - The Online Fuzzy Toolbox Solution.</p>
+}
+
+@jquery_docready = {
+
+    //This is the login ajax call
+    $('#login').click(function() {
+      $('#content').load('/login #content');
+    });
+      
+    var do_login = function(){
+      $.ajax({
+        type: 'POST',
+        url : '/login',
+        dataType : 'json',
+        data: $("#login_form").serialize(),
+        success: function(data, textStatus, jqXHR) {                  
+          window.location.href = '@routes.Application.index';
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          //$('#content').load('/login #content');
+        }
+      });
+
+    }
+
+    $("#login_post").live("click", function(){
+      do_login();
+    });
+}
+
+@jquery_winload = {
+
+}
+
+@h5bp.index("CloudFuzzy - " + title)("CloudFuzzy - The Online Fuzzy Toolbox Solution.")(cssExtra)(jsExtra)(jquery_docready)(jquery_winload)(header_slice()){
+    <nav id='menu' >
+        <ul>
+            <li ><a class='left_menu' href="/">Home</a></li>
+            <li><a href="/about/">About</a></li>
+            <li ><a class='right_menu' href="/blog/">Blog</a></li>
+        </ul>
+    </nav> 
+
+    <div id='content_area'>
+      <div id='content'>
+        <h2 class='content_header'>@title</h2>
+        @content
+      </div>  
+    </div>
+        
+}(footer)

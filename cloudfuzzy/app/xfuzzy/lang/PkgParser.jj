@@ -1,0 +1,815 @@
+/*
+ * @(#)PkgParser.jj        1.0 2000/05/09
+ *
+ * This file is part of Xfuzzy 3.0, a design environment for fuzzy logic
+ * based systems.
+ *
+ * (c) 2000 IMSE-CNM. The authors may be contacted by the email address:
+ *                    xfuzzy-team@imse.cnm.es
+ *
+ * Xfuzzy is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * Xfuzzy is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * for more details.
+ */
+
+options {
+ LOOKAHEAD = 1;
+ STATIC = false;
+}
+
+PARSER_BEGIN(PkgParser)
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//		PARSER DE LOS PAQUETES DE FUNCIONES		//
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+package xfuzzy.lang;
+
+import java.util.Vector;
+import java.io.*;
+
+public class PkgParser {
+ private final int JAVABLOCK = 0;
+ private final int DERIVBLOCK = 1;
+ private final int ANSICBLOCK = 2;
+ private final int CPPBLOCK = 3;
+
+ private String eol = System.getProperty("line.separator", "\n");
+ private Vector path;
+ private int error;
+ private String errorMsg;
+ private boolean end;
+
+ public PkgParser() {
+  this.path = new Vector();
+  this.error = 0;
+  this.errorMsg = "";
+  defaultPath();
+ }
+
+ public PkgParser(File path[]) {
+  this();
+  for(int i=0; i<path.length; i++) this.path.addElement(path[i]);
+ }
+
+ public PkgParser(File path) {
+  this();
+  this.path.addElement(path);
+ }
+
+ public PkgParser(String dir) {
+  this();
+  File file = new File(dir);
+  if(file.isDirectory()) this.path.addElement(path);
+ }
+   
+ public void setPath(File path) {
+  this.path = new Vector();
+  this.path.addElement(path);
+ }
+
+ public void setPath(File path[]) {
+  this.path = new Vector();
+  for(int i=0; i<path.length; i++) this.path.addElement(path[i]);
+ }
+
+ public void addPath(File path) {
+  this.path.addElement(path);
+ }
+
+ public XflPackage parse(String pkgname) {
+  String filename = pkgname+".pkg";
+  for(int i=0; i<path.size(); i++) {
+   File dir = (File) this.path.elementAt(i);
+   File file = new File(dir,filename);
+   if(file.exists()) return parse(file);
+  }
+  return null;
+ }
+
+ public XflPackage parse(File file) {
+  this.error = 0;
+  this.errorMsg = "";
+  XflPackage pkgdef = new XflPackage(file);
+  String filename = file.getAbsolutePath();
+  InputStream stream;
+  try { stream = new FileInputStream(file); }
+  catch (Exception e) {
+   this.errorMsg += "Can't open file"+filename+eol;
+   this.error++;
+   return null;
+  }
+
+  initParse(stream);
+  try { xflpackage(pkgdef); }
+  catch (ParseException e) {
+   this.errorMsg += "Fatal error loading "+filename+eol;
+   this.error ++;
+   return null;
+  }
+  catch (TokenMgrError e) {
+   this.errorMsg += "Fatal error loading "+filename+eol;
+   this.error ++;
+   return null;
+  }
+
+  try { stream.close(); } catch (IOException e) {}
+
+  if(this.error>0) return null;
+  return pkgdef;
+ }
+
+ public String resume() {
+  String msg = this.errorMsg + this.error;
+  if(this.error == 1) msg += " error."; else msg += " errors.";
+  return msg+eol;
+ }
+
+ public static void main(String args[]) throws Exception {
+  if(args.length != 1) return;
+  PkgParser parser = new PkgParser();
+  XflPackage pkgdef = parser.parse(new File(args[0]));
+  if(pkgdef == null) System.out.println(parser.resume());
+  else if(!pkgdef.compile()) System.out.println(pkgdef.resume());
+ }
+
+ private void defaultPath() {
+  File userdir = new File(System.getProperty("user.dir"));
+  File pkgdir = new File( System.getProperty("xfuzzy.path")+"/pkg" );
+  path.addElement(userdir);
+  path.addElement(pkgdir);
+ }
+
+ private void initParse(InputStream stream) {
+  jj_input_stream = new ASCII_CharStream(stream, 1, 1);
+  token_source = new PkgParserTokenManager(jj_input_stream);
+  token = new Token();
+  jj_ntk = -1;
+  jj_gen = 0;
+  for (int i = 0; i < jj_la1.length ; i++) jj_la1[i] = -1;
+ }
+
+ private String trim(String code) {
+  String line,rest; 
+  int index;
+
+  index = code.indexOf("\n"); if(index == -1) return code;
+  line = code.substring(0,index);
+  if(line.trim().length() == 0) rest = code.substring(index+1);
+  else rest = new String(code);
+  index = rest.lastIndexOf("\n"); if(index == -1) return rest;
+  line = rest.substring(index);
+  if(line.trim().length() == 0) rest = rest.substring(0,index);
+  return rest;
+ }
+
+ private void exception(ParseException e) {
+  Token t = e.currentToken.next;
+  this.error ++;
+  this.errorMsg += "XflPackage ["+this.error+"]. ";
+  this.errorMsg += "Parse error at line "+t.beginLine+" : ";
+  this.errorMsg += "Encountered \""+t.image+"\""+" while expecting ";
+
+  int expected[] = new int[e.expectedTokenSequences.length];
+  for(int i=0; i<expected.length; i++)
+   expected[i] = e.expectedTokenSequences[i][0];
+  if(expected.length == 1) this.errorMsg += e.tokenImage[expected[0]]+"."+eol;
+  else {
+   this.errorMsg += "one of :"+e.tokenImage[expected[0]];
+   for(int i=1; i<expected.length; i++)
+    this.errorMsg += ", "+e.tokenImage[expected[i]];
+   this.errorMsg += "."+eol;
+  }
+ }
+
+ private void exception(TokenMgrError e) {
+  this.error ++;
+  this.errorMsg += "XflPackage ["+this.error+"]. "+e.getMessage()+eol;
+ }
+
+}
+
+PARSER_END(PkgParser)
+
+SKIP :
+{
+ " " 
+| "\r" 
+| "\n" 
+| "\t"
+| <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <FORMAL_COMMENT: "/**" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+TOKEN : /* palabras claves */
+{
+  <BINARY: "binary">
+| <UNARY: "unary">
+| <MF: "mf">
+| <DEFUZ: "defuz">
+| <ALIAS: "alias">
+| <PARAM: "parameter">
+| <DEFINED: "definedfor">
+| <EQUAL: "equal">
+| <GREATER: "greatereq"> 
+| <SMALLER: "smallereq">
+| <CENTER: "center">
+| <BASIS: "basis">
+| <JAVA: "java">
+| <ANSI_C: "ansi_c">
+| <CPLUSPLUS: "cplusplus">
+| <DERIVATIVE: "derivative">
+| <REQUIRES: "requires">
+| <SOURCE: "source">
+}
+
+TOKEN : /* identificador */
+{
+<ID : ["a"-"z","A"-"Z","_"] (["a"-"z","A"-"Z","0"-"9","_"])* >
+| <OPERATOR: <ID> "." <ID> >
+}
+
+<CODEBLOCK> TOKEN: 
+{
+  <LBRACE: "{"> 
+| <RBRACE: "}">
+| <OTHER: ~["{","}"]>
+}
+
+void tryDefinition(XflPackage pkg) :
+{}
+{
+ try { definition(pkg) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void definition(XflPackage pkg) :
+{
+	Definition def;
+}
+{
+  def = binarydef(pkg) { pkg.add(def,XflPackage.BINARY); }
+| def = unarydef(pkg) { pkg.add(def,XflPackage.UNARY); }
+| def = mfdef(pkg)    { pkg.add(def,XflPackage.MFUNC); }
+| def = defuzdef(pkg) { pkg.add(def,XflPackage.DEFUZ); }
+| <EOF> { end = true; }
+}
+
+Definition binarydef(XflPackage pkg) :
+{
+	Definition def;
+	Token tid;
+}
+{
+ <BINARY> tid = <ID>
+	{
+	 def = Definition.createBinaryDefinition(pkg.toString(), tid.image);
+	}
+ "{"  
+( tryAliasBlock(def)
+| tryParamBlock(def)
+| tryRequiresBlock(def)
+| tryJavaBlock(def)
+| tryCBlock(def)
+| tryCppBlock(def)
+| tryDerivativeBlock(def)
+| tryOtherBlock(def)
+)+
+ "}"
+	{
+	 return def;
+	}
+}
+
+Definition unarydef(XflPackage pkg) :
+{
+	Definition def;
+	Token tid;
+}
+{
+ <UNARY> tid = <ID>
+	{
+	 def = Definition.createUnaryDefinition(pkg.toString(), tid.image);
+	}
+ "{" 
+( tryAliasBlock(def)
+| tryParamBlock(def)
+| tryRequiresBlock(def)
+| tryJavaBlock(def)
+| tryCBlock(def)
+| tryCppBlock(def)
+| tryDerivativeBlock(def)
+| tryOtherBlock(def)
+)+
+ "}"
+	{
+	 return def;
+	}
+}
+
+Definition defuzdef(XflPackage pkg) :
+{
+	Definition def;
+	Token tid;
+}
+{
+ <DEFUZ> tid = <ID>
+	{
+	 def = Definition.createDefuzDefinition(pkg.toString(), tid.image);
+	}
+ "{"
+( tryAliasBlock(def)
+| tryParamBlock(def)
+| tryRequiresBlock(def)
+| tryOtherBlock(def)
+| tryDefineBlock(def)
+| tryJavaBlock(def)
+| tryCBlock(def)
+| tryCppBlock(def)
+| tryDerivativeBlock(def)
+)+
+ "}"
+	{
+	 return def;
+	}
+}
+
+Definition mfdef(XflPackage pkg) :
+{
+        Definition def;
+        Token tid;
+}
+{
+ <MF> tid = <ID>
+        {
+         def = Definition.createMFDefinition(pkg.toString(), tid.image);
+        }
+ "{"
+(  tryAliasBlock(def)
+| tryParamBlock(def)
+| tryRequiresBlock(def)
+| tryOtherBlock(def)
+| tryMFJavaBlock(def)
+| tryMFAnsiCBlock(def)
+| tryMFCppBlock(def)
+| tryMFDerivativeBlock(def)
+)+
+ "}"
+        {
+         return def;
+        }
+}
+
+void tryAliasBlock(Definition def) :
+{}
+{
+ try { aliasblock(def) }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void aliasblock(Definition def) :
+{
+	Vector vector = new Vector();
+	Token tid;
+}
+{
+ <ALIAS> tid=<ID> { vector.addElement( tid.image ); }
+ ("," tid = <ID> { vector.addElement( tid.image ); })* ";"
+	{
+         def.setAlias(vector);
+	}
+}
+
+void tryParamBlock(Definition def) :
+{}
+{
+ try { paramblock(def) }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void paramblock(Definition def) :
+{
+	Vector vector = new Vector();
+	Token tid;
+}
+{
+ <PARAM> tid=<ID> { vector.addElement( tid.image ); }
+ ("," tid = <ID> { vector.addElement( tid.image ); })* ";"
+	{
+	 def.setParameters(vector);
+	}
+}
+
+void tryRequiresBlock(Definition def) :
+{}
+{
+ try { requiresblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void requiresblock(Definition def) :
+{
+	String code;
+}
+{
+ <REQUIRES> "{" code = codeblock() <RBRACE>
+	{
+	 def.setCode(Definition.REQUIREMENTS,trim(code));
+	}
+}
+
+void tryOtherBlock(Definition def) :
+{}
+{
+ try { otherblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void otherblock(Definition def) :
+{
+	String code;
+}
+{
+ <SOURCE> "{" code = codeblock() <RBRACE>
+	{
+	 def.setCode(Definition.SOURCE,trim(code));
+	}
+}
+
+void tryDefineBlock(Definition def) :
+{}
+{
+ try { defineblock(def) }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void defineblock(Definition def) :
+{
+	Vector vector = new Vector();
+	Token tid;
+}
+{
+ <DEFINED> (tid=<OPERATOR> | tid=<ID>) { vector.addElement( tid.image ); }
+ ("," (tid=<OPERATOR> | tid=<ID>) { vector.addElement( tid.image ); })* ";"
+	{
+	 def.setDefinedFor(vector);
+	}
+}
+
+void tryJavaBlock(Definition def) :
+{}
+{
+ try { javablock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void javablock(Definition def) :
+{
+	String code;
+}
+{
+ <JAVA> "{" code = codeblock() <RBRACE>
+	{
+         def.setCode(Definition.JAVA_EQUAL, trim(code));
+	}
+}
+
+void tryCBlock(Definition def) :
+{}
+{
+ try { cblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void cblock(Definition def) :
+{
+	String code;
+}
+{
+ <ANSI_C> "{" code = codeblock() <RBRACE>
+	{
+	 def.setCode(Definition.C_EQUAL, trim(code));
+	}
+}
+
+void tryCppBlock(Definition def) :
+{}
+{
+ try { cppblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void cppblock(Definition def) :
+{
+	String code;
+}
+{
+ <CPLUSPLUS> "{" code = codeblock() <RBRACE>
+	{
+	 def.setCode(Definition.CPP_EQUAL, trim(code));
+	}
+}
+
+void tryDerivativeBlock(Definition def) :
+{}
+{
+ try { derivativeblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void derivativeblock(Definition def) :
+{
+	String code;
+}
+{
+ <DERIVATIVE> "{" code = codeblock() <RBRACE>
+	{
+	 def.setCode(Definition.DERIV_EQUAL, trim(code));
+	}
+}
+
+void tryMFJavaBlock(Definition def) :
+{}
+{
+ try { mfjavablock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void mfjavablock(Definition def) :
+{}
+{
+ <JAVA> "{"
+( tryEqualBlock(def,JAVABLOCK)
+| tryGreatereqBlock(def,JAVABLOCK)
+| trySmallereqBlock(def,JAVABLOCK)
+| tryCenterBlock(def,JAVABLOCK)
+| tryBasisBlock(def,JAVABLOCK)
+)*
+ "}"
+}
+
+void tryMFAnsiCBlock(Definition def) :
+{}
+{
+ try { mfansicblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void mfansicblock(Definition def) :
+{}
+{
+ <ANSI_C> "{"
+( tryEqualBlock(def,ANSICBLOCK)
+| tryGreatereqBlock(def,ANSICBLOCK)
+| trySmallereqBlock(def,ANSICBLOCK)
+| tryCenterBlock(def,ANSICBLOCK)
+| tryBasisBlock(def,ANSICBLOCK)
+)*
+ "}"
+}
+
+void tryMFCppBlock(Definition def) :
+{}
+{
+ try { mfcppblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void mfcppblock(Definition def) :
+{}
+{
+ <CPLUSPLUS> "{"
+( tryEqualBlock(def,CPPBLOCK)
+| tryGreatereqBlock(def,CPPBLOCK)
+| trySmallereqBlock(def,CPPBLOCK)
+| tryCenterBlock(def,CPPBLOCK)
+| tryBasisBlock(def,CPPBLOCK)
+)*
+ "}"
+}
+
+void tryMFDerivativeBlock(Definition def) :
+{}
+{
+ try { mfderivativeblock(def) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void mfderivativeblock(Definition def) :
+{}
+{
+ <DERIVATIVE> "{"
+( tryEqualBlock(def,DERIVBLOCK)
+| tryGreatereqBlock(def,DERIVBLOCK)
+| trySmallereqBlock(def,DERIVBLOCK)
+| tryCenterBlock(def,DERIVBLOCK)
+| tryBasisBlock(def,DERIVBLOCK)
+)*
+ "}"
+}
+
+void tryEqualBlock(Definition def, int kind) :
+{}
+{
+ try { equalblock(def,kind) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void equalblock(Definition def, int kind) :
+{
+	 String code;
+}
+{
+ <EQUAL> "{" code = codeblock() <RBRACE>
+	{
+         switch(kind) {
+	  case JAVABLOCK:
+	   def.setCode(Definition.JAVA_EQUAL, trim(code)); break;
+	  case DERIVBLOCK:
+           def.setCode(Definition.DERIV_EQUAL, trim(code)); break;
+	  case ANSICBLOCK:
+           def.setCode(Definition.C_EQUAL, trim(code)); break;
+	  case CPPBLOCK:
+           def.setCode(Definition.CPP_EQUAL, trim(code)); break;
+         }
+	}
+}
+
+void tryGreatereqBlock(Definition def, int kind) :
+{}
+{
+ try { greatereqblock(def,kind) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void greatereqblock(Definition def, int kind) :
+{
+	 String code;
+}
+{
+ <GREATER> "{" code = codeblock() <RBRACE>
+	{
+         switch(kind) {
+          case JAVABLOCK:
+           def.setCode(Definition.JAVA_GREQ, trim(code)); break;
+          case DERIVBLOCK:
+           def.setCode(Definition.DERIV_GREQ, trim(code)); break;
+          case ANSICBLOCK:
+           def.setCode(Definition.C_GREQ, trim(code)); break;
+          case CPPBLOCK:
+           def.setCode(Definition.CPP_GREQ, trim(code)); break;
+         }
+	}
+}
+
+void trySmallereqBlock(Definition def, int kind) :
+{}
+{
+ try { smallereqblock(def,kind) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void smallereqblock(Definition def, int kind) :
+{
+	 String code;
+}
+{
+ <SMALLER> "{" code = codeblock() <RBRACE>
+	{
+         switch(kind) {
+          case JAVABLOCK:
+           def.setCode(Definition.JAVA_SMEQ, trim(code)); break;
+          case DERIVBLOCK:
+           def.setCode(Definition.DERIV_SMEQ, trim(code)); break;
+          case ANSICBLOCK:
+           def.setCode(Definition.C_SMEQ, trim(code)); break;
+          case CPPBLOCK:
+           def.setCode(Definition.CPP_SMEQ, trim(code)); break;
+         }
+	}
+}
+
+void tryCenterBlock(Definition def, int kind) :
+{}
+{
+ try { centerblock(def,kind) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void centerblock(Definition def, int kind) :
+{
+	 String code;
+}
+{
+ <CENTER> "{" code = codeblock() <RBRACE>
+	{
+         switch(kind) {
+          case JAVABLOCK:
+           def.setCode(Definition.JAVA_CENTER, trim(code)); break;
+          case DERIVBLOCK:
+           def.setCode(Definition.DERIV_CENTER, trim(code)); break;
+          case ANSICBLOCK:
+           def.setCode(Definition.C_CENTER, trim(code)); break;
+          case CPPBLOCK:
+           def.setCode(Definition.CPP_CENTER, trim(code)); break;
+         }
+	}
+}
+
+void tryBasisBlock(Definition def, int kind) :
+{}
+{
+ try { basisblock(def,kind) }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void basisblock(Definition def, int kind) :
+{
+	 String code;
+}
+{
+ <BASIS> "{" code = codeblock() <RBRACE>
+	{
+         switch(kind) {
+          case JAVABLOCK:
+           def.setCode(Definition.JAVA_BASIS, trim(code)); break;
+          case DERIVBLOCK:
+           def.setCode(Definition.DERIV_BASIS, trim(code)); break;
+          case ANSICBLOCK:
+           def.setCode(Definition.C_BASIS, trim(code)); break;
+          case CPPBLOCK:
+           def.setCode(Definition.CPP_BASIS, trim(code)); break;
+         }
+	}
+}
+
+JAVACODE
+void xflpackage(XflPackage pkg) {
+ end = false;
+ while(!end) {
+   try { tryDefinition(pkg); }
+   catch (ParseException e) { exception(e); skipto("}"); }
+   catch (TokenMgrError e) { exception(e); skipto("}"); }
+  }
+}
+
+JAVACODE
+String codeblock() {
+ String s = "";
+ int nesting = 1;
+ Token t;
+
+ token_source.curLexState = CODEBLOCK;
+ while(true) {
+   t = getToken(1);
+   if(t.kind == LBRACE) { nesting++; s+=t.image; }
+   else if(t.kind == RBRACE) { 
+     nesting--;
+     if( nesting == 0) break;
+     else s+=t.image;
+    }
+   else if(t.kind == EOF) break;
+   else s+=t.image;
+   t = getNextToken();
+  }
+ token_source.curLexState = DEFAULT;
+ return s;
+}
+
+JAVACODE
+void skipto(String st) {
+ Token t=null;
+ token_source.curLexState = CODEBLOCK;
+ while(true) {
+   try {
+    t = getNextToken();
+    if(t.kind == EOF || t.image.equals(st)) break;
+   } catch (TokenMgrError e) {}
+  } 
+ token_source.curLexState = DEFAULT;
+}
+

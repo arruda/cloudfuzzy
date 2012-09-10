@@ -1,0 +1,1019 @@
+/*
+ * @(#)XflParser.jj        1.0 2000/05/09
+ *
+ * This file is part of Xfuzzy 3.0, a design environment for fuzzy logic
+ * based systems.
+ *
+ * (c) 2000 IMSE-CNM. The authors may be contacted by the email address:
+ *                    xfuzzy-team@imse.cnm.es
+ *
+ * Xfuzzy is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * Xfuzzy is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * for more details.
+ */
+
+options {
+ LOOKAHEAD = 1;
+ STATIC = false;
+}
+
+PARSER_BEGIN(XflParser)
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//		    PARSER DEL LENGUAJE XFL3			//
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+package xfuzzy.lang;
+
+import java.io.*;
+import java.util.*;
+
+public class XflParser {
+ private String eol = System.getProperty("line.separator", "\n");
+ private PkgParser pkgparser;
+ private Vector imported;
+ private Vector used;
+ private Specification spec;
+
+ private int error;
+ private int warning;
+ private String errorMsg;
+ private boolean systemDefined;
+ private boolean end;
+
+ public XflParser () {
+  this.pkgparser = new PkgParser();
+  this.imported = new Vector();
+  this.used = new Vector();
+  this.error = 0;
+  this.warning = 0;
+  this.errorMsg = "";
+  this.systemDefined = false;
+ }
+
+ public Specification parse(String filename) {
+  this.imported = new Vector();
+  this.used = new Vector();
+  this.error = 0;
+  this.warning = 0;
+  this.errorMsg = "";
+  this.systemDefined = false;
+
+  File file = new File(filename);
+  this.spec = new Specification(file);
+
+  InputStream stream;
+  try { stream = new FileInputStream(filename); }
+  catch (Exception e) {
+   this.errorMsg += "Can't open file"+filename+eol;
+   this.error ++;
+   return null;
+  }
+
+  initParse(stream);
+  try { system(); }
+  catch (ParseException e) {
+   this.errorMsg += "Fatal error loading "+filename+eol;
+   this.error ++;
+   return null;
+  }
+  catch (TokenMgrError e) {
+   this.errorMsg += "Fatal error loading "+filename+eol;
+   this.error ++;
+   return null;
+  }
+
+  try { stream.close(); } catch (IOException e) {}
+
+  if(this.error>0) return null;
+  return spec;
+ }
+
+ public String resume() {
+  String msg = this.errorMsg + this.error;
+  if(this.error == 1) msg += " error"; else msg += " errors";
+  if(this.warning == 0) msg += ".";
+  else if(this.warning == 1) msg += " and "+this.warning+" warning.";
+  else msg += " and "+this.warning+" warnings.";
+  return msg;
+ }
+
+ public void addXflPackagePath(File path) {
+  this.pkgparser.addPath(path);
+ }
+
+ public static void main(String args[]) throws Exception {
+  if(args.length != 1 && args.length != 3) return;
+  XflParser parser = new XflParser();
+  if(args.length == 3 && args[1].equals("-p") ) 
+   parser.addXflPackagePath(new File(args[2]));
+  Specification spec = parser.parse(args[0]);
+  if(spec == null) System.out.println(parser.resume());
+  else System.out.println(spec.toXfl());
+ }
+
+ private void initParse(InputStream stream) {
+  jj_input_stream = new ASCII_CharStream(stream, 1, 1);
+  token_source = new XflParserTokenManager(jj_input_stream);
+  token = new Token();
+  jj_ntk = -1;
+  jj_gen = 0;
+  for(int i=0; i<jj_la1.length; i++) jj_la1[i] = -1;
+ }
+
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+ // 		Funciones internas de busqueda			//
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+ private XflPackage searchImported(String pkgname) {
+  for(int i=0, size=imported.size(); i<size; i++) {
+   XflPackage pkg = (XflPackage) imported.elementAt(i);
+   if(pkg.equals(pkgname)) return pkg;
+  }
+  return null;
+ }
+
+ private XflPackage searchXflPackage(String pkgname) {
+  for(int i=0, size=imported.size(); i<size; i++) {
+   XflPackage pkg = (XflPackage) imported.elementAt(i);
+   if(pkg.equals(pkgname)) return pkg;
+  }
+  for(int i=0, size=used.size(); i<size; i++) {
+   XflPackage pkg = (XflPackage) used.elementAt(i);
+   if(pkg.equals(pkgname)) return pkg;
+  }
+  return null;
+ }
+
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+ //	   Funciones internas para crear nuevos objetos		//
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+ private void newImported(Token tk, String pkgname) {
+  if(searchImported(pkgname)!=null) return;
+  XflPackage pkgobject = pkgparser.parse(pkgname);
+  if(pkgobject == null) { warning(tk,17); return; }
+  imported.add(pkgobject);
+ }
+
+ private XflPackage newUsed(String pkgname) {
+  XflPackage pkgobject = pkgparser.parse(pkgname);
+  if(pkgobject == null) return null;
+  used.add(pkgobject);
+  return pkgobject;
+ }
+
+ private Operatorset newOperatorset(Token tid) {
+  if(spec.searchOperatorset(tid.image)!=null) exception(tid, 9);
+  Operatorset newop = new Operatorset(tid.image);
+  spec.addOperatorset(newop);
+  return newop;
+ }
+
+ private void newOperator(Operatorset op, Token top, Token tid, double param[]) {
+  int kindop = -1;
+  int kindfz = -1;
+  if(top.image.equals("and"))
+   { kindop = FuzzyOperator.AND; kindfz = XflPackage.BINARY; }
+  if(top.image.equals("or"))
+   { kindop = FuzzyOperator.OR; kindfz = XflPackage.BINARY; }
+  if(top.image.equals("also"))
+   { kindop = FuzzyOperator.ALSO; kindfz = XflPackage.BINARY; }
+  if(top.image.equals("imp") || top.image.equals("implication"))
+   { kindop = FuzzyOperator.IMP; kindfz = XflPackage.BINARY; }
+  if(top.image.equals("not"))
+   { kindop = FuzzyOperator.NOT; kindfz = XflPackage.UNARY; }
+  if(top.image.equals("very") || top.image.equals("strongly"))
+   { kindop = FuzzyOperator.VERY; kindfz = XflPackage.UNARY; }
+  if(top.image.equals("moreorless"))
+   { kindop = FuzzyOperator.MOREORLESS; kindfz = XflPackage.UNARY; }
+  if(top.image.equals("slightly"))
+   { kindop = FuzzyOperator.SLIGHTLY; kindfz = XflPackage.UNARY; }
+  if(top.image.equals("defuzzification") || top.image.equals("defuz"))
+   { kindop = FuzzyOperator.DEFUZMETHOD; kindfz = XflPackage.DEFUZ; }
+  if(kindop == -1) { exception(top,5); return; }
+
+  FuzzyOperator operator = null;
+  int index = tid.image.indexOf('.');
+  if(index == -1) {
+   for(int i=0, size=imported.size(); i<size; i++) {
+    XflPackage pkg = (XflPackage) imported.elementAt(i);
+    if(pkg.contains(tid.image, kindfz)) 
+     operator = (FuzzyOperator) pkg.instantiate(tid.image, kindfz);
+   }
+  }
+  else {
+   String pkgname = tid.image.substring(0,index);
+   String opname = tid.image.substring(index+1);
+   XflPackage pkg = searchXflPackage(pkgname);
+   if(pkg==null) pkg = newUsed(pkgname);
+   if(pkg==null) { exception(tid,17); exception(tid,4); return; }
+   operator = (FuzzyOperator) pkg.instantiate(opname, kindfz);
+  }
+
+  if(operator==null) { exception(tid,4); return; }
+  operator.set(param);
+  op.set(operator, kindop);
+ }
+
+ private double[] newParameters(Token tn[],int counter) {
+  double param[] = new double[counter];
+  for(int i=0; i<counter; i++) param[i] = Double.parseDouble(tn[i].image);
+  return param;
+ }
+
+ private Type newType(Token tid, Token tp, Universe u) {
+  Type newtype = null;
+  if(spec.searchType(tid.image)!=null) { exception(tid, 11); return null; }
+  if(u != null) newtype = new Type(tid.image,u);
+  else if(tp != null) {
+   Type parent=spec.searchType(tp.image);
+   if(parent == null) exception(tp,12);
+   else newtype = new Type(tid.image,parent);
+  }
+  if(newtype==null) newtype = new Type(tid.image);
+  spec.addType(newtype);
+  return newtype;
+ }
+
+ private Universe newUniverse(Token tmin, Token tmax, Token tcard) {
+  double min = Double.valueOf(tmin.image).doubleValue();
+  double max = Double.valueOf(tmax.image).doubleValue();
+  if(tcard == null) 
+   try { return new Universe(min,max); }
+   catch (XflException e) { exception(tmin, e); return null; }
+
+  try {
+   int card = Integer.parseInt(tcard.image);
+   return new Universe(min,max,card);
+  }
+  catch (XflException e) { exception(tmin, e); return null; }
+  catch (NumberFormatException e) { exception(tmin, 2); return null; }
+ }
+
+ private void newMemFunc(Type type, Token tmf, Token tid, double param[]) {
+  if(type == null) return;
+  ParamMemFunc mf = null;
+  int index = tid.image.indexOf('.');
+  if(index == -1) {
+   for(int i=0, size=imported.size(); i<size; i++) {
+    XflPackage pkg = (XflPackage) imported.elementAt(i);
+    if(pkg.contains(tid.image, XflPackage.MFUNC))
+     mf = (ParamMemFunc) pkg.instantiate(tid.image, XflPackage.MFUNC);
+   }
+  }
+  else {
+   String pkgname = tid.image.substring(0,index);
+   String mfname = tid.image.substring(index+1);
+   XflPackage pkg = searchXflPackage(pkgname);
+   if(pkg==null) pkg = newUsed(pkgname);
+   if(pkg==null) { exception(tid,17); exception(tid,4); return; }
+   mf = (ParamMemFunc) pkg.instantiate(mfname, XflPackage.MFUNC);
+  }
+
+  if(mf==null) { exception(tid,7); return; }
+
+  try {
+   mf.set(tmf.image, type.getUniverse());
+   mf.set(param);
+   type.add(mf);
+  }
+  catch (XflException e) { exception(tmf, e); }
+ }
+
+ private Rulebase newRulebase(Token tmod) {
+  if(spec.searchRulebase(tmod.image)!=null) {exception(tmod,13); return null; }
+  Rulebase newmod = new Rulebase(tmod.image);
+  spec.addRulebase(newmod);
+  return newmod;
+ }
+
+ private void newVariable(Rulebase mod, Token ttype, Token tvar, boolean input) {
+  if(mod == null) return;
+  Type type = spec.searchType(ttype.image);
+  if(type == null) { exception(ttype,12); return; }
+  if(mod.searchVariable(tvar.image) != null ) { exception(tvar,15); return; } 
+  if(input) {
+   Variable inputvar = new Variable(tvar.image,type,Variable.INPUT);
+   mod.addInputVariable(inputvar);
+  }
+  else {
+   Variable outputvar = new Variable(tvar.image,type,mod);
+   mod.addOutputVariable(outputvar);
+  }
+ }
+
+ private void newUsingOp(Rulebase mod, Token top) {
+  if(mod == null) return;
+
+  if(top == null) {
+   Operatorset op = spec.searchOperatorset("_default_");
+   if(op == null) { op = new Operatorset(); spec.addOperatorset(op); }
+   mod.setOperatorset(op);
+   return;
+  }
+
+  Operatorset op = spec.searchOperatorset(top.image);
+  if(op==null) exception(top,10);
+  else mod.setOperatorset(op);
+ }
+
+ private Rule newRule(Relation rel, Rulebase mod, Token tdg) {
+  Rule rule;
+  if(tdg == null) rule = new Rule(rel);
+  else {
+   double degree = Double.parseDouble(tdg.image);
+   rule = new Rule(rel,degree);
+  }
+  mod.addRule(rule);
+  return rule;
+ }
+
+ private Relation newProposition(Token tvar,Token tmf,Rulebase mod,int code) {
+  Variable var = mod.searchVariable(tvar.image);
+  if(var == null) { exception(tvar, 16); return null; }
+
+  ParamMemFunc mf = var.search(tmf.image);
+  if(mf == null) { exception(tvar, 6); return null; }
+
+  switch (code) {
+   case 0: return Relation.create(Relation.IS,null,null,var,mf,mod);
+   case 1: return Relation.create(Relation.ISNOT,null,null,var,mf,mod);
+   case 2: return Relation.create(Relation.GR_EQ,null,null,var,mf,mod);
+   case 3: return Relation.create(Relation.SM_EQ,null,null,var,mf,mod);
+   case 4: return Relation.create(Relation.GREATER,null,null,var,mf,mod);
+   case 5: return Relation.create(Relation.SMALLER,null,null,var,mf,mod);
+   case 6: return Relation.create(Relation.APP_EQ,null,null,var,mf,mod);
+   case 7: return Relation.create(Relation.VERY_EQ,null,null,var,mf,mod);
+   case 8: return Relation.create(Relation.SL_EQ,null,null,var,mf,mod);
+   default: return null;
+  }
+ }
+
+ private void newConclusion(Token tvar, Token tmf, Rulebase mod, Rule rule) {
+  if(rule == null) return;
+  Variable output = mod.searchVariable(tvar.image);
+  if(output==null) { exception(tvar,16); return; }
+  ParamMemFunc mf = output.search(tmf.image);
+  if(mf==null) { exception(tmf,6); return; }
+  rule.add(new Conclusion(output,mf,mod));
+ }
+
+ private void newSystemModule(Token t) {
+  if(systemDefined) { exception(t,24); return; }
+  systemDefined = true;
+ }
+
+ private void newVariable(Token ttype, Token tid, boolean input) {
+  Type type = spec.searchType(ttype.image);
+  if(type == null) { exception(ttype,12); return; }
+  if(spec.getSystemModule().searchVariable(tid.image) != null )
+   { exception(tid,15); return; }
+  if(input) {
+   Variable inputvar = new Variable(tid.image,type,Variable.INPUT);
+   spec.getSystemModule().addVariable(inputvar);
+  }
+  else {
+   Variable outputvar = new Variable(tid.image,type,Variable.OUTPUT);
+   spec.getSystemModule().addVariable(outputvar);
+  }
+ }
+
+ private void newCall(Token t, Vector iv, Vector ov) {
+  Rulebase ref = spec.searchRulebase(t.image);
+  if(ref == null) { exception(t,20); return; }
+  if(ref.getInputs().length != iv.size()) { exception(t,21); return; }
+  if(ref.getOutputs().length != ov.size()) { exception(t,21); return; }
+  Variable[] ivar = new Variable[iv.size()];
+  Variable[] ovar = new Variable[ov.size()];
+  for(int i=0; i<ivar.length; i++) {
+   String varname = (String) iv.elementAt(i);
+   ivar[i] = spec.getSystemModule().searchVariable( varname );
+   if(ivar[i] == null) { exception(t,22); return; }
+  }
+  for(int i=0; i<ovar.length; i++) {
+   String varname = (String) ov.elementAt(i);
+   ovar[i] = spec.getSystemModule().searchVariable( varname );
+   if(ovar[i] != null && !ovar[i].isOutput()) { exception(t,23); return; }
+   if(ovar[i] == null) {
+    ovar[i] = new Variable(varname,Variable.INNER);
+    spec.getSystemModule().addVariable(ovar[i]);
+   }
+  }
+  spec.getSystemModule().addCall(ref,ivar,ovar);
+ }
+
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+ //		Funciones de manejo de excepciones		//
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+ private void exception(Token t, XflException e) {
+  this.error ++;
+  this.errorMsg += "Xfuzzy ["+this.error+"]. ";
+  this.errorMsg += "Parse error at line "+t.beginLine+" : "+e+eol;
+ }
+
+ private void exception(Token t, int code) {
+  this.error ++;
+  this.errorMsg += "Xfuzzy ["+this.error+"]. ";
+  this.errorMsg += "Parse error at line "+t.beginLine+" : ";
+  this.errorMsg += XflException.getMessage(code)+eol;
+ }
+
+ private void exception(ParseException e) {
+  Token t = e.currentToken.next;
+  this.error ++;
+  this.errorMsg += "Xfuzzy ["+this.error+"]. ";
+  this.errorMsg += "Parse error at line "+t.beginLine+" : ";
+  this.errorMsg += "Encountered \""+t.image+"\""+" while expecting ";
+
+  int expected[] = new int[e.expectedTokenSequences.length];
+  for(int i=0; i<expected.length; i++) 
+   expected[i] = e.expectedTokenSequences[i][0];
+  if(expected.length == 1) this.errorMsg += e.tokenImage[expected[0]]+"."+eol;
+  else {
+   this.errorMsg += "one of :"+e.tokenImage[expected[0]];
+   for(int i=1; i<expected.length; i++)
+    this.errorMsg += ", "+e.tokenImage[expected[i]];
+   this.errorMsg += "."+eol;
+  }
+ }
+
+ private void exception(TokenMgrError e) {
+  this.error ++;
+  this.errorMsg += "Xfuzzy ["+this.error+"]. "+e.getMessage()+eol;
+ }
+
+ private void warning(Token t, int code) {
+  this.warning++;
+  if(t==null) this.errorMsg += "Warning : ";
+  else this.errorMsg += "Warning at line "+t.beginLine+" : ";
+  this.errorMsg += XflException.getMessage(code)+eol;
+ }
+}
+
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+ //		Descripcion de la sintaxis de XFL3		//
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+PARSER_END(XflParser)
+
+SKIP :
+{
+  " "
+| "\r" 
+| "\n" 
+| "\t"
+| <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+TOKEN : /* palabras clave */
+{
+  <IMPORT: "import">
+| <OPERATORSET: "operatorset">
+| <TYPE: "type">
+| <EXTENDS: "extends">
+| <RULEBASE: "rulebase">
+| <USING: "using">
+| <IF: "if">
+| <SYSTEM: "system">
+}
+
+TOKEN: /* operadores */
+{
+  <AND: "&">
+| <OR: "|">
+| <NOT: "!">
+| <VERY: "+">
+| <MOREORLESS: "~">
+| <SLIGHTLY: "%">
+| <IS: "==">
+| <ISNOT: "!=">
+| <GREATEROREQUAL: ">=">
+| <SMALLEROREQUAL: "<=">
+| <GREATER: ">">
+| <SMALLER: "<">
+| <APPROXEQUAL: "~=">
+| <VERYEQUAL: "+=">
+| <SLIGHTLYEQUAL: "%=">
+| <ASIGN: "=">
+| <THEN: "->">
+}
+
+TOKEN: /* identificadores */
+{
+  <ID : ["a"-"z","A"-"Z","_"] (["a"-"z","A"-"Z","0"-"9","_"])* >
+| <OPERATOR: <ID> "." <ID> >
+}
+
+TOKEN: /* numeros */
+{
+  <NUMBER : <FLOAT>(["e","E"](["+","-"])?<INTEGER>)? >
+| <#INTEGER: ( ["0"-"9"] )+ >
+| <#FLOAT: ("-")? <INTEGER> | ("-")? <INTEGER>"."<INTEGER> | "."<INTEGER> >
+}
+
+void system() :
+{
+	end = false;
+}
+{
+(tryImportXflPackage() )*
+	{
+	 newImported(null,"xfl");
+	}
+ tryDefinitions()
+}
+
+void tryImportXflPackage() :
+{}
+{
+ try { importXflPackage() }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void importXflPackage() :
+{
+	Token tid;
+}
+{
+  <IMPORT> tid = <ID> ";" 
+	{
+	 newImported(tid, tid.image);
+	}
+}
+
+void definition() :
+{
+}
+{
+   tryOperatorset()
+ | tryType()
+ | tryRulebase() 
+ | trySystemModule()
+ | <EOF> { end = true; }
+}
+
+void tryOperatorset() :
+{}
+{
+ try { operatorset() }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void operatorset() :
+{
+	Token tid;
+	Operatorset newop;
+}
+{
+ <OPERATORSET> tid = <ID> 
+	{
+	 newop = newOperatorset(tid);
+	}
+ "{" ( tryOperator(newop) )* "}"
+}
+
+void tryOperator(Operatorset op) :
+{}
+{
+ try { operator(op) }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+
+void operator(Operatorset op) :
+{
+	Token top;
+	Token tname;
+	double param[];
+}
+{
+ top=<ID> ( tname=<OPERATOR> | tname=<ID> ) param=tryParameters() ";"
+	{
+	 newOperator(op,top,tname,param);
+	}
+}
+
+double[] tryParameters() :
+{
+	double param[];
+}
+{
+ try { param=parameters() {return param;} }
+ catch (ParseException e) { exception(e); skipto(")"); return new double[0]; }
+ catch (TokenMgrError e) { exception(e); skipto(")"); return new double[0];}
+}
+
+double[] parameters() :
+{
+	Token tn[] = new Token[25];
+	int i=0;
+}
+{
+  "(" ( tn[i]=<NUMBER> {i++;} ( "," tn[i]=<NUMBER> {i++;})* )? ")"
+	{
+	 return newParameters(tn,i);
+	}
+}
+
+void tryType() :
+{}
+{
+ try { type() }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void type() :
+{
+	Token tid;
+	Token tp = null;
+	Universe u = null;
+	Type newtype;
+}
+{
+ <TYPE> tid=<ID> ( u=universe() | <EXTENDS> tp=<ID>)?
+	{
+	 newtype = newType(tid,tp,u);
+	}
+ "{" ( tryMemFunc(newtype) )* "}"
+}
+
+Universe tryUniverse() :
+{
+	Universe u = null;
+}
+{
+ try { u=universe() {return u;} }
+ catch (ParseException e) { exception(e); skipto("]"); return u; }
+ catch (TokenMgrError e) { exception(e); skipto("]"); return u; }
+}
+
+Universe universe():
+{
+	Token tmin;
+	Token tmax;
+	Token tcard=null;
+}
+{
+ "[" tmin=<NUMBER> "," tmax=<NUMBER> ( ";" tcard=<NUMBER>)? "]"
+	{
+	 return newUniverse(tmin,tmax,tcard);
+	}
+}
+
+void tryMemFunc(Type type) :
+{}
+{
+ try { memfunc(type) }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void memfunc(Type type) :
+{
+	Token tmf;
+	Token tname;
+	double param[];
+}
+{
+ tname=<ID> (tmf=<OPERATOR> | tmf=<ID> ) param=tryParameters() ";"
+	{
+	 newMemFunc(type,tname,tmf,param);
+	}
+}
+
+void tryRulebase() :
+{}
+{
+ try { rulebase() }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void rulebase() :
+{
+	Token tmod;
+	Token top;
+	Rulebase newmod;
+}
+{
+ <RULEBASE> tmod=<ID> { newmod = newRulebase(tmod); }
+ tryVariables(newmod)  tryUsingOp(newmod)
+ (rule(newmod))+ "}"
+}
+
+void tryVariables(Rulebase mod) :
+{}
+{
+ try { variables(mod) }
+ catch (ParseException e) { exception(e); skipto(")"); }
+ catch (TokenMgrError e) { exception(e); skipto(")"); }
+}
+
+void variables(Rulebase mod):
+{
+}
+{
+ "(" (variable(mod,true) ("," variable(mod, true))* )? 
+ ":" (variable(mod,false) ("," variable(mod, false))* )? ")"
+}
+
+void variable(Rulebase mod, boolean input):
+{
+	Token ttype;
+	Token tvar;
+}
+{
+ ttype=<ID> tvar=<ID>
+	{
+	 newVariable(mod,ttype,tvar,input);
+	}
+}
+
+void tryUsingOp(Rulebase mod) :
+{}
+{
+ try { usingop(mod) }
+ catch (ParseException e) { exception(e); skipto("{"); }
+ catch (TokenMgrError e) { exception(e); skipto("{"); }
+}
+
+void usingop(Rulebase mod) :
+{
+	Token top = null;
+}
+{
+ (<USING> top=<ID>)? "{"
+	{
+	 newUsingOp(mod,top);
+	}
+}
+
+void tryRule(Rulebase mod) :
+{}
+{
+ try { rule(mod) }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void rule(Rulebase mod):
+{
+	Rule rule;
+	Token tdg = null;
+}
+{
+ ("["tdg = <NUMBER>"]")?
+ <IF> rule = tryAntecedent(mod, tdg) <THEN> tryConclusions(mod, rule) 
+}
+
+Rule tryAntecedent(Rulebase mod, Token tdg) :
+{
+	Rule rule;
+}
+{
+ try { rule = antecedent(mod,tdg) { return rule; } }
+ catch (ParseException e) { exception(e); skipto(")"); return null; }
+ catch (TokenMgrError e) { exception(e); skipto(")"); return null; }
+}
+
+Rule antecedent(Rulebase mod, Token tdg) :
+{
+	Relation rel;
+}
+{
+ "(" rel = relation(mod) ")"
+	{
+	 return newRule(rel,mod,tdg);
+	}
+}
+
+Relation relation(Rulebase mod):
+{
+	Relation rel;
+	Relation lrel;
+	Relation rrel;
+}
+{
+ rel = unary(mod) 	 
+(
+ <AND> rrel = unary(mod)
+	{
+	 lrel = rel;
+	 rel = Relation.create(Relation.AND,lrel,rrel,null,null,mod);
+	}
+| <OR> rrel = unary(mod)
+	{
+	 lrel = rel;
+	 rel = Relation.create(Relation.OR,lrel,rrel,null,null,mod);
+	}
+)*
+	{
+	 return rel;
+	}
+}
+
+Relation unary(Rulebase mod):
+{
+	Relation prop;
+}
+{ 
+  prop = proposition(mod)
+	{
+	 return prop;
+	}
+| <NOT> prop = proposition(mod) 
+	{
+	 return Relation.create(Relation.NOT,prop,null,null,null,mod);
+	}
+| <VERY> prop = proposition(mod)
+	{
+	 return Relation.create(Relation.VERY,prop,null,null,null,mod);
+	}
+| <MOREORLESS> prop = proposition(mod)
+	{	
+	 return Relation.create(Relation.MoL,prop,null,null,null,mod);
+	}
+| <SLIGHTLY> prop = proposition(mod)
+	{
+	 return Relation.create(Relation.SLIGHTLY,prop,null,null,null,mod);
+	}
+}
+
+Relation proposition(Rulebase mod):
+{
+	Token tvar;
+	Token tmf;
+	Relation prop;
+	int code;
+}
+{
+ ( prop = simpleProposition(mod) | prop = tryCompound(mod) )
+	{
+	 return prop;
+	}
+}
+
+Relation simpleProposition(Rulebase mod) :
+{
+        Token tvar;
+        Token tmf;
+        int code;
+}
+{
+ tvar=<ID> code=comparative() tmf=<ID>
+        {
+         return newProposition(tvar,tmf,mod,code);
+        }
+}
+
+int comparative() :
+{
+}
+{
+   <IS> { return 0; }
+ | <ISNOT> { return 1;}
+ | <GREATEROREQUAL> { return 2;}
+ | <SMALLEROREQUAL> { return 3;}
+ | <GREATER> { return 4;}
+ | <SMALLER> { return 5;}
+ | <APPROXEQUAL> { return 6;}
+ | <VERYEQUAL> { return 7;}
+ | <SLIGHTLYEQUAL> { return 8;}
+}
+
+Relation tryCompound(Rulebase mod) :
+{
+	Relation prop;
+}
+{
+ try { prop = compoundProposition(mod) { return prop; } }
+ catch (ParseException e) { exception(e); skipto(")"); return null; }
+ catch (TokenMgrError e) { exception(e); skipto(")"); return null; }
+}
+
+
+Relation compoundProposition(Rulebase mod) :
+{
+	Relation prop;
+}
+{
+ "(" prop = relation(mod) ")"
+	{
+	 return prop;
+	}
+}
+
+void tryConclusions(Rulebase mod, Rule rule) :
+{}
+{
+ try { conclusions(mod,rule) }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void conclusions(Rulebase mod, Rule rule):
+{
+	Token tvar;
+	Token tmf;
+}
+{
+ conclusion(mod,rule) ( "," conclusion(mod,rule) )* ";"
+}
+
+void conclusion(Rulebase mod, Rule rule):
+{
+        Token tvar;
+        Token tmf;
+}
+{
+ tvar = <ID> <ASIGN> tmf = <ID>
+        {
+         newConclusion(tvar,tmf,mod,rule);
+        }
+}
+
+void trySystemModule() :
+{}
+{
+ try { systemmod() }
+ catch (ParseException e) { exception(e); skipto("}"); }
+ catch (TokenMgrError e) { exception(e); skipto("}"); }
+}
+
+void systemmod() :
+{
+	Token t;
+}
+{
+ t = <SYSTEM>
+	{
+	 newSystemModule(t);
+	}
+ "(" (systemvar(true) ("," systemvar(true))*)? 
+ ":" (systemvar(false) ("," systemvar(false))*)? ")"
+ "{" ( tryCall() )* "}"
+}
+
+void systemvar(boolean input):
+{
+	Token ttype;
+        Token tid;
+}
+{
+ ttype=<ID> tid=<ID>
+        {
+         newVariable(ttype,tid,input);
+        }
+}
+
+void tryCall() :
+{}
+{
+ try { call() }
+ catch (ParseException e) { exception(e); skipto(";"); }
+ catch (TokenMgrError e) { exception(e); skipto(";"); }
+}
+
+void call() :
+{
+        Token tmod;
+        Token tvar;
+        Vector iv = new Vector();
+        Vector ov = new Vector();
+}
+{
+ tmod = <ID>
+ "(" tvar = <ID> { iv.add(tvar.image); }
+     ("," tvar = <ID> { iv.add(tvar.image); } )*
+ ":" tvar = <ID> { ov.add(tvar.image); }
+     ("," tvar = <ID> { ov.add(tvar.image); } )*
+ ")" ";" { newCall(tmod,iv,ov); }
+}
+
+JAVACODE
+void tryDefinitions() {
+ while(!end) {
+  try { definition(); }
+  catch (ParseException e) { exception(e); skipto("}"); }
+  catch (TokenMgrError e) { exception(e); end = true; }
+ }
+}
+
+JAVACODE
+void skipto(String st) {
+ Token t;
+ do { t = getNextToken();}
+ while(t.kind != EOF && !t.image.equals(st));
+}
+
