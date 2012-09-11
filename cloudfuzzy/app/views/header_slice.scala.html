@@ -7,7 +7,7 @@
             <a href="#">FAQs</a>
             <div id="container_login">
                 @if(session.get("email") != null){
-                    <a id="user" href="@routes.Application.index">Usuario</a>
+                    <a id="user" href="@routes.Application.index">@session.get("email")</a>
                     <a id="logout" href="@routes.Authentication.logout" >Logout</a>
                 } else{
                     <a id="login" href="@routes.Authentication.login" onclick="return false;">Login</a>
