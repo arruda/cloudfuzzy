@@ -70,9 +70,14 @@ public class Systems extends Controller {
   * Detail a system, and present the other options that the user may want to use, like adding new type and stuf.
   */
   public static Result detail(Long id) {
+      if(Secured.isOwnerOf(id)){
         return ok(
                 detail.render(FuzzySystem.find.byId(id))
                 ); 
+
+      }else{        
+            return forbidden();
+      }
   }
 
   //=================== SYSTEM ===================//

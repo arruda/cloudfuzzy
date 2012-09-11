@@ -99,8 +99,13 @@ public class FuzzySystem extends Model {
    * Check if a user is the owner of this FuzzySystem
    */
   public static boolean isOwner(Long system, String user) {
-      return find.where()
-          .eq("fuzzy_system.user.email", user)
+
+    // return FuzzySystem.find.where()
+    //       .eq("fuzzy_system.user.email",user)
+    //       .findList();
+
+      return FuzzySystem.find.where()
+          .eq("user.email", user)
           .eq("id", system)
           .findRowCount() > 0;
   }
