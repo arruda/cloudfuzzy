@@ -25,9 +25,11 @@ GET     /logout                             controllers.Authentication.logout()
 #####Fuzzy Systems
 
 ##System
-GET     /system/list            controllers.Systems.list()
-GET     /system/new            controllers.Systems.prepareCreate()
-POST /system/new                controllers.Systems.create()
+GET     /system/list                controllers.Systems.list()
+GET     /system/new                 controllers.Systems.prepareCreate()
+POST    /system/new                 controllers.Systems.create()
+GET     /system/:id_sys             controllers.Systems.detail(id_sys: Long)
+POST    /system/new                 controllers.Systems.create()
 
 ##
 

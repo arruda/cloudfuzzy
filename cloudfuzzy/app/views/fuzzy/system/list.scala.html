@@ -8,7 +8,7 @@
         <ul>
             @for(fuzzySystem <- fuzzySystems) {
                 <li>
-                    <a href="#">@fuzzySystem.name</a>
+                    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>
                     
                     @***
                     @form(routes.Fuzzy.deleteSystem(fuzzySystem.id)) {

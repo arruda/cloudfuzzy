@@ -66,6 +66,15 @@ public class Systems extends Controller {
       }
   }
 
+  /**
+  * Detail a system, and present the other options that the user may want to use, like adding new type and stuf.
+  */
+  public static Result detail(Long id) {
+        return ok(
+                detail.render(FuzzySystem.find.byId(id))
+                ); 
+  }
+
   //=================== SYSTEM ===================//
   
 //   public static Result newSystem() {
