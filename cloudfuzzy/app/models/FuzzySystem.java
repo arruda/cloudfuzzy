@@ -44,6 +44,25 @@ public class FuzzySystem extends Model {
     return find.all();
   }  
 
+  /**
+  * Returns all fuzzySystems for a given user email.
+  */
+  public static List<FuzzySystem> listFuzzySystemsByUser(String user) {
+
+    return FuzzySystem.find.where()
+          .eq("user.email",user)
+          .findList();
+  }  
+
+
+    // /**
+    //  * Retrieve project for user
+    //  */
+    // public static List<Project> findInvolving(String user) {
+    //     return find.where()
+    //         .eq("members.email", user)
+    //         .findList();
+    // }
 
   /**
    * Creates a Fuzzy System with a default content for the file, using the filename.
@@ -75,6 +94,16 @@ public class FuzzySystem extends Model {
 	  sys.delete();
   }
   
+    
+  /**
+   * Check if a user is the owner of this FuzzySystem
+   */
+  public static boolean isOwner(Long system, String user) {
+      return find.where()
+          .eq("fuzzy_system.user.email", user)
+          .eq("id", system)
+          .findRowCount() > 0;
+  }
   
   ////////// Queries END //////////
 

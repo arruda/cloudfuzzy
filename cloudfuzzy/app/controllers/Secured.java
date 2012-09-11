@@ -28,12 +28,12 @@ public class Secured extends Security.Authenticator {
     	return true;
     }
     
-    public static boolean isOwnerOf(Long task) {
-//        return Task.isOwner(
-//            task,
-//            Context.current().request().username()
-//        );
-    	return true;
+    public static boolean isOwnerOf(Long system) {
+       return FuzzySystem.isOwner(
+           system,
+           Context.current().request().username()
+       );
+    	// return true;
     }
     
 }

@@ -26,6 +26,8 @@ GET     /logout                             controllers.Authentication.logout()
 
 ##System
 GET     /system/list            controllers.Systems.list()
+GET     /system/new            controllers.Systems.prepareCreate()
+POST /system/new                controllers.Systems.create()
 
 ##
 

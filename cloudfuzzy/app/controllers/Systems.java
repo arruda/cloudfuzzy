@@ -33,19 +33,39 @@ public class Systems extends Controller {
   */  
   public static Result list() {
       return ok(
-               list.render(FuzzySystem.all())
+               list.render(FuzzySystem.listFuzzySystemsByUser(request().username()))
               );
   }
 
   /**
-  * Prepares a new Fuzzy System form.
+  * Prepares to create a new Fuzzy System form.
   */  
-  public static Result prepareSystem() {
+  public static Result prepareCreate() {
       return ok(
-               list.render(FuzzySystem.all())
+               prepareCreate.render(fuzzySystemForm)
               );
   }
   
+  /**
+  * Creates the given fuzzy system
+  */
+  public static Result create() {
+      Form<FuzzySystem> filledForm = fuzzySystemForm.bindFromRequest();
+      if(filledForm.hasErrors()) {
+        return badRequest(
+                prepareCreate.render(filledForm)
+        );
+      } else {
+          System.out.println("good");
+         FuzzySystem newSys = filledForm.get();
+         newSys.fileName = newSys.name+".xfl";
+         newSys.user = User.findByEmail(request().username());
+         FuzzySystem.create(filledForm.get());
+
+            return redirect(routes.Systems.list()); 
+      }
+  }
+
   //=================== SYSTEM ===================//
   
 //   public static Result newSystem() {
