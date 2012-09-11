@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String)(menu: Html)(content: Html)
 
 @***
 @cloudFuzzyDesc = "CloudFuzzy - The Online Fuzzy Toolbox Solution."
@@ -64,9 +64,7 @@
 @h5bp.index("CloudFuzzy - " + title)("CloudFuzzy - The Online Fuzzy Toolbox Solution.")(cssExtra)(jsExtra)(jquery_docready)(jquery_winload)(header_slice()){
     <nav id='menu' >
         <ul>
-            <li ><a class='left_menu' href="/">Home</a></li>
-            <li><a href="/about/">About</a></li>
-            <li ><a class='right_menu' href="/blog/">Blog</a></li>
+            @menu
         </ul>
     </nav> 
 

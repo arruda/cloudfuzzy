@@ -28,10 +28,21 @@ public class Systems extends Controller {
   // static Form<Type> editTypeForm = form(Type.class);
   // static Form<MF> editMFForm = form(MF.class);
   
-    
+  /**
+  * List all the fuzzy Systems of a user.
+  */  
   public static Result list() {
       return ok(
-               list.render(FuzzySystem.all(),fuzzySystemForm)
+               list.render(FuzzySystem.all())
+              );
+  }
+
+  /**
+  * Prepares a new Fuzzy System form.
+  */  
+  public static Result prepareSystem() {
+      return ok(
+               list.render(FuzzySystem.all())
               );
   }
   

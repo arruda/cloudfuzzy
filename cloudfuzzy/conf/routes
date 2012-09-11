@@ -19,7 +19,6 @@ GET     /login                              controllers.Authentication.login()
 POST    /login                              controllers.Authentication.authenticate()
 GET     /logout                             controllers.Authentication.logout()
 
-GET     /login_bla                              controllers.Authentication.login()
 
 
 

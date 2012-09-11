@@ -3,7 +3,7 @@
 @import helper._
 
   
-@main("Register") {
+@main("Register")(menu_default()) {
 
     @helper.form(action = routes.Authentication.submit, 'id -> "registerForm") {
         
