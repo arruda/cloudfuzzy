@@ -3,21 +3,22 @@
 @import helper._
 
 @fuzzy.system.system_template{   
-    <div class="sub_content sub_limited">
-        <h3 class='sub_content_header'>Your Fuzzy Systems: @fuzzySystems.size() system(s)</h3> 
-        <ul>
-            @for(fuzzySystem <- fuzzySystems) {
-                <li>
-                    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>
-                    
-                    @***
-                    @form(routes.Fuzzy.deleteSystem(fuzzySystem.id)) {
-                        <input type="submit" value="Delete">
-                    }
-                    ***@
-                </li>
-            }
-        </ul>
-    </div>
+    <p>Here are presented the Fuzzy Systems created by you so far.</br>
+    You can detail, modify and delete any of then, or create a new one.
+    </p>
+    @for(fuzzySystem <- fuzzySystems) {
+        <div class="sub_content sub_limited">
+            <h3 class='sub_content_header'>@fuzzySystem.name</h3> 
+
+                        <a href="@routes.Systems.detail(fuzzySystem.id)">Detail</a>
+                        <a href="@routes.Systems.detail(fuzzySystem.id)">Delete</a>
+                        
+                        @***
+                        @form(routes.Fuzzy.deleteSystem(fuzzySystem.id)) {
+                            <input type="submit" value="Delete">
+                        }
+                        ***@
+        </div>
+    }
     
 }
