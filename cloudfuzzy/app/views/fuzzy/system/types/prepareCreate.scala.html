@@ -1,0 +1,78 @@
+@(systemId: Long, newTypeForm: Form[forms.Type])
+
+@import helper._
+
+@fuzzy.system.system_template{   
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>New Fuzzy Type</h3> 
+            @helper.form(action = routes.Types.prepareCreate(systemId), 'id -> "newTypeForm") {
+                
+                <fieldset>
+                    <legend>General Information for the new Type</legend>
+                    
+                    @inputText(
+                        newTypeForm("name"), 
+                        '_label -> "Name", 
+                        '_help -> "The name of this type."
+                    )                
+
+                    
+                    
+                    @inputRadioGroup(
+                      newTypeForm("type"),
+                      options = options(
+                            "0"->"Equi-spaced Triangles",
+                            "1"->"Triangles with 'straps'",
+                            "2"->"Equi-spaced Bells",
+                            "3"->"Bells with 'straps'",
+                            "4"->"Equi-spaced Trapezoids",
+                            "5"->"Equi-spaced Singletons",
+                            "6"->"Centered Bells",
+                            "7"->"Centered Singletons",
+                            "8"->"Blank",
+                            "9"->"Extends"
+                            ),
+                      '_label -> "Member Functions Type",
+                      '_error -> newTypeForm("type").error.map(_.withMessage("select Type"))
+                    )
+
+                </fieldset>           
+                
+                <fieldset>
+                    <legend>Universe</legend>
+                    @inputText(
+                        newTypeForm("min"), 
+                        '_label -> "Min", 
+                        '_help -> "Minimun of the Universe."
+                    )      
+                    @inputText(
+                        newTypeForm("max"), 
+                        '_label -> "Max", 
+                        '_help -> "Maximun of the Universe."
+                    )      
+                
+                    @inputText(
+                        newTypeForm("card"), 
+                        '_label -> "Cardinality", 
+                        '_help -> "Cardinality of the Universe."
+                    )      
+                
+                </fieldset>         
+                <fieldset>
+                    <legend>Membership Functions</legend>
+                    @inputText(
+                        newTypeForm("numMFs"), 
+                        '_label -> "No. Membership Function", 
+                        '_help -> "The amount of Membership functions."
+                    )      
+                </fieldset>             
+                
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Create">
+                </div>
+                
+            }
+ 
+    </div>
+    
+}

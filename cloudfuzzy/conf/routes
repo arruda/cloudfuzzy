@@ -31,7 +31,8 @@ POST    /system/new                 controllers.Systems.create()
 GET     /system/:id_sys             controllers.Systems.detail(id_sys: Long)
 POST    /system/:id_sys/del         controllers.Systems.delete(id_sys: Long)
 
-##
+##Type
+GET     /system/:id_sys/type/new                 controllers.Types.prepareCreate(id_sys: Long)
 
 
 #JS Routing
