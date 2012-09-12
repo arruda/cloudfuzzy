@@ -6,6 +6,7 @@
 create table fuzzy_system (
   id                        bigint not null,
   name                      varchar(255),
+  description               varchar(255),
   file_name                 varchar(255),
   file_path                 varchar(255),
   user_email                varchar(255),

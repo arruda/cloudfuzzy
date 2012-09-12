@@ -29,7 +29,7 @@ GET     /system/list                controllers.Systems.list()
 GET     /system/new                 controllers.Systems.prepareCreate()
 POST    /system/new                 controllers.Systems.create()
 GET     /system/:id_sys             controllers.Systems.detail(id_sys: Long)
-POST    /system/new                 controllers.Systems.create()
+POST    /system/:id_sys/del         controllers.Systems.delete(id_sys: Long)
 
 ##
 

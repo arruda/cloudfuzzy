@@ -21,6 +21,9 @@ public class FuzzySystem extends Model {
   @Required
   public String name;
 
+  @Required
+  public String description;
+
   public String fileName;
   
   public String filePath;

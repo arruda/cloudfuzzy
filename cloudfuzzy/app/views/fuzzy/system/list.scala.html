@@ -8,11 +8,15 @@
     </p>
     @for(fuzzySystem <- fuzzySystems) {
         <div class="sub_content sub_limited">
-            <h3 class='sub_content_header'>@fuzzySystem.name</h3> 
+            <h3 class='sub_content_header'>
+                <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>
+            </h3> 
 
-                        <a href="@routes.Systems.detail(fuzzySystem.id)">Detail</a>
-                        <a href="@routes.Systems.detail(fuzzySystem.id)">Delete</a>
-                        
+                        <p>@fuzzySystem.description</p>
+                        @form(routes.Systems.delete(fuzzySystem.id)) {
+                            <input type="submit" value="Delete">
+                        }
+
                         @***
                         @form(routes.Fuzzy.deleteSystem(fuzzySystem.id)) {
                             <input type="submit" value="Delete">

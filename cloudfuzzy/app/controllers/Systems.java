@@ -80,6 +80,24 @@ public class Systems extends Controller {
       }
   }
 
+
+  /**
+  * Deletes a fuzzy system
+  */
+  public static Result delete(Long id) {
+      if(Secured.isOwnerOf(id)){
+        FuzzySystem.delete(id);
+
+        return redirect(
+                routes.Systems.list()
+                ); 
+
+      }else{        
+            return forbidden();
+      }
+
+  }
+
   //=================== SYSTEM ===================//
   
 //   public static Result newSystem() {
