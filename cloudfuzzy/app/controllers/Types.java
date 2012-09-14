@@ -39,51 +39,54 @@ public class Types extends Controller {
               );
   }
 
-  // public static Result newType(Long systemId) {
-  //     Form<Type> filledForm = newTypeForm.bindFromRequest();
+  /**
+  * Creates a new Fuzzy type with some parameters.
+  */
+  public static Result create(Long systemId) {
+      Form<Type> filledForm = newTypeForm.bindFromRequest();
 
-  //     // Check the numMFs
-  //     if(!filledForm.field("type").valueOr("").isEmpty()) {
-  //         int type = Integer.valueOf(filledForm.field("type").valueOr(""));
-  //         //if needed the number of mfs
-  //         if(type != 8 || type != 9) {
-  //             if(filledForm.field("numMFs").valueOr("").isEmpty()){
-  //                 filledForm.reject("numMFs", "Need the number of MFs");                  
-  //             }
-  //             else{
-  //                 int numMFs = Integer.valueOf(filledForm.field("numMFs").valueOr("")); 
-  //                 if(numMFs<0){
-  //                     filledForm.reject("numMFs", "Need a positive number");    
+      // Check the numMFs
+      if(!filledForm.field("type").valueOr("").isEmpty()) {
+          int type = Integer.valueOf(filledForm.field("type").valueOr(""));
+          //if needed the number of mfs
+          if(type != 8 || type != 9) {
+              if(filledForm.field("numMFs").valueOr("").isEmpty()){
+                  filledForm.reject("numMFs", "Need the number of MFs");                  
+              }
+              else{
+                  int numMFs = Integer.valueOf(filledForm.field("numMFs").valueOr("")); 
+                  if(numMFs<0){
+                      filledForm.reject("numMFs", "Need a positive number");    
                       
-  //                 }
-  //             }
+                  }
+              }
               
-  //         }
-  //     }
-  //     FuzzySystem sys = FuzzySystem.find.byId(systemId);
-  //     Specification spec=null;
-  //     try{
-  //         spec = sys.loadSpecification();             
-  //     }
-  //     catch(Exception e){
-  //         e.printStackTrace();
-  //     }
+          }
+      }
+      FuzzySystem sys = FuzzySystem.find.byId(systemId);
+      Specification spec=null;
+      try{
+          spec = sys.loadSpecification();             
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }
       
-  //     //checks if the type exists with this name
-  //     if(spec.searchType(filledForm.field("name").valueOr("")) != null){
-  //         filledForm.reject("name", "Already exist a type with this name");  
-  //     }
+      //checks if the type exists with this name
+      if(spec.searchType(filledForm.field("name").valueOr("")) != null){
+          filledForm.reject("name", "Already exist a type with this name");  
+      }
       
-  //     if(filledForm.hasErrors()) {
-  //       return badRequest(
-  //               views.html.fuzzy.systemDetail.render(FuzzySystem.find.byId(systemId),filledForm)
-  //       );
-  //     } else {
-  //         Type newType = filledForm.get();
-  //         Type.create(newType, spec);
-  //        return redirect(routes.Fuzzy.list()); 
-  //     }
-  // }
+      if(filledForm.hasErrors()) {
+        return badRequest(
+          prepareCreate.render(systemId,filledForm)
+        );
+      } else {
+          Type newType = filledForm.get();
+          Type.create(newType, spec);
+         return redirect(routes.Systems.detail(systemId)); 
+      }
+  }
 
 //   //=================== Type (Linguistic Variabel Type) ===================//
 

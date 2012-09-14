@@ -5,7 +5,7 @@
 @fuzzy.system.system_template{   
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Fuzzy Type</h3> 
-            @helper.form(action = routes.Types.prepareCreate(systemId), 'id -> "newTypeForm") {
+            @helper.form(action = routes.Types.create(systemId), 'id -> "newTypeForm") {
                 
                 <fieldset>
                     <legend>General Information for the new Type</legend>

@@ -12,10 +12,13 @@
                         @spec.getTypes()(i).getName()
                 </a></li>
              }
+             @if(spec.getTypes().length <= 0){
+                <p>There are no Types yet.</br>
+                Create a <a href="@routes.Types.prepareCreate(fuzzySystem.id)">new one!</a></p>
+             }
              
         }
         
-        #link
     </div>
     
 }
