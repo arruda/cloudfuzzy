@@ -88,6 +88,12 @@ public class Type {
     	type.card = tp.getUniverse().card();
     	
     	type.numMFs = tp.getMembershipFunctions().length;
+
+        type.MFs = new ArrayList<MF>();
+        for(xfuzzy.lang.ParamMemFunc pmf : tp.getAllMembershipFunctions()){
+            MF newMF = MF.createFromFuzzyMF(pmf);
+            type.MFs.add(newMF);
+        }
 		
     			
     	return type;

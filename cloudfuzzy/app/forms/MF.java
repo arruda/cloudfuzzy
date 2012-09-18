@@ -36,6 +36,9 @@ public class MF{
     	return this.pkg + "_mf_" + this.name; 
     }
 
+    /**
+    * Creates a MF using a XFuzzy ParamMemFunc as base
+    */
     public static MF createFromFuzzyMF(xfuzzy.lang.ParamMemFunc pmf){
     	MF mf = new MF();
     	

@@ -88,6 +88,29 @@ public class Types extends Controller {
       }
   }
 
+
+  /**
+  * Detail a given type, the id_tp is nothing related to DB model.
+  * Its the position of the type in the spec.types array.
+  */
+  public static Result detail(Long id_sys, Integer id_tp) {
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      xfuzzy.lang.Specification spec = sys.getSpecification();
+      xfuzzy.lang.Type [] tps = spec.getTypes();
+
+      
+      if(tps.length <= id_tp || id_tp < 0){
+            return badRequest();
+      }
+      
+      Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
+      
+    return ok(
+            detail.render(sys,tp)
+            ); 
+  }
+
+
 //   //=================== Type (Linguistic Variabel Type) ===================//
 
 //   public static Result newType(Long systemId) {
