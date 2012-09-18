@@ -1,8 +1,8 @@
-@(fuzzySystem : FuzzySystem)
+@(fuzzySystem : FuzzySystem, tp : forms.Type)
 @***
 Represents the menu for a detailed fuzzy type view.
 ***@
 
 <li ><a class='left_menu' href="@routes.Systems.detail(fuzzySystem.id)">System</a></li>
 <li><a href="#">Something</a></li>
-<li ><a class='right_menu' href="#">Other</a></li>
+<li ><a class='right_menu' href="@routes.Types.delete(fuzzySystem.id,tp.id)">Delete</a></li>

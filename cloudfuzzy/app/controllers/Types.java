@@ -110,6 +110,39 @@ public class Types extends Controller {
             ); 
   }
 
+  /**
+  * Deletes a given type, the id_tp is nothing related to DB model.
+  * Its the position of the type in the spec.types array.
+  */
+  public static Result delete(Long id_sys, Integer id_tp) {
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      xfuzzy.lang.Specification spec = sys.getSpecification();
+      xfuzzy.lang.Type [] tps = spec.getTypes();
+
+      
+      System.out.println("aqui"); 
+      if(tps.length <= id_tp || id_tp < 0){
+            return badRequest();
+      }
+      
+      xfuzzy.lang.Type tp = tps[id_tp];
+    // if(selection == null || selection.isEditing()) return;
+
+    // Type selection = (Type) typelist.getSelectedValue();
+    if(tp.isLinked()) {
+        String msg = "Cannot remove type \""+tp.getName()+"\".";
+        msg+="\nSystem is using this type.";
+        System.out.println(msg); 
+    }
+    spec.removeType(tp);
+    spec.setModified(true);
+    spec.save();      
+
+
+    return redirect(routes.Systems.detail(id_sys)); 
+  }
+
+
 
 //   //=================== Type (Linguistic Variabel Type) ===================//
 
