@@ -25,7 +25,7 @@ import xfuzzy.lang.XflParser;
 public class Types extends Controller {
   
   static Form<Type> newTypeForm = form(Type.class);
-  // static Form<Type> editTypeForm = form(Type.class);
+  static Form<Type> editTypeForm = form(Type.class);
   // static Form<MF> editMFForm = form(MF.class);
   
 
@@ -133,6 +133,7 @@ public class Types extends Controller {
         String msg = "Cannot remove type \""+tp.getName()+"\".";
         msg+="\nSystem is using this type.";
         System.out.println(msg); 
+        return badRequest();  
     }
     spec.removeType(tp);
     spec.setModified(true);
@@ -143,6 +144,49 @@ public class Types extends Controller {
   }
 
 
+  /**
+  *Edit the given type.
+  */
+  public static Result edit(Long id_sys, Integer id_tp) {
+      Form<Type> filledForm = editTypeForm.bindFromRequest();
+
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      Specification spec=null;
+      try{
+          spec = sys.loadSpecification();             
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }
+      
+
+      //the types for this modeling
+      xfuzzy.lang.Type [] tps = spec.getTypes();
+
+      //ensures that the required type id is within the bounds tps array
+      if(tps.length <= id_tp || id_tp < 0){
+            return badRequest();
+      }
+      
+      //checks if the type exists with this name
+      //considering that need to ignore the original type been edited.
+      xfuzzy.lang.Type search_tp = spec.searchType(filledForm.field("name").valueOr(""));
+      if(search_tp != null && search_tp != tps[id_tp]){
+          filledForm.reject("name", "Already exist a type with this name");  
+      }
+
+      
+      if(filledForm.hasErrors()) {
+        return badRequest(
+                edit.render(id_sys, null,filledForm)
+        );
+      } else {
+
+          Type editedType = filledForm.get();
+          Type.edit(editedType,tps[id_tp], spec);
+         return redirect(routes.Fuzzy.detailSystem(id_sys)); 
+      }
+  }
 
 //   //=================== Type (Linguistic Variabel Type) ===================//
 
