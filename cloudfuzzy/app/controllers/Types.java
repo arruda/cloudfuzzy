@@ -145,10 +145,9 @@ public class Types extends Controller {
 
 
   /**
-  *Edit the given type.
+  *Prepare to Edit the given type.
   */
-  public static Result edit(Long id_sys, Integer id_tp) {
-      Form<Type> filledForm = editTypeForm.bindFromRequest();
+  public static Result prepareEdit(Long id_sys, Integer id_tp) {
 
       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
       Specification spec=null;
@@ -168,23 +167,74 @@ public class Types extends Controller {
             return badRequest();
       }
       
+
+      Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
+
+      editTypeForm = form(Type.class).fill(
+          tp
+      );
+
+
+
+      return ok(
+               edit.render(sys,editTypeForm)
+               // index.render()
+              );
+  }
+  /**
+  *Edit the given type.
+  */
+  public static Result edit(Long id_sys, Integer id_tp) {
+
+      Form<Type> filledForm = editTypeForm.bindFromRequest();
+
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      Specification spec=null;
+      try{
+          spec = sys.loadSpecification();             
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }
+      
+
+      //the types for this modeling
+      xfuzzy.lang.Type [] tps = spec.getTypes();
+
+      //ensures that the required type id is within the bounds tps array
+      if(tps.length <= id_tp || id_tp < 0){
+            return badRequest();
+      }
+      Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
+
+      
       //checks if the type exists with this name
       //considering that need to ignore the original type been edited.
       xfuzzy.lang.Type search_tp = spec.searchType(filledForm.field("name").valueOr(""));
       if(search_tp != null && search_tp != tps[id_tp]){
           filledForm.reject("name", "Already exist a type with this name");  
       }
-
+    
       
-      if(filledForm.hasErrors()) {
+      if(filledForm.field("name").errors().size() > 0 ||
+         filledForm.field("max").errors().size() > 0  ||
+         filledForm.field("min").errors().size() > 0  ||
+         filledForm.field("card").errors().size() > 0 ) {
         return badRequest(
-                edit.render(id_sys, null,filledForm)
+                edit.render(sys, filledForm)
         );
       } else {
 
-          Type editedType = filledForm.get();
-          Type.edit(editedType,tps[id_tp], spec);
-         return redirect(routes.Fuzzy.detailSystem(id_sys)); 
+          System.out.println("editou"); 
+          Type editedType = tp;
+          editedType.name = filledForm.field("name").value();
+          editedType.max = filledForm.field("max").value();
+          editedType.min = filledForm.field("min").value();
+          editedType.card = filledForm.field("card").value();
+
+
+          //Type.edit(editedType,tps[id_tp], spec);
+         return redirect( routes.Types.detail(id_sys,id_tp) ); 
       }
   }
 

@@ -1,0 +1,53 @@
+@(fuzzySystem : FuzzySystem, editTypeForm: Form[forms.Type])
+
+@import helper._
+
+@main(fuzzySystem.name + " -> " + editTypeForm("name").value)(fuzzy.system.types.menu(fuzzySystem,editTypeForm.get())){   
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>New Fuzzy Type</h3> 
+            @helper.form(action = routes.Types.edit(fuzzySystem.id, editTypeForm("id").value.toInt), 'id -> "newTypeForm") {
+
+                
+
+                <fieldset>
+                    <legend>General Information for the new Type</legend>
+                    
+                    @inputText(
+                        editTypeForm("name"), 
+                        '_label -> "Name", 
+                        '_help -> "The name of this type."
+                    )                
+
+
+                </fieldset>           
+                
+                <fieldset>
+                    <legend>Universe</legend>
+                    @inputText(
+                        editTypeForm("min"), 
+                        '_label -> "Min", 
+                        '_help -> "Minimun of the Universe."
+                    )      
+                    @inputText(
+                        editTypeForm("max"), 
+                        '_label -> "Max", 
+                        '_help -> "Maximun of the Universe."
+                    )      
+                
+                    @inputText(
+                        editTypeForm("card"), 
+                        '_label -> "Cardinality", 
+                        '_help -> "Cardinality of the Universe."
+                    )      
+                
+                </fieldset>         
+                
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Save">
+                </div>
+                
+            }
+ 
+    </div>
+    
+}
