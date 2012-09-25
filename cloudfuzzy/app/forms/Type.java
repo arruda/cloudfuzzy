@@ -16,6 +16,7 @@ import play.data.validation.*;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.Universe;
 import xfuzzy.lang.XflException;
+import xfuzzy.lang.ParamMemFunc;
 
 public class Type {
 	
@@ -100,21 +101,39 @@ public class Type {
     }
     
 
-    public static void edit(Type editedType, xfuzzy.lang.Type fuzzyType,  Specification spec){
-    	
+    public static void edit(Type editedType, xfuzzy.lang.Type fuzzyType,  Specification spec)
+        throws Exception{
+
     	//sets the new name, or keep the same if not changed.
     	fuzzyType.setName(editedType.name);
     	
-		  //changes the universe
-		  try {
-		  	  //need to check if this universe is valid.
-			  xfuzzy.lang.Universe ou = fuzzyType.getUniverse();
-			  ou.set(editedType.min,editedType.max,editedType.card);
+        xfuzzy.lang.Universe originalUniverse = fuzzyType.getUniverse();
+
+        //need to check if this universe is valid.
+	    //changes the universe
+	    try {
+  			  originalUniverse.set(editedType.min,editedType.max,editedType.card);
 		} catch (XflException e) {
 			e.printStackTrace();
 		}
 
+        //Change the MF's universe to use the new one
+        ParamMemFunc editedMFs[] = fuzzyType.getMembershipFunctions();
 
+        for(int i=0; i<editedMFs.length; i++){
+            //well... this 'u' lost here is the MF's universe...
+            editedMFs[i].u = originalUniverse;
+        } 
+
+
+        //set this new MF's in the fuzzyType
+        fuzzyType.setMembershipFunctions(editedMFs);
+
+          if(!fuzzyType.testUniverse(editedType.min,editedType.max,editedType.card)) {
+            throw new Exception("Universe conflicts with defined MFs");
+          }
+
+          //spec.exchange(fuzzyType,fuzzyType);
 		  spec.setModified(true);
 		  spec.save();		  
     }

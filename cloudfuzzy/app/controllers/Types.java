@@ -227,13 +227,25 @@ public class Types extends Controller {
 
           System.out.println("editou"); 
           Type editedType = tp;
+
+          System.out.println(filledForm.data()); 
+          //Type test = filledForm.get();
           editedType.name = filledForm.field("name").value();
-          editedType.max = filledForm.field("max").value();
-          editedType.min = filledForm.field("min").value();
-          editedType.card = filledForm.field("card").value();
+          editedType.max = Double.valueOf(filledForm.field("max").value());
+          editedType.min = Double.valueOf(filledForm.field("min").value());
+          editedType.card = Integer.valueOf(filledForm.field("card").value());
 
+          try{
+            Type.edit(editedType,tps[id_tp], spec);
+          }
+          catch(Exception e){
+            filledForm.reject(e.getMessage());  
 
-          //Type.edit(editedType,tps[id_tp], spec);
+            return badRequest(
+                    edit.render(sys, filledForm)
+            );
+          }
+          
          return redirect( routes.Types.detail(id_sys,id_tp) ); 
       }
   }
