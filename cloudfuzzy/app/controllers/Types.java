@@ -177,7 +177,7 @@ public class Types extends Controller {
 
 
       return ok(
-               edit.render(sys,editTypeForm)
+               edit.render(sys, tp,editTypeForm)
                // index.render()
               );
   }
@@ -220,8 +220,10 @@ public class Types extends Controller {
          filledForm.field("max").errors().size() > 0  ||
          filledForm.field("min").errors().size() > 0  ||
          filledForm.field("card").errors().size() > 0 ) {
+
+          System.out.println("id:"+filledForm.field("id").value()); 
         return badRequest(
-                edit.render(sys, filledForm)
+                edit.render(sys, tp,filledForm)
         );
       } else {
 
@@ -242,10 +244,10 @@ public class Types extends Controller {
             filledForm.reject(e.getMessage());  
 
             return badRequest(
-                    edit.render(sys, filledForm)
+                edit.render(sys, tp,filledForm)
             );
           }
-          
+
          return redirect( routes.Types.detail(id_sys,id_tp) ); 
       }
   }

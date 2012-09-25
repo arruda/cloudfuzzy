@@ -1,8 +1,8 @@
-@(fuzzySystem : FuzzySystem, tp : forms.Type)
+@(fuzzySystem : FuzzySystem, id_type : java.lang.Integer)
 @***
 Represents the menu for a detailed fuzzy type view.
 ***@
 
 <li ><a class='left_menu' href="@routes.Systems.detail(fuzzySystem.id)">System</a></li>
-<li><a href="@routes.Types.prepareEdit(fuzzySystem.id,tp.id)">Edit</a></li>
-<li ><a class='right_menu' href="@routes.Types.delete(fuzzySystem.id,tp.id)">Delete</a></li>
+<li><a href="@routes.Types.prepareEdit(fuzzySystem.id,id_type)">Edit</a></li>
+<li ><a class='right_menu' href="@routes.Types.delete(fuzzySystem.id,id_type)">Delete</a></li>

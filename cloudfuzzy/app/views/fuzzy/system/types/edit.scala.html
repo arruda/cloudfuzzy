@@ -1,13 +1,17 @@
-@(fuzzySystem : FuzzySystem, editTypeForm: Form[forms.Type])
+@(fuzzySystem : FuzzySystem, tp : forms.Type, editTypeForm: Form[forms.Type])
 
 @import helper._
 
-@main(fuzzySystem.name + " -> " + editTypeForm("name").value)(fuzzy.system.types.menu(fuzzySystem,editTypeForm.get())){   
+@main(fuzzySystem.name + " -> " + tp.name)(fuzzy.system.types.menu(fuzzySystem,tp.id)){   
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Fuzzy Type</h3> 
-            @helper.form(action = routes.Types.edit(fuzzySystem.id, editTypeForm("id").value.toInt), 'id -> "newTypeForm") {
+            @helper.form(action = routes.Types.edit(fuzzySystem.id, tp.id), 'id -> "editTypeForm") {
 
-                
+                @if(editTypeForm.hasGlobalErrors) { 
+                    <p class="error">
+                        @editTypeForm.globalError.message
+                    </p>
+                }
 
                 <fieldset>
                     <legend>General Information for the new Type</legend>
