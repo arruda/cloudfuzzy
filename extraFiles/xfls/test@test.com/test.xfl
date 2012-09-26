@@ -1,0 +1,13 @@
+type t1 [1.0,100.0;100] {
+  mf0 xfl.triangle(-15.5,1.0,17.5);
+  mf1 xfl.triangle(1.0,17.5,34.0);
+  mf2 xfl.triangle(17.5,34.0,50.5);
+  mf3 xfl.triangle(34.0,50.5,67.0);
+  mf4 xfl.triangle(50.5,67.0,83.5);
+  mf5 xfl.triangle(67.0,83.5,100.0);
+  mf6 xfl.triangle(83.5,100.0,116.5);
+ }
+
+
+system ( : ) {
+ }
