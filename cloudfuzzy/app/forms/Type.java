@@ -137,9 +137,11 @@ public class Type {
     	type.numMFs = tp.getMembershipFunctions().length;
 
         type.MFs = new ArrayList<MF>();
+        int mf_id=0;
         for(xfuzzy.lang.ParamMemFunc pmf : tp.getAllMembershipFunctions()){
-            MF newMF = MF.createFromFuzzyMF(pmf);
+            MF newMF = MF.createFromFuzzyMF(pmf,mf_id);
             type.MFs.add(newMF);
+            mf_id+=1;
         }
 		
     			

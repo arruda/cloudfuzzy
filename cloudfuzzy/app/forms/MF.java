@@ -54,8 +54,13 @@ public class MF{
     */
     public static MF get(FuzzySystem sys, Integer id_tp,Integer id_mf)
     throws Exception {
+
+        //Get the given Fuzzy Type or raise an exception
+        xfuzzy.lang.ParamMemFunc fuzzyMF = MF.getFuzzy(sys, id_tp, id_mf);
+
       return MF.createFromFuzzyMF(
-                MF.getFuzzy(sys, id_tp, id_mf)
+                fuzzyMF,
+                id_mf
         );
 
     }
@@ -91,9 +96,9 @@ public class MF{
     /**
     * Creates a MF using a XFuzzy ParamMemFunc as base
     */
-    public static MF createFromFuzzyMF(xfuzzy.lang.ParamMemFunc pmf){
+    public static MF createFromFuzzyMF(xfuzzy.lang.ParamMemFunc pmf, Integer id_mf){
     	MF mf = new MF();
-    	
+    	mf.id = id_mf;
 		mf.label = pmf.label;
 		mf.name = pmf.name;
 		mf.pkg = pmf.pkg;
