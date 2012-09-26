@@ -17,7 +17,7 @@
 
         <ul>
         @for( mf <- tp.MFs ) {
-            <li><a href="#">
+            <li><a href="@routes.MFs.detail(fuzzySystem.id,tp.id,mf.id)">
                     @mf.label
             </a></li>
          }
