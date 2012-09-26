@@ -13,6 +13,8 @@ import javax.validation.Constraint;
 import play.Play;
 import play.data.validation.*;
 
+import models.FuzzySystem;
+
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.Universe;
 import xfuzzy.lang.XflException;
@@ -49,6 +51,50 @@ public class Type {
     static {
     	MFTYPES.put(1, "Triangular Something");
     };
+
+
+
+    /**
+    * Return (creating it from the spec file) the given Type,
+    * Passing it's FuzzySystem, and it's id(the position of this type in the Types array)
+    * if any error occours, like the id_tp is out of the array bound, then raise an Exception
+    * that should be treated in along
+    */
+    public static Type get(FuzzySystem sys, Integer id_tp)
+    throws Exception {
+
+      return Type.createFromFuzzyType(
+                Type.getFuzzy(sys, id_tp),
+                id_tp
+        );
+
+    }
+    
+
+    /**
+    * Return the given Type(The xFuzzy one) for a given id_tp,
+    * Passing it's FuzzySystem, and it's id(the position of this type in the Types array)
+    * if any error occours, like the id_tp is out of the array bound, then raise an Exception
+    * that should be treated in along
+    */
+    public static xfuzzy.lang.Type getFuzzy(FuzzySystem sys, Integer id_tp)
+    throws Exception {
+      Specification spec=null;
+      //can throw an exception
+      spec = sys.getSpecification();  
+      
+
+      //the types for this modeling
+      xfuzzy.lang.Type [] tps = spec.getTypes();
+
+      //ensures that the required type id is within the bounds tps array
+      if(tps.length <= id_tp || id_tp < 0){
+            throw new Exception("Wrong Type ID:"+id_tp);
+      }
+
+      return tps[id_tp];
+    }
+
 
     public static void create(Type newType, Specification spec){
     	int i = Integer.valueOf("12");

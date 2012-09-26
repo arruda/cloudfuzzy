@@ -102,8 +102,14 @@ public class Types extends Controller {
       if(tps.length <= id_tp || id_tp < 0){
             return badRequest();
       }
-      
-      Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
+
+      Type tp = null;
+      try{
+        tp = Type.get(sys,id_tp);
+      }
+      catch(Exception e){
+            return badRequest();        
+      }
       
     return ok(
             detail.render(sys,tp)
@@ -117,15 +123,26 @@ public class Types extends Controller {
   public static Result delete(Long id_sys, Integer id_tp) {
       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
       xfuzzy.lang.Specification spec = sys.getSpecification();
-      xfuzzy.lang.Type [] tps = spec.getTypes();
+
+      // xfuzzy.lang.Type [] tps = spec.getTypes();
 
       
-      System.out.println("aqui"); 
-      if(tps.length <= id_tp || id_tp < 0){
-            return badRequest();
-      }
+      // if(tps.length <= id_tp || id_tp < 0){
+      //       return badRequest();
+      // }
       
-      xfuzzy.lang.Type tp = tps[id_tp];
+      // xfuzzy.lang.Type tp = tps[id_tp];
+
+      xfuzzy.lang.Type tp = null;
+      try{
+        tp = Type.getFuzzy(sys,id_tp);
+      }
+      catch(Exception e){
+            return badRequest();        
+      }
+
+
+      System.out.println("aqui"); 
     // if(selection == null || selection.isEditing()) return;
 
     // Type selection = (Type) typelist.getSelectedValue();
@@ -135,9 +152,11 @@ public class Types extends Controller {
         System.out.println(msg); 
         return badRequest();  
     }
+  
     spec.removeType(tp);
     spec.setModified(true);
     spec.save();      
+    System.out.println("aqui"); 
 
 
     return redirect(routes.Systems.detail(id_sys)); 

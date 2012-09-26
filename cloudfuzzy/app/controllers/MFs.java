@@ -29,14 +29,25 @@ public class MFs extends Controller {
   // static Form<MF> editMFForm = form(MF.class);
   
 
-  /**
-  * prepare to creates a new Fuzzy Type.
-  */
-  // public static Result prepareCreate(Long systemId) {
-  //     return ok(
-  //              prepareCreate.render(systemId,newTypeForm)
-  //              // index.render()
-  //             );
+  // /**
+  // * Detail a given MF, the id_mf is nothing related to DB model.
+  // * Its the position of the MF in the spec.types.getMembershipFunctions array.
+  // */
+  // public static Result detail(Long id_sys, Integer id_tp, Integer id_mf) {
+  //     FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+  //     xfuzzy.lang.Specification spec = sys.getSpecification();
+  //     xfuzzy.lang.Type [] tps = spec.getTypes();
+
+      
+  //     if(tps.length <= id_tp || id_tp < 0){
+  //           return badRequest();
+  //     }
+      
+  //     Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
+      
+  //   return ok(
+  //           detail.render(sys,tp)
+  //           ); 
   // }
 
 //   //=================== MF (Membership Function) ===================//
