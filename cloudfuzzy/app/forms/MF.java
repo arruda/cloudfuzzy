@@ -45,6 +45,16 @@ public class MF{
     }
 
 
+    /**
+     * 
+     *returns in the format: pkg.function
+     * @return
+     */
+    public String functionName(){
+        return this.pkg + "." + this.name; 
+    }
+    
+
 
     /**
     * Return (creating it from the spec file) the given MF,

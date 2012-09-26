@@ -2,13 +2,13 @@
 
 @import helper._
 
-@main(fuzzySystem.name + " -> " + tp.name + " -> " + mf.name)(fuzzy.system.types.mfs.menu(fuzzySystem, tp, mf)){   
+@main(fuzzySystem.name + " -> " + tp.name + " -> " + mf.label)(fuzzy.system.types.mfs.menu(fuzzySystem, tp, mf)){   
 
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>General Information</h3>
 
         <p>Label: @mf.label</p>
-        <p>Function: @mf.fullFunctionName()</p>
+        <p>Function: @mf.functionName()</p>
 
         
     </div>
