@@ -56,7 +56,6 @@ public class Systems extends Controller {
                 prepareCreate.render(filledForm)
         );
       } else {
-          System.out.println("good");
          FuzzySystem newSys = filledForm.get();
          newSys.fileName = newSys.name+".xfl";
          newSys.user = User.findByEmail(request().username());

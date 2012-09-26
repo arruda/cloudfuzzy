@@ -1,0 +1,31 @@
+@***
+@(fuzzySystem : FuzzySystem, tp : forms.Type, mf : forms.MF)
+
+@import helper._
+
+@main(fuzzySystem.name + " -> " + tp.name + " -> " + mf.name)(fuzzy.system.types.mfs.menu(fuzzySystem, tp, mf)){   
+
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>Universe of Discourse</h3>
+
+        <p>Min: @tp.min</p>
+        <p>Max: @tp.max</p>
+        <p>Card: @tp.card</p>
+        
+    </div>
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>Membership Functions</h3>
+
+        <ul>
+        @for( mf <- tp.MFs ) {
+            <li><a href="#">
+                    @mf.label
+            </a></li>
+         }
+        </ul>
+        
+    </div>
+    
+}
+        
+***@        

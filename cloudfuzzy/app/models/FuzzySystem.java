@@ -128,9 +128,12 @@ public class FuzzySystem extends Model {
   */  
   public File getFile(){	  
 	  File file = new File(this.getFileFullPath());
+
 	  if(!file.isFile()){
+
 		  return null;
 	  }
+
 	  return file;
 	  
   }
@@ -166,7 +169,7 @@ public class FuzzySystem extends Model {
   *no spec is loaded.
   */
   public Specification loadSpecification() throws Exception{
-
+ 
 		XflParser parser = new XflParser();
 		Specification modeling = parser.parse(this.getFile().getAbsolutePath());
 

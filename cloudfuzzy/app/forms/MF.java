@@ -9,6 +9,12 @@ import xfuzzy.lang.XflException;
 
 public class MF{
     
+    /**
+     * This ID is the position of the fuzzy mf in the array of
+     * MFs in a type.
+     */
+    public Integer id;
+
     @Constraints.Required
     public String label;
     
