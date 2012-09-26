@@ -31,6 +31,8 @@ public class FuzzySystem extends Model {
   @ManyToOne
   public User user;
   
+  private Specification loadedSpecification = null;
+
   ////////// Queries //////////
 
   /**
@@ -153,15 +155,21 @@ public class FuzzySystem extends Model {
 
   /**
   *Return the Specification(XFuzzy) that this FuzzySystem uses or null.
+  * if this FuzzySystem has already loaded a spec, then will use that.
   */
   public Specification getSpecification(){
-	  try{
-		  return this.loadSpecification();
-	  }
-	  catch(Exception e){
-		  e.printStackTrace();
-	  }
-	  return null;
+
+    if(this.loadedSpecification == null){
+
+  	  try{
+        this.loadSpecification();
+  	  }
+  	  catch(Exception e){
+  		  e.printStackTrace();
+  	  }
+
+    }
+    return this.loadedSpecification;  
   }
   
   /**
@@ -178,7 +186,8 @@ public class FuzzySystem extends Model {
 			throw new Exception(
 					"motorInferencia.INCONSISTENCIA_MODELAGEM");
 		}
-		
+
+		this.loadedSpecification = modeling;
 		return modeling;
   }
   
