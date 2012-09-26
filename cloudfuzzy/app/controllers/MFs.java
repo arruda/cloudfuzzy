@@ -25,10 +25,32 @@ import xfuzzy.lang.XflParser;
 @Security.Authenticated(Secured.class)
 public class MFs extends Controller {
   
-  static Form<Type> newMFForm = form(Type.class);
+  static Form<MF> newMFForm = form(MF.class);
   // static Form<Type> editTypeForm = form(Type.class);
   // static Form<MF> editMFForm = form(MF.class);
   
+
+  /**
+  * prepare to creates a new Fuzzy Type.
+  */
+  public static Result prepareCreate(Long id_sys, Integer id_tp) {
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+      Type tp = null;
+      try{
+            tp = Type.get(sys,id_tp);
+      }
+      catch(Exception e){
+        return badRequest();
+      }
+
+      //should put some information first? like the mf.id?
+      //see if this will be a problem ahead.
+      return ok(
+               prepareCreate.render(sys,tp,newMFForm)
+              );
+  }
+
 
   /**
   * Detail a given MF, the id_mf is nothing related to DB model.

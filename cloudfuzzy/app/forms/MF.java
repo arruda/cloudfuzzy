@@ -28,6 +28,7 @@ public class MF{
 
     public String pkg;
     
+    @Constraints.Required
     public ArrayList<Double> params;
 //    public Double paramA;
 //    public Double paramB;

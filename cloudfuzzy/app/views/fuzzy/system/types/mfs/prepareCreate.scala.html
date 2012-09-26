@@ -1,0 +1,57 @@
+@(fuzzySystem : FuzzySystem, tp : forms.Type, newMFForm : Form[forms.MF])
+
+@import helper._
+
+@main(fuzzySystem.name + " -> " + tp.name)(fuzzy.system.types.menu(fuzzySystem, tp.id)){ 
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>New Membership Function</h3> 
+            @helper.form(action = routes.MFs.prepareCreate(fuzzySystem.id,tp.id), 'id -> "newMFForm") {
+                
+                <fieldset>
+                    <legend>General Information for the new MF</legend>
+                    
+                    @inputText(
+                        newMFForm("label"), 
+                        '_label -> "Label", 
+                        '_help -> "The label of this MF"
+                    )                
+
+                    
+                    @select(
+                        field = newMFForm("idFunction"),
+                            options = options(
+                                "1" -> "Yes",
+                                "1" -> "No"
+                            ),
+                        '_label -> "Member Functions Type",
+                        '_help -> "Select the function for this MF"
+                    )                        
+                </fieldset>           
+                
+                <fieldset>
+                    <legend>Parameters</legend>
+
+                    @repeat(newMFForm("params"), min = 3) { paramField =>
+                        
+                        @inputText(
+                            paramField
+                        )
+                        
+                    }   
+                    @***
+                        <dl class=" " id="params_0__field">
+                            <dt><label for="params_0_">params[0]</label></dt>
+                            <dd>
+                            <input type="text" id="params_0_" name="params[0]" value="" >
+                        </dd>
+                    ***@
+                
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Create">
+                </div>
+                
+            }
+ 
+    </div>
+    
+}

@@ -41,6 +41,7 @@ POST     /system/:id_sys/type/:id_type/edit             controllers.Types.edit(i
 
 
 ##MF
+GET     /system/:id_sys/type/:id_type/mf/new      controllers.MFs.prepareCreate(id_sys: Long, id_type: java.lang.Integer)
 GET     /system/:id_sys/type/:id_type/mf/:id_mf/               controllers.MFs.detail(id_sys: Long, id_type: java.lang.Integer, id_mf: java.lang.Integer)
 
 #JS Routing
