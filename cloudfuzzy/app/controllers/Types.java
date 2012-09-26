@@ -95,13 +95,7 @@ public class Types extends Controller {
   */
   public static Result detail(Long id_sys, Integer id_tp) {
       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
-      xfuzzy.lang.Specification spec = sys.getSpecification();
-      xfuzzy.lang.Type [] tps = spec.getTypes();
-
       
-      if(tps.length <= id_tp || id_tp < 0){
-            return badRequest();
-      }
 
       Type tp = null;
       try{
@@ -142,7 +136,6 @@ public class Types extends Controller {
       }
 
 
-      System.out.println("aqui"); 
     // if(selection == null || selection.isEditing()) return;
 
     // Type selection = (Type) typelist.getSelectedValue();
@@ -156,7 +149,6 @@ public class Types extends Controller {
     spec.removeType(tp);
     spec.setModified(true);
     spec.save();      
-    System.out.println("aqui"); 
 
 
     return redirect(routes.Systems.detail(id_sys)); 
@@ -169,25 +161,14 @@ public class Types extends Controller {
   public static Result prepareEdit(Long id_sys, Integer id_tp) {
 
       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
-      Specification spec=null;
+
+      Type tp = null;
       try{
-          spec = sys.loadSpecification();             
+        tp = Type.get(sys,id_tp);
       }
       catch(Exception e){
-          e.printStackTrace();
+            return badRequest();        
       }
-      
-
-      //the types for this modeling
-      xfuzzy.lang.Type [] tps = spec.getTypes();
-
-      //ensures that the required type id is within the bounds tps array
-      if(tps.length <= id_tp || id_tp < 0){
-            return badRequest();
-      }
-      
-
-      Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
 
       editTypeForm = form(Type.class).fill(
           tp
@@ -210,27 +191,28 @@ public class Types extends Controller {
       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
       Specification spec=null;
       try{
-          spec = sys.loadSpecification();             
+          spec = sys.getSpecification();             
       }
       catch(Exception e){
           e.printStackTrace();
       }
-      
 
-      //the types for this modeling
-      xfuzzy.lang.Type [] tps = spec.getTypes();
-
-      //ensures that the required type id is within the bounds tps array
-      if(tps.length <= id_tp || id_tp < 0){
-            return badRequest();
+      Type tp = null;
+      xfuzzy.lang.Type fuzzyType = null;
+      try{
+        tp = Type.get(sys,id_tp);
+        fuzzyType = Type.getFuzzy(sys,id_tp);
       }
-      Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
+      catch(Exception e){
+            return badRequest();        
+      }
+      
 
       
       //checks if the type exists with this name
       //considering that need to ignore the original type been edited.
       xfuzzy.lang.Type search_tp = spec.searchType(filledForm.field("name").valueOr(""));
-      if(search_tp != null && search_tp != tps[id_tp]){
+      if(search_tp != null && search_tp != fuzzyType){
           filledForm.reject("name", "Already exist a type with this name");  
       }
     
@@ -240,16 +222,13 @@ public class Types extends Controller {
          filledForm.field("min").errors().size() > 0  ||
          filledForm.field("card").errors().size() > 0 ) {
 
-          System.out.println("id:"+filledForm.field("id").value()); 
         return badRequest(
                 edit.render(sys, tp,filledForm)
         );
       } else {
 
-          System.out.println("editou"); 
           Type editedType = tp;
 
-          System.out.println(filledForm.data()); 
           //Type test = filledForm.get();
           editedType.name = filledForm.field("name").value();
           editedType.max = Double.valueOf(filledForm.field("max").value());
@@ -257,7 +236,7 @@ public class Types extends Controller {
           editedType.card = Integer.valueOf(filledForm.field("card").value());
 
           try{
-            Type.edit(editedType,tps[id_tp], spec);
+            Type.edit(editedType,fuzzyType, spec);
           }
           catch(Exception e){
             filledForm.reject(e.getMessage());  
