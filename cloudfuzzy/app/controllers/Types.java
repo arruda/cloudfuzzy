@@ -76,6 +76,9 @@ public class Types extends Controller {
       if(spec.searchType(filledForm.field("name").valueOr("")) != null){
           filledForm.reject("name", "Already exist a type with this name");  
       }
+      if(!FuzzySystem.isIdentifier(filledForm.field("label").valueOr(""))) {
+        filledForm.reject("name", "Invalid name");  
+      }
       
       if(filledForm.hasErrors()) {
         return badRequest(

@@ -136,6 +136,26 @@ public class FuzzySystem extends Model {
   }
 
   /**
+  * Simple method taken from xFuzzy.utils.XConstant
+  * returns if the name is a identifier
+  */
+ static public boolean isIdentifier(String name) {
+  if(name.equals("")) return false;
+  if(name.equals("operation")) return false;
+  if(name.equals("type")) return false;
+  if(name.equals("module")) return false;
+  if(name.equals("extends")) return false;
+  if(name.equals("using")) return false;
+  if(name.equals("import")) return false;
+  if(name.equals("if")) return false;
+  char [] namec = name.toCharArray();
+  if(!Character.isLetter(namec[0]) && namec[0] != '_') return false;
+  for(int i=1; i<namec.length; i++)
+   if(!Character.isLetterOrDigit(namec[i]) && namec[i] != '_') return false;
+  return true;
+ }
+
+  /**
   *Returns this FuzzySystem full file path.
   */
   public String getFileFullPath(){

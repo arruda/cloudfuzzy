@@ -24,7 +24,6 @@ import xfuzzy.lang.ParamMemFunc;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.Universe;
 import xfuzzy.lang.XflParser;
-// import xfuzzy.util.XConstants;
 
 @Security.Authenticated(Secured.class)
 public class MFs extends Controller {
@@ -103,10 +102,14 @@ public class MFs extends Controller {
         }
         
       }
+      
+      if(!FuzzySystem.isIdentifier(filledForm.field("label").valueOr(""))) {
+        filledForm.reject("label", "Invalid linguistic label");  
+      }
       System.out.println("erros:"+ filledForm.errors()); 
 
 
-      
+
        //   if(!XConstants.isIdentifier(mfcopy.label)) {
        //    labelform.setText("");
        //    mfcopy.label = "";
