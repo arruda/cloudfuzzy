@@ -219,6 +219,9 @@ public class Types extends Controller {
           filledForm.reject("name", "Already exist a type with this name");  
       }
     
+      if(!FuzzySystem.isIdentifier(filledForm.field("label").valueOr(""))) {
+        filledForm.reject("name", "Invalid name");  
+      }
       
       if(filledForm.field("name").errors().size() > 0 ||
          filledForm.field("max").errors().size() > 0  ||
