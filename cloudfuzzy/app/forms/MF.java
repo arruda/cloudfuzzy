@@ -100,13 +100,14 @@ public class MF{
         }
         return mftps;
     }
+
+
     /**
-    * Return the total number of parameters of a given
+    * Return a blank MF(Fuzzy) for the given MFType
     * MF Type(id_mfType).
     * this id is the position of the MFType in the Available MF Types Vector
     */
-    public static Integer getNumParamsForMFType(Integer id_mfType){
-
+    public static ParamMemFunc getBlankMFForMFType(Integer id_mfType){
 
         //get the MF definition for this type
         Definition def = null;
@@ -119,9 +120,25 @@ public class MF{
         //Instantiate a MF to get its total parameters
         ParamMemFunc mf  = (ParamMemFunc) def.instantiate(); 
 
+        return mf;
+    }
+
+    /**
+    * Return the total number of parameters of a given
+    * MF Type(id_mfType).
+    * this id is the position of the MFType in the Available MF Types Vector
+    */
+    public static Integer getNumParamsForMFType(Integer id_mfType){
+
+
+
+        //Instantiate a MF to get its total parameters
+        ParamMemFunc mf  = getBlankMFForMFType(id_mfType); 
+
         return mf.parameter.length;
 
     }
+
 
     // public static Map<String,String> getMFTYPES(FuzzySystem sys, Integer id_tp,
 
@@ -187,11 +204,50 @@ public class MF{
 		for(int i=0; i < pmf.parameter.length; i++){
 			mf.params.add(pmf.parameter[i].value);
 		}
-    	
-    	
 			
     			
     	return mf;
+    }
+
+    /**
+    *Create a MF(fuzzy) with the given MF as source, adding it to the Type given in the spec.
+    */
+    public static void create(MF newMF, xfuzzy.lang.Type tp, Specification spec)
+    throws Exception{
+
+
+
+        //Instantiate a new MF for the given type.
+        ParamMemFunc newFuzzyMF = MF.getBlankMFForMFType(Integer.valueOf(newMF.idFunction));
+        //set its name and universe.
+        newFuzzyMF.label = newMF.label;
+        newFuzzyMF.u = tp.getUniverse();
+
+        //set the parameters
+       for(int i=0; i < newMF.params.size(); i++) {
+            newFuzzyMF.parameter[i].value = newMF.params.get(i);
+       }
+
+        //test if the MF works out with the given parameters
+        if(!newFuzzyMF.test()) {
+            throw new Exception("Invalid parameters");
+        }
+
+        //create a new array for the MFs using the original as base
+        //leaving the last position of the new array for the new MF
+        ParamMemFunc originalMfs[] = tp.getMembershipFunctions();  
+        ParamMemFunc newMFs[] = new ParamMemFunc[originalMfs.length+1];
+        System.arraycopy(originalMfs,0,newMFs,0,originalMfs.length);
+
+        //set the new MF
+        newMFs[originalMfs.length] = newFuzzyMF;
+
+        //set the Type's MFs to be this new MF array
+        tp.setMembershipFunctions(newMFs);
+
+        //save the spec.
+        spec.setModified(true);
+        spec.save();        
     }
 
     public static void edit(MF editedMF, xfuzzy.lang.ParamMemFunc fuzzyMF,  Specification spec){
@@ -213,5 +269,6 @@ public class MF{
 		  spec.setModified(true);
 		  spec.save();		  
     }
+
     
 }

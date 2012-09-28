@@ -106,46 +106,25 @@ public class MFs extends Controller {
       if(!FuzzySystem.isIdentifier(filledForm.field("label").valueOr(""))) {
         filledForm.reject("label", "Invalid linguistic label");  
       }
-      System.out.println("erros:"+ filledForm.errors()); 
 
 
-
-       //   if(!XConstants.isIdentifier(mfcopy.label)) {
-       //    labelform.setText("");
-       //    mfcopy.label = "";
-       //    XDialog.showMessage(xfeditor,"Invalid linguistic label");
-       //    return;
-       //   }
-
-       //   if(!mfcopy.test()) {
-       //    XDialog.showMessage(xfeditor,"Invalid parameters");
-       //    return false;
-       //   }
-
-
-
-       // private void addMF(ParamMemFunc newmf) {
-       //  ParamMemFunc mf[] = copy.getMembershipFunctions();
-       //  ParamMemFunc amf[] = new ParamMemFunc[mf.length+1];
-       //  System.arraycopy(mf,0,amf,0,mf.length);
-       //  amf[mf.length] = newmf;
-       //  copy.setMembershipFunctions(amf);
-
-       //  Mapping amp[] = new Mapping[mapping.length+1];
-       //  System.arraycopy(mapping,0,amp,0,mapping.length);
-       //  amp[mapping.length] = new Mapping(null,newmf);
-       //  this.mapping = amp;
-
-       //  setList();
-       // }
-
-      
       if(filledForm.hasErrors()) {
         return badRequest(
           prepareCreate.render(sys,tp,filledForm)
         );
       } else {
-         System.out.println("save");
+         MF newMF = filledForm.get();
+         //tries to save the given MF, if catch an exception get the error and put in the form, as a param error
+         try{
+            MF.create(newMF,fuzzyTp,spec);
+         }
+         catch(Exception e){
+            filledForm.reject("params", "Invalid parameters");  
+
+            return badRequest(
+              prepareCreate.render(sys,tp,filledForm)
+            );
+         }
          return redirect(routes.Types.detail(sys.id,tp.id)); 
       }
   }
