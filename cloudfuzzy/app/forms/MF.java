@@ -26,7 +26,7 @@ public class MF{
     @Constraints.Required
     public String label;
     
-    @Constraints.Required
+    
     public String name;
 
     @Constraints.Required

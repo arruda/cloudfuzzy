@@ -7,7 +7,7 @@
 
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Membership Function</h3> 
-            @helper.form(action = routes.MFs.prepareCreate(fuzzySystem.id,tp.id), 'id -> "newMFForm") {
+            @helper.form(action = routes.MFs.create(fuzzySystem.id,tp.id), 'id -> "newMFForm") {
                 
                 <fieldset>
                     <legend>General Information for the new MF</legend>
@@ -32,6 +32,7 @@
 
                     <div id="params">
                     </div>
+
                     @***
 
                     @repeat(newMFForm("params"), min = 3) { paramField =>
@@ -47,6 +48,7 @@
                             <dd>
                             <input type="text" id="params_0_" name="params[0]" value="" >
                         </dd>
+
                     ***@
                 
                 <div class="actions">
@@ -79,6 +81,13 @@
           function setParamsForMf(num_params) {
                 var paramsDiv = $('#params');
                 var paramsHTML = '';
+
+                @if(newMFForm("params").hasErrors) {
+                    @newMFForm("params").errors().map { error =>
+                     paramsHTML += '<dd class="error">@error.message()</dd>'
+                    }
+                }
+                
                 for (var i = 0; i < num_params; i++) {
                     paramsHTML += getNewParamHtml(i);
                 };
@@ -91,13 +100,13 @@
 
           /* Creates the html for the new param input and label*/
           function getNewParamHtml(i){
-
             var letter = String.fromCharCode(97 + i);
-            var paramHTML ='<dl class=" " id="params_ID__field">\
+            var paramHTML ='<dl class="@if(newMFForm("params").hasErrors) {error} " id="params_ID__field">\
                                <dt><label for="params_ID_">Param.  LETTER</label></dt>\
-                                <dd>\
-                                <input type="text" id="params_ID_" name="params[ID]" value="" >\
-                            </dd>'
+                                <dd><input type="text" id="params_ID_" name="params[ID]" value="" ></dd>'
+
+
+                paramHTML += '</dl>'; 
 
             paramHTML = paramHTML.replace(/ID/g, i);
             paramHTML = paramHTML.replace(/LETTER/g, letter);

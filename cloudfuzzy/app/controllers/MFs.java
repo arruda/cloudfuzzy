@@ -59,6 +59,96 @@ public class MFs extends Controller {
 
 
   /**
+  * Creates a new Fuzzy type with some parameters.
+  */
+  public static Result create(Long id_sys, Integer id_tp) {
+      Form<MF> filledForm = newMFForm.bindFromRequest();
+
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+      Specification spec=null;
+      xfuzzy.lang.Type fuzzyTp = null;
+      Type tp = null;
+      try{
+          spec = sys.getSpecification();
+          fuzzyTp = Type.getFuzzy(sys,id_tp);      
+          tp = Type.get(sys,id_tp);             
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }
+      
+      ParamMemFunc originalMfs[] = fuzzyTp.getMembershipFunctions();
+
+      //check if in that type a mf with that label already exist
+      for (int i=0; i < originalMfs.length; i++ ) {
+        if(originalMfs[i].label.equals(filledForm.field("label").valueOr(""))){
+          filledForm.reject("label", "Already exist a MF with this label");  
+
+        }        
+      }
+
+      //--check if the params are correct
+      //get the num of params this MF Type should have
+      int numParams = MF.getNumParamsForMFType(Integer.valueOf(filledForm.field("idFunction").valueOr("")));
+      for (int i =0; i< numParams; i++) {
+
+        try{
+          Double newParam = Double.valueOf(filledForm.field("params["+i+"]").valueOr(""));
+        }
+        catch(Exception e){
+          //Integer letter = i;
+          Character letter = (char)(97+i);
+          filledForm.reject("params", "Invalid Parameter("+letter+"): Real Numbers required");
+        }
+        
+      }
+      System.out.println("erros:"+ filledForm.errors()); 
+
+
+      
+       //   if(!XConstants.isIdentifier(mfcopy.label)) {
+       //    labelform.setText("");
+       //    mfcopy.label = "";
+       //    XDialog.showMessage(xfeditor,"Invalid linguistic label");
+       //    return;
+       //   }
+
+       //   if(!mfcopy.test()) {
+       //    XDialog.showMessage(xfeditor,"Invalid parameters");
+       //    return false;
+       //   }
+
+
+
+       // private void addMF(ParamMemFunc newmf) {
+       //  ParamMemFunc mf[] = copy.getMembershipFunctions();
+       //  ParamMemFunc amf[] = new ParamMemFunc[mf.length+1];
+       //  System.arraycopy(mf,0,amf,0,mf.length);
+       //  amf[mf.length] = newmf;
+       //  copy.setMembershipFunctions(amf);
+
+       //  Mapping amp[] = new Mapping[mapping.length+1];
+       //  System.arraycopy(mapping,0,amp,0,mapping.length);
+       //  amp[mapping.length] = new Mapping(null,newmf);
+       //  this.mapping = amp;
+
+       //  setList();
+       // }
+
+      
+      if(filledForm.hasErrors()) {
+        return badRequest(
+          prepareCreate.render(sys,tp,filledForm)
+        );
+      } else {
+         System.out.println("save");
+         return redirect(routes.Types.detail(sys.id,tp.id)); 
+      }
+  }
+
+
+  /**
   * Detail a given MF, the id_mf is nothing related to DB model.
   * Its the position of the MF in the spec.types.getMembershipFunctions array.
   */
@@ -99,12 +189,6 @@ public class MFs extends Controller {
                     );
     }
 
-    public static Result get()
-    {
-        Map<String,String[]> queryParameters = request().queryString();
-        return ok(String.format("Here's my server-side data using $.get(), and you sent me [%s]",
-                                queryParameters.get("foo")[0]));
-    }
 
 //   //=================== MF (Membership Function) ===================//
 
