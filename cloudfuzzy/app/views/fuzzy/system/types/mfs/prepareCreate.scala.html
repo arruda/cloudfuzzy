@@ -19,10 +19,7 @@
                     
                     @select(
                         field = newMFForm("idFunction"),
-                            options = options(
-                                "1" -> "Yes",
-                                "1" -> "No"
-                            ),
+                            options = options(forms.MF.getMFTypes()),
                         '_label -> "Member Functions Type",
                         '_help -> "Select the function for this MF"
                     )                        

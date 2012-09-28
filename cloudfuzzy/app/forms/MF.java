@@ -1,6 +1,9 @@
 package forms;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
 import models.FuzzySystem;
 
@@ -8,6 +11,7 @@ import play.data.validation.Constraints;
 import xfuzzy.lang.ParamMemFunc;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.XflException;
+import xfuzzy.lang.XflPackage;
 
 public class MF{
     
@@ -36,6 +40,12 @@ public class MF{
 //    public Double paramD;
 //    public Double paramE;
     
+    
+    // public static final Map<String,String> MFTYPES = new HashMap<String, String>();
+    // static {
+    //     MFTYPES.put(1, "Triangular Something");
+    // };
+
     /**
      * 
      *returns in the format: pkg_mf_function
@@ -55,7 +65,31 @@ public class MF{
         return this.pkg + "." + this.name; 
     }
     
+    public static Map<String,String> getMFTypes(){
+        Map<String,String> mftps = new HashMap<String, String>();
 
+
+        Vector pkglist = FuzzySystem.getLoadedPackages();
+        Vector available = new Vector();
+        for(int i=0, size=pkglist.size(); i<size; i++) {
+            XflPackage pkg = (XflPackage) pkglist.elementAt(i);
+            Vector vv = pkg.get(XflPackage.MFUNC);
+            int vvsize = vv.size();
+            for(int j=0; j<vvsize; j++)
+            {
+                available.addElement( vv.elementAt(j) ); 
+            } 
+        }
+
+        for(int i = 0; i < available.size(); i++){
+
+            //String type = available.elementAt(i).pkg + "." + available.elementAt(i).name;
+            mftps.put(String.valueOf(i), available.elementAt(i).toString());
+        }
+        return mftps;
+    }
+
+    // public static Map<String,String> getMFTYPES(FuzzySystem sys, Integer id_tp,
 
     /**
     * Return (creating it from the spec file) the given MF,

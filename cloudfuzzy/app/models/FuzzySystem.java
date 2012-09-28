@@ -9,6 +9,9 @@ import play.data.validation.Constraints.*;
 import xfuzzy.Xfuzzy;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.XflParser;
+import xfuzzy.lang.PkgParser;
+import xfuzzy.lang.XflPackage;
+
 
 import javax.persistence.*;
 
@@ -32,6 +35,7 @@ public class FuzzySystem extends Model {
   public User user;
   
   private Specification loadedSpecification = null;
+
 
   ////////// Queries //////////
 
@@ -117,6 +121,19 @@ public class FuzzySystem extends Model {
   
   ////////// Queries END //////////
 
+  /**
+  *Return the vector o loaded pkgs
+  */
+  public static Vector getLoadedPackages(){
+    PkgParser pkgparser = new PkgParser();
+    File path = new File( Xfuzzy.fuzzyPath );
+    pkgparser.addPath(new File(path,"pkg"));
+    XflPackage xflpkg = pkgparser.parse("xfl");
+
+    Vector loadedpkg = new Vector();
+    loadedpkg.add(xflpkg);
+    return loadedpkg;
+  }
 
   /**
   *Returns this FuzzySystem full file path.
@@ -152,6 +169,10 @@ public class FuzzySystem extends Model {
 		  file.delete();
 	  
   }
+
+
+
+
 
   /**
   *Return the Specification(XFuzzy) that this FuzzySystem uses or null.

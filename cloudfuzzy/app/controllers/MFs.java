@@ -44,6 +44,8 @@ public class MFs extends Controller {
         return badRequest();
       }
 
+      System.out.println(MF.getMFTypes());  
+
       //should put some information first? like the mf.id?
       //see if this will be a problem ahead.
       return ok(
