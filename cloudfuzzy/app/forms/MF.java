@@ -12,6 +12,8 @@ import xfuzzy.lang.ParamMemFunc;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.XflException;
 import xfuzzy.lang.XflPackage;
+import xfuzzy.lang.Definition;
+
 
 public class MF{
     
@@ -64,11 +66,11 @@ public class MF{
     public String functionName(){
         return this.pkg + "." + this.name; 
     }
-    
-    public static Map<String,String> getMFTypes(){
-        Map<String,String> mftps = new HashMap<String, String>();
-
-
+    /**
+    *Returns the vector of MFs Types
+    * from the xfl package 
+    */
+    public static Vector getAvailableMFTypes(){        
         Vector pkglist = FuzzySystem.getLoadedPackages();
         Vector available = new Vector();
         for(int i=0, size=pkglist.size(); i<size; i++) {
@@ -80,13 +82,45 @@ public class MF{
                 available.addElement( vv.elementAt(j) ); 
             } 
         }
+        return available;
+    }
 
+    /**
+    * Returns a Map of the available types to be used in the MFType identification
+    */
+    public static Map<String,String> getMFTypes(){
+        Map<String,String> mftps = new HashMap<String, String>();
+
+
+        Vector available = MF.getAvailableMFTypes();
         for(int i = 0; i < available.size(); i++){
 
             //String type = available.elementAt(i).pkg + "." + available.elementAt(i).name;
             mftps.put(String.valueOf(i), available.elementAt(i).toString());
         }
         return mftps;
+    }
+    /**
+    * Return the total number of parameters of a given
+    * MF Type(id_mfType).
+    * this id is the position of the MFType in the Available MF Types Vector
+    */
+    public static Integer getNumParamsForMFType(Integer id_mfType){
+
+
+        //get the MF definition for this type
+        Definition def = null;
+        try{ 
+            def = (Definition) MF.getAvailableMFTypes().elementAt(id_mfType); 
+        }
+        catch(Exception ex) {
+        } 
+
+        //Instantiate a MF to get its total parameters
+        ParamMemFunc mf  = (ParamMemFunc) def.instantiate(); 
+
+        return mf.parameter.length;
+
     }
 
     // public static Map<String,String> getMFTYPES(FuzzySystem sys, Integer id_tp,

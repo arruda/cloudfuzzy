@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.File;
+import java.util.Map;
+
 import models.FuzzySystem;
 import models.User;
 
@@ -10,6 +12,8 @@ import forms.Type;
 import play.*;
 import play.mvc.*;
 import play.data.*;
+import play.libs.Json;
+
 import views.html.fuzzy.system.types.mfs.*;
 // import views.html.*;
 
@@ -44,7 +48,7 @@ public class MFs extends Controller {
         return badRequest();
       }
 
-      System.out.println(MF.getMFTypes());  
+      
 
       //should put some information first? like the mf.id?
       //see if this will be a problem ahead.
@@ -75,6 +79,32 @@ public class MFs extends Controller {
             detail.render(sys,tp,mf)
             ); 
   }
+
+
+   //=================== AJAX ===================//
+    /**
+    * Returns a json with the number of parameters of the given mf type
+    * it looks in the  request.GET for a 'mf_key' value.
+    */
+    public static Result ajaxGetNumParams()
+    {
+        //get the mfKey from request GET
+        Map<String,String[]> queryParameters = request().queryString();
+        String mfKey = queryParameters.get("mf_key")[0];
+
+        //Get the number of parameters for this MFType.
+        Integer numParams = MF.getNumParamsForMFType(Integer.valueOf(mfKey));
+        return ok(
+                    Json.toJson(numParams)
+                    );
+    }
+
+    public static Result get()
+    {
+        Map<String,String[]> queryParameters = request().queryString();
+        return ok(String.format("Here's my server-side data using $.get(), and you sent me [%s]",
+                                queryParameters.get("foo")[0]));
+    }
 
 //   //=================== MF (Membership Function) ===================//
 
