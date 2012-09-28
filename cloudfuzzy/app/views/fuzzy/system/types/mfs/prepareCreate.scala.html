@@ -57,8 +57,8 @@
  
 
     </div>
-    <script>
-            
+    <script type="text/javascript">
+
         $(document).ready(function() {
 
           $('#idFunction').change(getParamsForMf);
@@ -92,13 +92,16 @@
           /* Creates the html for the new param input and label*/
           function getNewParamHtml(i){
 
-             var paramHTML ='<dl class=" " id="params_ID__field">\
-                               <dt><label for="params_ID_">params[ID]</label></dt>\
+            var letter = String.fromCharCode(97 + i);
+            var paramHTML ='<dl class=" " id="params_ID__field">\
+                               <dt><label for="params_ID_">Param.  LETTER</label></dt>\
                                 <dd>\
                                 <input type="text" id="params_ID_" name="params[ID]" value="" >\
                             </dd>'
 
             paramHTML = paramHTML.replace(/ID/g, i);
+            paramHTML = paramHTML.replace(/LETTER/g, letter);
+
 
             // var paramHTML =   '<dl class=" " id="params_'+i+'__field">';
 
@@ -110,7 +113,6 @@
 
 
         });
-
                 
     </script>
 }
