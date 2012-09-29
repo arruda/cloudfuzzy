@@ -33,6 +33,9 @@ public class MFs extends Controller {
   // static Form<MF> editMFForm = form(MF.class);
   
 
+
+  //=================== CRUD ===================//
+
   /**
   * prepare to creates a new Fuzzy Type.
   */
@@ -113,6 +116,7 @@ public class MFs extends Controller {
           prepareCreate.render(sys,tp,filledForm)
         );
       } else {
+
          MF newMF = filledForm.get();
          //tries to save the given MF, if catch an exception get the error and put in the form, as a param error
          try{
@@ -125,6 +129,7 @@ public class MFs extends Controller {
               prepareCreate.render(sys,tp,filledForm)
             );
          }
+
          return redirect(routes.Types.detail(sys.id,tp.id)); 
       }
   }
@@ -151,6 +156,41 @@ public class MFs extends Controller {
             detail.render(sys,tp,mf)
             ); 
   }
+
+  /**
+  * Delete a given MF, the id_mf is nothing related to DB model.
+  * Its the position of the MF in the spec.types.getMembershipFunctions array.
+  */
+  public static Result delete(Long id_sys, Integer id_tp, Integer id_mf) {
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      xfuzzy.lang.Specification spec = sys.getSpecification();
+
+      ParamMemFunc mf = null;
+      xfuzzy.lang.Type tp = null;
+      try{
+            tp = Type.getFuzzy(sys,id_tp);
+            mf = MF.getFuzzy(sys,id_tp, id_mf);
+      }
+      catch(Exception e){
+        return badRequest();
+      }
+
+      //cant remove if been used in the system.
+      if(mf.isLinked()){          
+        String msg = "Cannot remove membership function\""+mf+"\".";
+        msg+="\nThere are rulebases using this function..";
+        System.out.println(msg); 
+        return badRequest();  
+      }
+
+      tp.remove(mf);
+      //save the spec.
+      spec.setModified(true);
+      spec.save();        
+
+    return redirect(routes.Types.detail(id_sys,id_tp)); 
+  }
+
 
 
    //=================== AJAX ===================//

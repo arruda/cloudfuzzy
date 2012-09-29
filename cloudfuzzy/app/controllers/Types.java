@@ -29,6 +29,7 @@ public class Types extends Controller {
   // static Form<MF> editMFForm = form(MF.class);
   
 
+  //=================== CRUD ===================//
   /**
   * prepare to creates a new Fuzzy Type.
   */
