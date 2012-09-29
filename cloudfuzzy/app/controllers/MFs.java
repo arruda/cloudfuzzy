@@ -6,8 +6,8 @@ import java.util.Map;
 import models.FuzzySystem;
 import models.User;
 
-import forms.MF;
-import forms.Type;
+import models.MF;
+import models.Type;
 
 import play.*;
 import play.mvc.*;

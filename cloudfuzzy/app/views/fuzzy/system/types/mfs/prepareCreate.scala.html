@@ -1,4 +1,4 @@
-@(fuzzySystem : FuzzySystem, tp : forms.Type, newMFForm : Form[forms.MF])
+@(fuzzySystem : FuzzySystem, tp : models.Type, newMFForm : Form[models.MF])
 
 @import helper._
 
@@ -21,7 +21,7 @@
                     
                     @select(
                         field = newMFForm("idFunction"),
-                            options = options(forms.MF.getMFTypes()),
+                            options = options(models.MF.getMFTypes()),
                         '_label -> "Member Functions Type",
                         '_help -> "Select the function for this MF"
                     )                        
