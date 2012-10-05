@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -59,7 +60,7 @@ public class OperatorSet{
     /**
     *Represent a operator that appear to be selected in the creation or edition of a OperatorsSet
     */
-    private class Operator(){
+    private class Operator{
         // public Integer opType;
         public String name;
 
