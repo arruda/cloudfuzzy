@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import models.FuzzySystem;
 
+import javax.validation.*;
 import play.data.validation.Constraints;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.XflPackage;
@@ -24,7 +25,7 @@ public class OperatorSet{
     
     @Constraints.Required
     public String name;
-
+    @Valid
     public List<Operator> operators;
     //make the Operators
      // public Binary and;
@@ -70,7 +71,7 @@ public class OperatorSet{
         //the available options list
         public List<String> options;
 
-    }
+    };
 
     /**
     * Represents the options codes
@@ -79,6 +80,13 @@ public class OperatorSet{
       { FuzzyOperator.AND, FuzzyOperator.OR, FuzzyOperator.NOT, FuzzyOperator.ALSO,
         FuzzyOperator.IMP, FuzzyOperator.MOREORLESS, FuzzyOperator.VERY,
         FuzzyOperator.SLIGHTLY, FuzzyOperator.DEFUZMETHOD };
+
+    /**
+    * The labels for the operators
+    */
+     private static String oplabel[] = 
+      {"and", "or", "not", "also", "implication", "moreorless", "strongly",
+       "slightly", "defuzzification" };
 
     /**
     *Get the available Operator for a given Operator Type
@@ -119,90 +127,32 @@ public class OperatorSet{
         return available;
     }
 
+    /**
+    * Sets the operators of this operator set to be with the correct default value
+    */
+    public void setDefaultOperatorsList(){
+        this.operators = new ArrayList<Operator>();
 
-    // /**
-    // * Returns a Map of the available types to be used in the MFType identification
-    // */
-    // public static Map<String,String> getMFTypes(){
-    //     Map<String,String> mftps = new HashMap<String, String>();
+        //should create a Operator for each one of the FuzzyOperators
+        for(int i=0; i<opcode.length; i++){
+            Operator op = new Operator();
+            op.name = oplabel[i];
+            op.options = new ArrayList<String>();
 
+            //get the available options for this operator
+            Vector available = getAvailableOperatorsForOPType(i);
+            for(int op_pos=0; op_pos < available.size(); op_pos++){
+                op.options.add(String.valueOf(available.elementAt(op_pos)));
+            }
 
-    //     Vector available = MF.getAvailableMFTypes();
-    //     for(int i = 0; i < available.size(); i++){
+            //leaves the default as the default selected option
+            op.selectedOption = 0;
 
-    //         //String type = available.elementAt(i).pkg + "." + available.elementAt(i).name;
-    //         mftps.put(String.valueOf(i), available.elementAt(i).toString());
-    //     }
-    //     return mftps;
-    // }
+            //add this new operator in the operators list
+            this.operators.add(op);
+        }
+    }
 
-
-    // /**
-    // * Return (creating it from the spec file) the given MF,
-    // * Passing it's FuzzySystem, and it's id(the position of this MF in the MFs array)
-    // * if any error occours, like the id_mf is out of the array bound, then raise an Exception
-    // * that should be treated in along
-    // */
-    // public static MF get(FuzzySystem sys, Integer id_tp,Integer id_mf)
-    // throws Exception {
-
-    //     //Get the given Fuzzy Type or raise an exception
-    //     xfuzzy.lang.ParamMemFunc fuzzyMF = MF.getFuzzy(sys, id_tp, id_mf);
-
-    //   return MF.createFromFuzzyMF(
-    //             fuzzyMF,
-    //             id_mf
-    //     );
-
-    // }
-    
-
-    // /**
-    // * Return  the given MF(the fuzzy one),
-    // * Passing it's FuzzySystem, and it's id(the position of this MF in the MFs array)
-    // * if any error occours, like the id_mf is out of the array bound, then raise an Exception
-    // * that should be treated in along
-    // */
-    // public static xfuzzy.lang.ParamMemFunc getFuzzy(FuzzySystem sys, Integer id_tp, Integer id_mf)
-    // throws Exception {
-
-    //     //Get the given Fuzzy Type or raise an exception
-    //     xfuzzy.lang.Type fuzzyType = Type.getFuzzy(sys,id_tp);
-
-
-    //     xfuzzy.lang.ParamMemFunc mfs [] =  fuzzyType.getAllMembershipFunctions();
-
-
-    //     //ensures that the required mf id is within the bounds mfs array
-    //     if(mfs.length <= id_mf || id_mf < 0){
-    //         throw new Exception("Wrong MF ID:"+id_mf);
-    //     }
-
-
-    //   return mfs[id_mf];
-    // }
-
-    
-
-  //   /**
-  //   * Creates a MF using a XFuzzy ParamMemFunc as base
-  //   */
-  //   public static MF createFromFuzzyMF(xfuzzy.lang.ParamMemFunc pmf, Integer id_mf){
-  //   	MF mf = new MF();
-  //   	mf.id = id_mf;
-		// mf.label = pmf.label;
-		// mf.name = pmf.name;
-		// mf.pkg = pmf.pkg;
-		
-		// //add the parameters for this mfs
-		// mf.params = new ArrayList<Double>();
-		// for(int i=0; i < pmf.parameter.length; i++){
-		// 	mf.params.add(pmf.parameter[i].value);
-		// }
-			
-    			
-  //   	return mf;
-  //   }
 
  // private boolean apply() {
  //  String name = nameform.getText();

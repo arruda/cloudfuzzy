@@ -25,8 +25,12 @@ public class OperatorSets extends Controller {
   * prepare to creates a new Fuzzy OperatorSet.
   */
   public static Result prepareCreate(Long systemId) {
+      OperatorSet opSetWithOperators = new OperatorSet();
+      opSetWithOperators.setDefaultOperatorsList();
+
+
       return ok(
-               prepareCreate.render(systemId,newOPSetForm)
+               prepareCreate.render(systemId,newOPSetForm.fill(opSetWithOperators))
               );
   }
 

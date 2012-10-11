@@ -1,0 +1,59 @@
+@(systemId: Long, newOPSetForm: Form[models.OperatorSet])
+
+@import helper._
+@import MyHelpers._
+
+@operatorField(field: Field) = {
+
+    @repeat(field("options"),min=0) { option =>
+        
+        @inputText(
+            option("name")
+        )
+        
+    }   
+}
+
+@fuzzy.system.system_template{   
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>New Fuzzy Operator Set</h3> 
+            @helper.form(action = routes.Types.prepareCreate(systemId), 'id -> "newOPSetForm") {
+                
+                <fieldset>
+                    <legend>General Information for the new Type</legend>
+                    
+                    @inputText(
+                        newOPSetForm("name"), 
+                        '_label -> "Name", 
+                        '_help -> "The name of this Operator Set."
+                    )                
+
+                    
+                </fieldset>           
+                
+                <fieldset>
+                    <legend>Select Operators</legend>
+
+                    @repeatOperators(newOPSetForm("operators")) { operators =>
+                        
+                        @operatorField(operators)
+                        
+                    }   
+	                @****
+	                @repeat(contactForm("informations")) { information =>
+	                
+	                    @informationGroup(information)
+	                
+	                }
+	                ****@
+                </fieldset>         
+                
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Create">
+                </div>
+                
+            }
+ 
+    </div>
+    
+}
