@@ -72,15 +72,21 @@ public class OperatorSet{
 
     }
 
+    /**
+    * Represents the options codes
+    */
+     private static int opcode[] = 
+      { FuzzyOperator.AND, FuzzyOperator.OR, FuzzyOperator.NOT, FuzzyOperator.ALSO,
+        FuzzyOperator.IMP, FuzzyOperator.MOREORLESS, FuzzyOperator.VERY,
+        FuzzyOperator.SLIGHTLY, FuzzyOperator.DEFUZMETHOD };
 
     /**
-    *Get the available Operator for a given Operator Type.s
+    *Get the available Operator for a given Operator Type
     */
     public static Vector getAvailableOperatorsForOPType(int id_opType){
-
         //retrieve whats the kind of the operator
         int kind;
-        switch(id_opType) {
+        switch(opcode[id_opType]) {
             case FuzzyOperator.AND:
             case FuzzyOperator.OR:
             case FuzzyOperator.ALSO:
@@ -96,8 +102,12 @@ public class OperatorSet{
             default: kind = -1;
         }
 
+        //prepare the available  Operators vector
         Vector available = new Vector();
+        //add the default option
         available.addElement("default");
+
+        //for each loaded package get the all the options for a given kind
         Vector pkglist = FuzzySystem.getLoadedPackages();
         for(int i=0, size=pkglist.size(); i<size; i++) {
             XflPackage pkg = (XflPackage) pkglist.elementAt(i);
@@ -194,6 +204,34 @@ public class OperatorSet{
   //   	return mf;
   //   }
 
+ // private boolean apply() {
+ //  String name = nameform.getText();
+ //  if(!XConstants.isIdentifier(name)) {
+ //   nameform.setText("");
+ //   XDialog.showMessage(nameform,"Invalid Name");
+ //   return false;
+ //  }
+ //  Operatorset search = spec.searchOperatorset(name);
+ //  if(search != null && search != original) {
+ //   nameform.setText("");
+ //   XDialog.showMessage(nameform,"Invalid Name: Operatorset already exists");
+ //   return false;
+ //  }
+ //  if(original != null) {
+ //   original.setName(name);
+ //   for(int k=1; k<10; k++) original.set(copy.get(k),k);
+ //  }
+ //  else {
+ //   copy.setName(name);
+ //   spec.addOperatorset(copy);
+ //   original = copy;
+ //   original.setEditing(true);
+ //  }
+ //  spec.setModified(true);
+ //  copy = (Operatorset) original.clone();
+ //  xfeditor.refresh();
+ //  return true;
+ // }
 
     
 }
