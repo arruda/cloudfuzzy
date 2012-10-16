@@ -66,7 +66,7 @@ public class OperatorSet{
         public String name;
 
         //what is the selected option for this 
-        public Integer selectedOption;
+        public String selectedOption;
 
         //the available options list
         public List<String> options;
@@ -125,6 +125,13 @@ public class OperatorSet{
         }
 
         return available;
+    }
+
+    /**
+    * Get the Map for a given kind
+    */
+    public static Map<String,String> getOptionsMapForOperator(String kind){
+        
     }
 
     /**

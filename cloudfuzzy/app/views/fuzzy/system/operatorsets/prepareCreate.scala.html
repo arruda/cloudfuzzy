@@ -5,6 +5,7 @@
 
 @operatorField(field: Field) = {
 
+    @***
     @repeat(field("options"),min=0) { option =>
         
         @inputText(
@@ -12,6 +13,18 @@
         )
         
     }   
+    ***@
+
+    @select(
+        field = field("selectedOption"),
+        options = options(
+            (0 until field("option").indexes.max + 1).map(i =>
+                field("option")("[" + i + "]")
+            )
+         ),
+        '_label -> field("name"),
+        '_help -> field("name")
+    )                        
 }
 
 @fuzzy.system.system_template{   
@@ -34,9 +47,9 @@
                 <fieldset>
                     <legend>Select Operators</legend>
 
-                    @repeatOperators(newOPSetForm("operators")) { operators =>
+                    @repeatOperators(newOPSetForm("operators")) { operator =>
                         
-                        @operatorField(operators)
+                        @operatorField(operator)
                         
                     }   
 	                @****
