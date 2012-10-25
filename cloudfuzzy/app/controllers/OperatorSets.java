@@ -28,14 +28,38 @@ public class OperatorSets extends Controller {
       OperatorSet opSetWithOperators = new OperatorSet();
       opSetWithOperators.name="test";
       opSetWithOperators.setDefaultOperatorsList();
-      for(OperatorSet.Operator op : opSetWithOperators.operators){
-        System.out.println("op:"+op.name);
+      // for(OperatorSet.Operator op : opSetWithOperators.operators){
+      //   System.out.println("op:"+op.name);
 
-      }
+      // }
 
       return ok(
                prepareCreate.render(systemId,newOPSetForm.fill(opSetWithOperators))
               );
   }
 
+  /**
+  * Creates a new Fuzzy OperatorSet with some parameters.
+  */
+  public static Result create(Long systemId) {
+      Form<OperatorSet> filledForm = newOPSetForm.bindFromRequest();
+
+
+      
+      if(filledForm.hasErrors()) {
+        return badRequest(
+          prepareCreate.render(systemId,filledForm)
+        );
+      } else {
+          OperatorSet newOPSet = filledForm.get();
+          
+          System.out.println("newOPSet:"+newOPSet);
+          for(OperatorSet.Operator op : newOPSet.operators){
+            System.out.println("op:"+op.name+ "->" + op.selectedOption);
+
+          }
+         return ok(prepareCreate.render(systemId,filledForm));
+         //redirect(routes.Systems.detail(systemId)); 
+      }
+  }
 }

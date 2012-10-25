@@ -35,6 +35,7 @@ GET     /system/:id_sys/print             controllers.Systems.print(id_sys: Long
 
 ##OperatorSet
 GET     /system/:id_sys/opset/new                 controllers.OperatorSets.prepareCreate(id_sys: Long)
+POST     /system/:id_sys/opset/new                 controllers.OperatorSets.create(id_sys: Long)
 
 ##Type
 GET     /system/:id_sys/type/new                 controllers.Types.prepareCreate(id_sys: Long)

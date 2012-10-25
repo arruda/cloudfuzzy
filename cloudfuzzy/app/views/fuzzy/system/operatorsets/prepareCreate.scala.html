@@ -1,79 +1,37 @@
 @(systemId: Long, newOPSetForm: Form[models.OperatorSet])
 
 @import helper._
-@import MyHelpers._
 
+
+@hiddenField(field: Field) = {
+    @input(field, '_label -> null , '_class -> null ) { (id, name, value, _) =>
+        <input type="hidden" name="@name" value="@value"> 
+    }
+}
 
 @operatorField(field: Field) = {
 
-    @***
-    @repeat(field("options"),min=0) { option =>
-        
-        @inputText(
-            option("name")
-        )
-        
-    }   
-    ***@
 
-
+    @hiddenField(field("name"))
 
     @select(
         field("selectedOption"),
-        options =  Seq("foo"->"Foo", "bar"->"Bar"),
+        options =  options(
+                        models.OperatorSet.getAvailableOptionsMapForOperatorsByOperatorLabel(
+                            field("name").value.getOrElse("")
+                        )
+                    ),
         '_label -> field("name").value
     )          
 
 
 
-
-    @***
-
-
-    @select(
-        field("selectedOption"),
-        options =  field("options").data map{ op =>
-                    op
-                },
-        '_label -> field("name").value
-    )          
-
-
-    @inputText(
-        field("name")
-    )
-
-    @input(field, '_label -> "Phone numbers", '_class -> className) { (id, name, value, _) =>
-        <input type="text" name="@name" value="@value"> 
-        <a class="removePhone btn danger">Remove</a>
-    }
-    
-    @select(
-        field("selectedOption"),
-        options = field("options").map{ op =>
-            op->op
-        },
-        '_label -> "Label"
-    )          
-
-    
-
-    @select(
-        field("selectedOption"),
-        options = Seq("foo"->"Foo", "bar"->"Bar"),
-        '_label -> field("name").value
-    )          
-
-
-
-
-    ***@              
 }
 
 @fuzzy.system.system_template{   
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Fuzzy Operator Set</h3> 
-            @helper.form(action = routes.Types.prepareCreate(systemId), 'id -> "newOPSetForm") {
+            @helper.form(action = routes.OperatorSets.create(systemId), 'id -> "newOPSetForm") {
                 
                 <fieldset>
                     <legend>General Information for the new Type</legend>
@@ -90,7 +48,7 @@
                 <fieldset>
                     <legend>Select Operators</legend>
 
-                    @repeatOperators(newOPSetForm("operators")) { operator =>
+                    @repeat(newOPSetForm("operators")) { operator =>
                         
                         @operatorField(operator)
                         

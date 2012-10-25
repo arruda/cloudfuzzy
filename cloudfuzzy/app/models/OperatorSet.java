@@ -63,12 +63,15 @@ public class OperatorSet{
     */
     public static class Operator{
         // public Integer opType;
+        @Constraints.Required
         public String name;
 
         //what is the selected option for this 
+        @Constraints.Required
         public String selectedOption;
 
         //the available options list
+        @Valid
         public List<String> options;
     };
 
@@ -90,7 +93,7 @@ public class OperatorSet{
     /**
     *Get the available Operator for a given Operator Type
     */
-    public static Vector getAvailableOperatorsForOPType(int id_opType){
+    public static Vector getAvailableOptionsForOperatorsByOPType(int id_opType){
         //retrieve whats the kind of the operator
         int kind;
         switch(opcode[id_opType]) {
@@ -128,10 +131,37 @@ public class OperatorSet{
 
 
     /**
-    * Get the Map for a given kind
+    * Get the Options map for a given Operator, ex:
+    * and: (xfl.default, xfl.something, etc)
     */
-    public static Map<String,String> getOptionsMapForOperator(String kind){
-        return null;
+    public static Map<String,String> getAvailableOptionsMapForOperatorsByOperatorLabel(String operatorLabel){
+
+        System.out.println("operatorLabel:"+operatorLabel);
+        Integer id_opType=null;
+        
+        //gets what's the id_opType of this operator label
+        for (int i=0; i< oplabel.length; i++ ) {
+            if(operatorLabel.equals(oplabel[i])){
+                id_opType = i;
+                break;
+            }   
+        }
+        if(id_opType == null){
+            return null;
+        }
+
+        Map<String,String> availableOptions = new HashMap<String, String>();
+
+        //get the available options for this operator
+        Vector available = getAvailableOptionsForOperatorsByOPType(id_opType);
+        for(int op_pos=0; op_pos < available.size(); op_pos++){
+            availableOptions.put(String.valueOf(op_pos), available.elementAt(op_pos).toString());
+        }
+
+
+
+
+        return availableOptions;
     }
 
     /**
@@ -147,7 +177,7 @@ public class OperatorSet{
             op.options = new ArrayList<String>();
 
             //get the available options for this operator
-            Vector available = getAvailableOperatorsForOPType(i);
+            Vector available = getAvailableOptionsForOperatorsByOPType(i);
             for(int op_pos=0; op_pos < available.size(); op_pos++){
                 op.options.add(String.valueOf(available.elementAt(op_pos)));
             }
