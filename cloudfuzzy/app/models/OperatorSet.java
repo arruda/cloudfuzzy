@@ -61,7 +61,7 @@ public class OperatorSet{
     /**
     *Represent a operator that appear to be selected in the creation or edition of a OperatorsSet
     */
-    private class Operator{
+    public static class Operator{
         // public Integer opType;
         public String name;
 
@@ -70,7 +70,6 @@ public class OperatorSet{
 
         //the available options list
         public List<String> options;
-
     };
 
     /**
@@ -127,11 +126,12 @@ public class OperatorSet{
         return available;
     }
 
+
     /**
     * Get the Map for a given kind
     */
     public static Map<String,String> getOptionsMapForOperator(String kind){
-        
+        return null;
     }
 
     /**
@@ -153,7 +153,7 @@ public class OperatorSet{
             }
 
             //leaves the default as the default selected option
-            op.selectedOption = 0;
+            op.selectedOption = String.valueOf(0);
 
             //add this new operator in the operators list
             this.operators.add(op);

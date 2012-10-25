@@ -26,8 +26,12 @@ public class OperatorSets extends Controller {
   */
   public static Result prepareCreate(Long systemId) {
       OperatorSet opSetWithOperators = new OperatorSet();
+      opSetWithOperators.name="test";
       opSetWithOperators.setDefaultOperatorsList();
+      for(OperatorSet.Operator op : opSetWithOperators.operators){
+        System.out.println("op:"+op.name);
 
+      }
 
       return ok(
                prepareCreate.render(systemId,newOPSetForm.fill(opSetWithOperators))

@@ -3,6 +3,7 @@
 @import helper._
 @import MyHelpers._
 
+
 @operatorField(field: Field) = {
 
     @***
@@ -15,16 +16,58 @@
     }   
     ***@
 
+
+
     @select(
-        field = field("selectedOption"),
-        options = options(
-            (0 until field("option").indexes.max + 1).map(i =>
-                field("option")("[" + i + "]")
-            )
-         ),
-        '_label -> field("name"),
-        '_help -> field("name")
-    )                        
+        field("selectedOption"),
+        options =  Seq("foo"->"Foo", "bar"->"Bar"),
+        '_label -> field("name").value
+    )          
+
+
+
+
+    @***
+
+
+    @select(
+        field("selectedOption"),
+        options =  field("options").data map{ op =>
+                    op
+                },
+        '_label -> field("name").value
+    )          
+
+
+    @inputText(
+        field("name")
+    )
+
+    @input(field, '_label -> "Phone numbers", '_class -> className) { (id, name, value, _) =>
+        <input type="text" name="@name" value="@value"> 
+        <a class="removePhone btn danger">Remove</a>
+    }
+    
+    @select(
+        field("selectedOption"),
+        options = field("options").map{ op =>
+            op->op
+        },
+        '_label -> "Label"
+    )          
+
+    
+
+    @select(
+        field("selectedOption"),
+        options = Seq("foo"->"Foo", "bar"->"Bar"),
+        '_label -> field("name").value
+    )          
+
+
+
+
+    ***@              
 }
 
 @fuzzy.system.system_template{   
@@ -52,7 +95,13 @@
                         @operatorField(operator)
                         
                     }   
-	                @****
+
+                    @****
+
+                    @operatorField(
+                        newOPSetForm("operators[0]")
+                    )
+
 	                @repeat(contactForm("informations")) { information =>
 	                
 	                    @informationGroup(information)
