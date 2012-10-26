@@ -13,15 +13,17 @@
             </h3> 
 
                         <p>@fuzzySystem.description</p>
-                        @form(routes.Systems.delete(fuzzySystem.id)) {
-                            <input type="submit" value="Delete">
-                        }
-
                         @***
                         @form(routes.Fuzzy.deleteSystem(fuzzySystem.id)) {
                             <input type="submit" value="Delete">
                         }
                         ***@
+            <div class="actions">
+
+                @form(routes.Systems.delete(fuzzySystem.id)) {
+                    <input type="submit" value="Delete">
+                }
+            </div>
         </div>
     }
     
