@@ -192,34 +192,29 @@ public class OperatorSet{
     }
 
 
- // private boolean apply() {
- //  String name = nameform.getText();
- //  if(!XConstants.isIdentifier(name)) {
- //   nameform.setText("");
- //   XDialog.showMessage(nameform,"Invalid Name");
- //   return false;
- //  }
- //  Operatorset search = spec.searchOperatorset(name);
- //  if(search != null && search != original) {
- //   nameform.setText("");
- //   XDialog.showMessage(nameform,"Invalid Name: Operatorset already exists");
- //   return false;
- //  }
- //  if(original != null) {
- //   original.setName(name);
- //   for(int k=1; k<10; k++) original.set(copy.get(k),k);
- //  }
- //  else {
- //   copy.setName(name);
- //   spec.addOperatorset(copy);
- //   original = copy;
- //   original.setEditing(true);
- //  }
- //  spec.setModified(true);
- //  copy = (Operatorset) original.clone();
- //  xfeditor.refresh();
- //  return true;
- // }
+    /**
+    * Return  the given OperatorSet(the fuzzy one),
+    * Passing it's FuzzySystem, and it's id(the position of this OperatorSet in the OperatorSets array)
+    * if any error occours, like the id_opset is out of the array bound, then raise an Exception
+    * that should be treated in along
+    */
+    public static xfuzzy.lang.Operatorset getFuzzy(FuzzySystem sys, Integer id_opset)
+    throws Exception {
+      Specification spec=null;
+      //can throw an exception
+      spec = sys.getSpecification();  
+      
+
+      //the Operatorset for this modeling
+      xfuzzy.lang.Operatorset [] opsets = spec.getOperatorsets();
+
+      //ensures that the required type id is within the bounds tps array
+      if(opsets.length <= id_opset || id_opset < 0){
+            throw new Exception("Wrong OperatorSet ID:"+id_opset);
+      }
+
+      return opsets[id_opset];
+    }
 
     /**
     *Create a OperatorSet(fuzzy) with the given OperatorSet as source, adding it to the given spec.

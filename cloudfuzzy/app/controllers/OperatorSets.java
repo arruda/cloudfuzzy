@@ -40,18 +40,6 @@ public class OperatorSets extends Controller {
   public static Result create(Long systemId) {
       Form<OperatorSet> filledForm = newOPSetForm.bindFromRequest();
 
-      // Specification spec=null;
-      // xfuzzy.lang.Type fuzzyTp = null;
-      // Type tp = null;
-      // try{
-      //     spec = sys.getSpecification();
-      //     fuzzyTp = Type.getFuzzy(sys,id_tp);      
-      //     tp = Type.get(sys,id_tp);             
-      // }
-      // catch(Exception e){
-      //     e.printStackTrace();
-      // }
-
       FuzzySystem sys = FuzzySystem.find.byId(systemId);
       Specification spec=null;
       try{
@@ -78,15 +66,48 @@ public class OperatorSets extends Controller {
       } else {
           OperatorSet newOPSet = filledForm.get();
           
-          //spec.addOperatorset(copy);
           System.out.println("newOPSet:"+newOPSet);
           for(OperatorSet.Operator op : newOPSet.operators){
             System.out.println("op:"+op.name+ "->" + op.selectedOption);
 
           }
          OperatorSet.create(newOPSet,spec);
-         // return ok(prepareCreate.render(systemId,filledForm));
          return redirect(routes.Systems.detail(systemId)); 
       }
   }
+
+
+  /**
+  * Delete a given OperatorSet, the id_opset is nothing related to DB model.
+  * Its the position of the OperatorSet in the spec.getOperatorsets array.
+  */
+  public static Result delete(Long id_sys, Integer id_opset) {
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      xfuzzy.lang.Specification spec = sys.getSpecification();
+      xfuzzy.lang.Operatorset opset = null;
+      try{
+            opset = OperatorSet.getFuzzy(sys,id_opset);
+      }
+      catch(Exception e){
+        e.printStackTrace(); 
+        return badRequest();
+      }
+
+      //cant remove if been used in the system.
+      if(opset.isLinked()){          
+        String msg = "Cannot remove operator set\""+opset+"\".";
+        msg+="\nThere are rulebases using this operator set.";
+        return badRequest(routes.Systems.detail(id_sys));  
+      }
+
+      spec.removeOperatorset(opset);
+      //save the spec.
+      spec.setModified(true);
+      spec.save();        
+
+    return redirect(routes.Systems.detail(id_sys)); 
+  }
+
+
+
 }

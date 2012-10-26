@@ -36,6 +36,7 @@ GET     /system/:id_sys/print             controllers.Systems.print(id_sys: Long
 ##OperatorSet
 GET     /system/:id_sys/opset/new                 controllers.OperatorSets.prepareCreate(id_sys: Long)
 POST     /system/:id_sys/opset/new                 controllers.OperatorSets.create(id_sys: Long)
+GET     /system/:id_sys/opset/:id_opset/del             controllers.OperatorSets.delete(id_sys: Long, id_opset: java.lang.Integer)
 
 ##Type
 GET     /system/:id_sys/type/new                 controllers.Types.prepareCreate(id_sys: Long)
