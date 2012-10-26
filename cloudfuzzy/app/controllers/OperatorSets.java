@@ -97,7 +97,7 @@ public class OperatorSets extends Controller {
       if(opset.isLinked()){          
         String msg = "Cannot remove operator set\""+opset+"\".";
         msg+="\nThere are rulebases using this operator set.";
-        return badRequest(routes.Systems.detail(id_sys));  
+        return badRequest();  
       }
 
       spec.removeOperatorset(opset);
