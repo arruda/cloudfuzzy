@@ -13,6 +13,7 @@ import play.data.validation.Constraints;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.XflPackage;
 
+import xfuzzy.lang.Definition;
 import xfuzzy.lang.FuzzyOperator;
 
 
@@ -220,5 +221,75 @@ public class OperatorSet{
  //  return true;
  // }
 
-    
+    /**
+    *Create a OperatorSet(fuzzy) with the given OperatorSet as source, adding it to the given spec.
+    */
+    public static void create(OperatorSet newOpSet,  Specification spec){
+
+
+
+        //Creates the newFuzzyOpSet with the correct name
+        xfuzzy.lang.Operatorset newFuzzyOpSet = new xfuzzy.lang.Operatorset(newOpSet.name);
+
+        for(int id_opType =0; id_opType < newOpSet.operators.size(); id_opType++){
+            Integer id_option = Integer.valueOf(newOpSet.operators.get(id_opType).selectedOption);
+
+            // FuzzyOperator newFuzOp = createFuzzyOperatorByOpType(id_opType, id_option)
+            newFuzzyOpSet.set( 
+                    createFuzzyOperatorByOpType(id_opType, id_option),  
+                    //the FuzzyOperator Kind, ex: FuzzyOperator.AND
+                    opcode[id_opType]
+                    );
+        }
+        
+        spec.addOperatorset(newFuzzyOpSet);
+        //save the spec.
+        spec.setModified(true);
+        spec.save();        
+    }
+
+
+    /**
+    *Create a FuzzyOperator(fuzzy) with the given id_opType (if its the AND, OR, NOT, etc..)
+    * and id_option (which option was selected from the Operator.options)
+    */
+    public static FuzzyOperator createFuzzyOperatorByOpType(Integer id_opType, Integer id_option){
+        Definition def = null;
+        FuzzyOperator operator;
+        
+
+        try{
+            def = (Definition) getAvailableOptionsForOperatorsByOPType(id_opType).elementAt(id_option);
+        }
+        catch(Exception ex) {
+        }
+
+        //Enters here if id_opType was the one for default
+        if(def == null)
+        {
+            operator = xfuzzy.lang.Operatorset.getDefault(opcode[id_opType]);
+        }
+        //if is not the Default one, then isntantiate it from the definition
+        else 
+        {
+            //get the new operator
+            operator = (FuzzyOperator) def.instantiate();
+        }
+        //if this operator has no parameter or is default then just return it
+        if(operator.get().length == 0 || operator.isDefault()){
+            // copy.set(operator,opcode[id_opType]);
+            return operator;
+        }
+        //if has more then one parameter and is not the default one
+        //then need to get the parameter for it.
+        // else {
+            // ParamDialog dialog = new ParamDialog(xfeditor, operator, id_opType);
+            // if(dialog.showDialog()){
+            //     copy.set(operator,opcode[id_opType]);
+            // }    
+        // }
+
+       return operator;
+    }
+
 }
