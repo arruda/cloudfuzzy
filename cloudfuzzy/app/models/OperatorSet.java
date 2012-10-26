@@ -28,41 +28,14 @@ public class OperatorSet{
     public String name;
     @Valid
     public List<Operator> operators;
-    //make the Operators
-     // public Binary and;
-     // public Binary or;
-     // public Binary imp;
-     // public Binary also;
-     // public Unary not;
-     // public Unary very;
-     // public Unary moreorless;
-     // public Unary slightly;
-     // public DefuzMethod defuz;
-
-
-    // /**
-    // *Returns the vector of MFs Types
-    // * from the xfl package 
-    // */
-    // public static Vector getAvailableMFTypes(){        
-    //     Vector pkglist = FuzzySystem.getLoadedPackages();
-    //     Vector available = new Vector();
-    //     for(int i=0, size=pkglist.size(); i<size; i++) {
-    //         XflPackage pkg = (XflPackage) pkglist.elementAt(i);
-    //         Vector vv = pkg.get(XflPackage.MFUNC);
-    //         int vvsize = vv.size();
-    //         for(int j=0; j<vvsize; j++)
-    //         {
-    //             available.addElement( vv.elementAt(j) ); 
-    //         } 
-    //     }
-    //     return available;
-    // }
 
     /**
     *Represent a operator that appear to be selected in the creation or edition of a OperatorsSet
     */
     public static class Operator{
+        //whats the position of this operator in the opcode[]
+        public Integer id;
+
         // public Integer opType;
         @Constraints.Required
         public String name;
@@ -74,6 +47,58 @@ public class OperatorSet{
         //the available options list
         @Valid
         public List<String> options;
+
+
+        /**
+        * Create a Operator from a given id_opType(id for the operator type)  and FuzzyOperator
+        */    
+        public static Operator createFromFuzzyOperator(Integer id_opType,                                                 
+                                                 FuzzyOperator fuzzyOperator){
+
+            Operator newOperator= new Operator();
+            newOperator.id = id_opType;
+            newOperator.name = oplabel[id_opType];
+            newOperator.selectedOption = "0";
+            newOperator.options =  new ArrayList<String>();
+
+            Vector available = getAvailableOptionsForOperatorsByOPType(id_opType);
+            for(int op_pos=0; op_pos < available.size(); op_pos++){ 
+                //add to options                        
+                String option = String.valueOf(available.elementAt(op_pos));
+                newOperator.options.add(option);   
+                //if its the default one wont try the cast to definition             
+                if(op_pos == 0){
+                    continue;
+                }
+
+                Definition def = (Definition) available.elementAt(op_pos);
+
+                 if (def.getPackageName().equals(fuzzyOperator.pkg) &&
+                    def.getName().equals(fuzzyOperator.name)){
+                        //set as the selected option
+                        newOperator.selectedOption=String.valueOf(op_pos);
+                 }
+            }
+
+
+            //add the parameters
+
+             // public double[] get() {
+             //  double[] p = new double[parameter.length];
+             //  for(int i=0; i<parameter.length; i++) p[i] = parameter[i].value;
+             //  return p;
+             // }
+
+            return newOperator;
+        }
+        public String getOptionName(){
+            Integer op_pos = Integer.valueOf(this.selectedOption);
+
+            Vector available = getAvailableOptionsForOperatorsByOPType(this.id);
+
+            String optionName = String.valueOf(available.elementAt(op_pos));
+            return optionName;
+        }
     };
 
     /**
@@ -192,6 +217,22 @@ public class OperatorSet{
     }
 
 
+
+    /**
+    * Return (creating it from the spec file) the given OperatorSet,
+    * Passing it's FuzzySystem, and it's id(the position of this type in the OperatorSet array)
+    * if any error occours, like the id_opset is out of the array bound, then raise an Exception
+    * that should be treated in along
+    */
+    public static OperatorSet get(FuzzySystem sys, Integer id_opset)
+    throws Exception {
+
+      return OperatorSet.createFromFuzzyOperatorSet(
+                OperatorSet.getFuzzy(sys, id_opset),
+                id_opset
+        );
+
+    }
     /**
     * Return  the given OperatorSet(the fuzzy one),
     * Passing it's FuzzySystem, and it's id(the position of this OperatorSet in the OperatorSets array)
@@ -243,6 +284,29 @@ public class OperatorSet{
         spec.save();        
     }
 
+    
+    /**
+    * Create a OperatorSet from a given fuzzy Operator set and with the id_opset
+    */    
+    public static OperatorSet createFromFuzzyOperatorSet(xfuzzy.lang.Operatorset fuzzyOpset, Integer id_opset){
+        OperatorSet opSet = new OperatorSet();
+        
+        opSet.id = id_opset;
+        
+        opSet.name = fuzzyOpset.getName();        
+        
+        //sets the operators
+        opSet.operators = new ArrayList<Operator>();
+        //should create a Operator for each one of the FuzzyOperators
+        for(int id_opType=0; id_opType<opcode.length; id_opType++){
+            Operator op = Operator.createFromFuzzyOperator(id_opType,fuzzyOpset.get(opcode[id_opType]));
+            //add this new operator in the operators list
+            opSet.operators.add(op);
+        }
+
+        return opSet;
+    }
+    
 
     /**
     *Create a FuzzyOperator(fuzzy) with the given id_opType (if its the AND, OR, NOT, etc..)

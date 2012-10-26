@@ -1,0 +1,26 @@
+@(fuzzySystem : FuzzySystem, opSet : models.OperatorSet)
+
+@import helper._
+
+@main(fuzzySystem.name + " -> " + opSet.name)(menu_default()){   
+
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>General Information</h3>
+
+        <p>Name: @opSet.name</p>
+        
+    </div>
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>Operators</h3>
+
+        <ul>
+        @for( op <- opSet.operators ) {
+            <li>
+                    @op.name:   @op.getOptionName()
+            </li>
+         }
+        </ul>
+    </div>
+    
+}
+        

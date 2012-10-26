@@ -76,6 +76,28 @@ public class OperatorSets extends Controller {
       }
   }
 
+  /**
+  * Detail a given OperatorSet, the id_opset is nothing related to DB model.
+  * Its the position of the type in the spec.getOperatorsets array.
+  */
+  public static Result detail(Long id_sys, Integer id_opset) {
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      
+
+      OperatorSet opset = null;
+      try{
+        opset = OperatorSet.get(sys,id_opset);
+      }
+      catch(Exception e){
+        e.printStackTrace();
+            return badRequest();        
+      }
+      
+    return ok(
+            detail.render(sys,opset)
+            ); 
+  }
+
 
   /**
   * Delete a given OperatorSet, the id_opset is nothing related to DB model.
