@@ -85,8 +85,8 @@ public class OperatorSets extends Controller {
 
           }
          OperatorSet.create(newOPSet,spec);
-         return ok(prepareCreate.render(systemId,filledForm));
-         //redirect(routes.Systems.detail(systemId)); 
+         // return ok(prepareCreate.render(systemId,filledForm));
+         return redirect(routes.Systems.detail(systemId)); 
       }
   }
 }
