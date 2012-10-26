@@ -183,7 +183,7 @@ public class Operatorset implements Cloneable {
   if(!this.and.isDefault()) code += "  and "+this.and.toXfl()+";"+eol;
   if(!this.or.isDefault()) code += "  or "+this.or.toXfl()+";"+eol;
   if(!this.imp.isDefault()) code += "  imp "+this.imp.toXfl()+";"+eol;
-  if(!this.also.isDefault()) code += "  also "+this.also.toXfl()+":"+eol;
+  if(!this.also.isDefault()) code += "  also "+this.also.toXfl()+";"+eol;
   if(!this.not.isDefault()) code += "  not "+this.not.toXfl()+";"+eol;
   if(!this.very.isDefault()) code += "  strongly "+this.very.toXfl()+";"+eol;
   if(!this.moreorless.isDefault())
