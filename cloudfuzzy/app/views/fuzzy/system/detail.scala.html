@@ -4,25 +4,49 @@
 
 @main(fuzzySystem.name)(fuzzy.system.menu(fuzzySystem)){   
 
-    <div class="sub_content sub_limited">
-        <h3 class='sub_content_header'>Types for Linguistic Variables</h3>
-        @defining(fuzzySystem.getSpecification()){ spec =>
+    @defining(fuzzySystem.getSpecification()){ spec =>  
 
-             @if(spec.getTypes().length <= 0){
-                <p>There are no Types yet.</br>
-                Create a <a href="@routes.Types.prepareCreate(fuzzySystem.id)">new one!</a></p>
-             } else {
-                <ul>
-                @for( i <- 0 to spec.getTypes().length-1 ) {
-                    <li><a href="@routes.Types.detail(fuzzySystem.id, i)">
-                            @spec.getTypes()(i).getName()
-                    </a></li>
-                 }
-                </ul>
-            }
-             
-        }
-        
-    </div>
+        <div class="sub_content sub_limited">
+            <h3 class='sub_content_header'>Types for Linguistic Variables</h3>
+
+                 @if(spec.getTypes().length <= 0){
+                    <p>There are no Types yet.</br>
+                    Create a <a href="@routes.Types.prepareCreate(fuzzySystem.id)">new one!</a></p>
+                 } else {
+                    <ul>
+                    @for( i <- 0 to spec.getTypes().length-1 ) {
+                        <li><a href="@routes.Types.detail(fuzzySystem.id, i)">
+                                @spec.getTypes()(i).getName()
+                        </a></li>
+                     }
+                    </ul>
+                }
+            <div class="actions">
+                <a href="@routes.Types.prepareCreate(fuzzySystem.id)">Add Type</a>
+            </div>
+        </div>
+
+        <div class="sub_content sub_limited">
+            <h3 class='sub_content_header'>Operators Set</h3>
+
+                 @if(spec.getOperatorsets().length <= 0){
+                    <p>There are no Operators Set yet.</br>
+                    Create a <a href="@routes.OperatorSets.prepareCreate(fuzzySystem.id)">new one!</a></p>
+                 } else {
+                    <ul>
+                    @for( i <- 0 to spec.getOperatorsets().length-1 ) {
+                        <li><a href="#@*** @routes.OperatorSets.detail(fuzzySystem.id, i) ***@">
+                                @spec.getOperatorsets()(i).getName()
+                        </a></li>
+                     }
+                    </ul>
+                }
+                 
+            <div class="actions">
+                <a href="#">Add Operator Set</a>
+            </div>
+        </div>
+
+    }   
     
 }
