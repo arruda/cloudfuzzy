@@ -27,14 +27,16 @@
 
 
 }
-
-@fuzzy.system.system_template{   
+@*** 
+@main("Fuzzy System")(fuzzy.system.operatorsets.menu_add(systemId)){ 
+***@
+@fuzzy.system.system_template{    
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Fuzzy Operator Set</h3> 
             @helper.form(action = routes.OperatorSets.create(systemId), 'id -> "newOPSetForm") {
                 
                 <fieldset>
-                    <legend>General Information for the new Type</legend>
+                    <legend>General Information for the new Operator Set</legend>
                     
                     @inputText(
                         newOPSetForm("name"), 

@@ -22,7 +22,12 @@
                     </ul>
                 }
             <div class="actions">
-                <a href="@routes.Types.prepareCreate(fuzzySystem.id)">Add Type</a>
+
+                <form action="@routes.Types.prepareCreate(fuzzySystem.id)" method="GET" >
+                    
+                    <input type="submit" value="Add Type">
+                                        
+                </form>
             </div>
         </div>
 
@@ -43,7 +48,11 @@
                 }
                  
             <div class="actions">
-                <a href="#">Add Operator Set</a>
+                <form action="@routes.OperatorSets.prepareCreate(fuzzySystem.id)" method="GET" >
+                    
+                    <input type="submit" value="Add Operator Set">
+                                        
+                </form>
             </div>
         </div>
 
