@@ -83,8 +83,6 @@
 
         $(document).ready(function() {
 
-            var l;
-            // getParamsForOption();
             //get parameters for a given operator selected option
             function getParamsForOption(option) { 
                 //$("#operators_0__selectedOption")
@@ -99,7 +97,14 @@
                         id_opType: id_opType
                       },
                       function(data) {
-                        console.log(data);
+                        var newParams = data;
+                        for (var i = 0; i < newParams.length; i++) {
+                            //see if should add the i or the newParams[i]
+                            var newParamName = "operators[" + id_opType + "].options[" + id_option +"].[" + i + "].name";
+                            console.log(getNewParamHtml(newParamName,0));
+                        };
+
+                        
                 });
             }
 
@@ -110,6 +115,18 @@
                 });
                 getParamsForOption($(this));
             });
+
+            /* Creates the html for the new param hidden input */
+            function getNewParamHtml(name, value){
+                var paramHTML ='<input type="hidden" name="NAME" value="VAL" >';
+
+                paramHTML = paramHTML.replace(/NAME/g, name);
+                paramHTML = paramHTML.replace(/VAL/g, value);
+
+
+                return paramHTML;
+            }
+
 
         });
                 
