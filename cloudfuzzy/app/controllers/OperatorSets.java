@@ -8,6 +8,7 @@ import java.io.File;
 import models.FuzzySystem;
 import models.User;
 import models.OperatorSet;
+import models.Parameter;
 
 import play.*;
 import play.mvc.*;
@@ -65,6 +66,7 @@ public class OperatorSets extends Controller {
 
       
       if(filledForm.hasErrors()) {
+          System.out.println("erros:"+filledForm.errors());
         return badRequest(
           prepareCreate.render(systemId,filledForm)
         );
@@ -156,7 +158,7 @@ public class OperatorSets extends Controller {
 
 
         //Get the number of parameters for this Operator option.
-        List<String> params = OperatorSet.Operator.getParamsForOption(id_opType, id_option);
+        List<Parameter> params = OperatorSet.Operator.getParamsForOption(id_opType, id_option);
         return ok(
                     Json.toJson(params)
                     );

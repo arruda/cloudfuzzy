@@ -67,7 +67,7 @@ public class OperatorSet{
 
             //the available options list
             @Valid
-            public List<String> options;
+            public List<Parameter> options;
 
 
             /**
@@ -80,12 +80,12 @@ public class OperatorSet{
                 newOperator.id = id_opType;
                 newOperator.name = oplabel[id_opType];
                 newOperator.selectedOption = "0";
-                newOperator.options =  new ArrayList<String>();
+                newOperator.options =  new ArrayList<Parameter>();
 
                 Vector available = getAvailableOptionsForOperatorsByOPType(id_opType);
                 for(int op_pos=0; op_pos < available.size(); op_pos++){ 
                     //add to options                        
-                    String option = String.valueOf(available.elementAt(op_pos));
+                    Parameter option = new Parameter(String.valueOf(available.elementAt(op_pos)));
                     newOperator.options.add(option);   
                     //if its the default one wont try the cast to definition             
                     if(op_pos == 0){
@@ -126,16 +126,16 @@ public class OperatorSet{
             }
 
             /**
-            *get a the params(a list of strings that contain the 'name' of the parameter)
+            *get a the params(a list of Parameters that contain the 'name' and the 'value' of the parameter)
             */
-            public static List<String> getParamsForOption(int id_opType, int id_option){
+            public static List<Parameter> getParamsForOption(int id_opType, int id_option){
 
                 FuzzyOperator fuzzyOperator = OperatorSet.createFuzzyOperatorByOpType(id_opType, id_option);
 
 
                 double fuzzParams[] = fuzzyOperator.get();
 
-                ArrayList<String> params = new ArrayList<String>();
+                ArrayList<Parameter> params = new ArrayList<Parameter>();
 
                 //if this operator has no parameter or is default then just return an empty list of params
                 if(fuzzParams.length == 0 || fuzzyOperator.isDefault()){
@@ -144,7 +144,12 @@ public class OperatorSet{
 
                 for(int i=0; i<fuzzParams.length; i++) {
                     // textform[i+3].setText(""+param[i]);
-                    params.add(fuzzyOperator.parameter[i].getName());
+                    params.add(
+                            new Parameter(
+                                fuzzyOperator.parameter[i].getName(), 
+                                fuzzParams[i]
+                                )
+                            );
                 }
 
 
@@ -238,12 +243,14 @@ public class OperatorSet{
         for(int i=0; i<opcode.length; i++){
             Operator op = new Operator();
             op.name = oplabel[i];
-            op.options = new ArrayList<String>();
+            op.options = new ArrayList<Parameter>();
 
             //get the available options for this operator
             Vector available = getAvailableOptionsForOperatorsByOPType(i);
             for(int op_pos=0; op_pos < available.size(); op_pos++){
-                op.options.add(String.valueOf(available.elementAt(op_pos)));
+                op.options.add(
+                        new Parameter( String.valueOf(available.elementAt(op_pos)) )
+                    );
             }
 
             //leaves the default as the default selected option
