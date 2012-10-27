@@ -1,6 +1,10 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.io.File;
+
 import models.FuzzySystem;
 import models.User;
 import models.OperatorSet;
@@ -8,6 +12,7 @@ import models.OperatorSet;
 import play.*;
 import play.mvc.*;
 import play.data.*;
+import play.libs.Json;
 import views.html.fuzzy.system.operatorsets.*;
 
 import xfuzzy.lang.XflParser;
@@ -129,6 +134,33 @@ public class OperatorSets extends Controller {
 
     return redirect(routes.Systems.detail(id_sys)); 
   }
+
+   //=================== AJAX ===================//
+
+    /**
+    * Returns a json with the number of parameters of the given operator id and the option id
+    * id_opType is the position of the operator in the OperatorSet.operators array
+    * id_option is the position of the option Operator.options array
+    *
+    * it looks in the  request.GET for a:
+    * 'id_opType'
+    * 'id_option'
+    */
+    public static Result ajaxGetNumParamsForOption()
+    {
+
+        //get the mfKey from request GET
+        Map<String,String[]> queryParameters = request().queryString();
+        Integer id_opType = Integer.valueOf( queryParameters.get("id_opType")[0] );
+        Integer id_option = Integer.valueOf( queryParameters.get("id_option")[0] );
+
+
+        //Get the number of parameters for this Operator option.
+        List<String> params = OperatorSet.Operator.getParamsForOption(id_opType, id_option);
+        return ok(
+                    Json.toJson(params)
+                    );
+    }
 
 
 

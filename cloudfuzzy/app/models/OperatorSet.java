@@ -29,77 +29,8 @@ public class OperatorSet{
     @Valid
     public List<Operator> operators;
 
-    /**
-    *Represent a operator that appear to be selected in the creation or edition of a OperatorsSet
-    */
-    public static class Operator{
-        //whats the position of this operator in the opcode[]
-        public Integer id;
-
-        // public Integer opType;
-        @Constraints.Required
-        public String name;
-
-        //what is the selected option for this 
-        @Constraints.Required
-        public String selectedOption;
-
-        //the available options list
-        @Valid
-        public List<String> options;
 
 
-        /**
-        * Create a Operator from a given id_opType(id for the operator type)  and FuzzyOperator
-        */    
-        public static Operator createFromFuzzyOperator(Integer id_opType,                                                 
-                                                 FuzzyOperator fuzzyOperator){
-
-            Operator newOperator= new Operator();
-            newOperator.id = id_opType;
-            newOperator.name = oplabel[id_opType];
-            newOperator.selectedOption = "0";
-            newOperator.options =  new ArrayList<String>();
-
-            Vector available = getAvailableOptionsForOperatorsByOPType(id_opType);
-            for(int op_pos=0; op_pos < available.size(); op_pos++){ 
-                //add to options                        
-                String option = String.valueOf(available.elementAt(op_pos));
-                newOperator.options.add(option);   
-                //if its the default one wont try the cast to definition             
-                if(op_pos == 0){
-                    continue;
-                }
-
-                Definition def = (Definition) available.elementAt(op_pos);
-
-                 if (def.getPackageName().equals(fuzzyOperator.pkg) &&
-                    def.getName().equals(fuzzyOperator.name)){
-                        //set as the selected option
-                        newOperator.selectedOption=String.valueOf(op_pos);
-                 }
-            }
-
-
-            //add the parameters
-
-             // public double[] get() {
-             //  double[] p = new double[parameter.length];
-             //  for(int i=0; i<parameter.length; i++) p[i] = parameter[i].value;
-             //  return p;
-             // }
-
-            return newOperator;
-        }
-        public String getOptionName(){
-            Integer op_pos = Integer.valueOf(this.selectedOption);
-
-            Vector available = getAvailableOptionsForOperatorsByOPType(this.id);
-
-            String optionName = String.valueOf(available.elementAt(op_pos));
-            return optionName;
-        }
-    };
 
     /**
     * Represents the options codes
@@ -115,6 +46,113 @@ public class OperatorSet{
      private static String oplabel[] = 
       {"and", "or", "not", "also", "implication", "moreorless", "strongly",
        "slightly", "defuzzification" };
+
+
+
+        /**
+        *Represent a operator that appear to be selected in the creation or edition of a OperatorsSet
+        */
+        public static class Operator{
+
+            //whats the position of this operator in the opcode[]
+            public Integer id;
+
+            // public Integer opType;
+            @Constraints.Required
+            public String name;
+
+            //what is the selected option for this 
+            @Constraints.Required
+            public String selectedOption;
+
+            //the available options list
+            @Valid
+            public List<String> options;
+
+
+            /**
+            * Create a Operator from a given id_opType(id for the operator type)  and FuzzyOperator
+            */    
+            public static Operator createFromFuzzyOperator(Integer id_opType,                                                 
+                                                     FuzzyOperator fuzzyOperator){
+
+                Operator newOperator= new Operator();
+                newOperator.id = id_opType;
+                newOperator.name = oplabel[id_opType];
+                newOperator.selectedOption = "0";
+                newOperator.options =  new ArrayList<String>();
+
+                Vector available = getAvailableOptionsForOperatorsByOPType(id_opType);
+                for(int op_pos=0; op_pos < available.size(); op_pos++){ 
+                    //add to options                        
+                    String option = String.valueOf(available.elementAt(op_pos));
+                    newOperator.options.add(option);   
+                    //if its the default one wont try the cast to definition             
+                    if(op_pos == 0){
+                        continue;
+                    }
+
+                    Definition def = (Definition) available.elementAt(op_pos);
+
+                     if (def.getPackageName().equals(fuzzyOperator.pkg) &&
+                        def.getName().equals(fuzzyOperator.name)){
+                            //set as the selected option
+                            newOperator.selectedOption=String.valueOf(op_pos);
+                     }
+                }
+
+
+                //add the parameters
+
+                 // public double[] get() {
+                 //  double[] p = new double[parameter.length];
+                 //  for(int i=0; i<parameter.length; i++) p[i] = parameter[i].value;
+                 //  return p;
+                 // }
+
+                return newOperator;
+            }
+
+            /**
+            *Return the option name of this option name
+            */
+            public String getOptionName(){
+                Integer op_pos = Integer.valueOf(this.selectedOption);
+
+                Vector available = getAvailableOptionsForOperatorsByOPType(this.id);
+
+                String optionName = String.valueOf(available.elementAt(op_pos));
+                return optionName;
+            }
+
+            /**
+            *get a the params(a list of strings that contain the 'name' of the parameter)
+            */
+            public static List<String> getParamsForOption(int id_opType, int id_option){
+
+                FuzzyOperator fuzzyOperator = OperatorSet.createFuzzyOperatorByOpType(id_opType, id_option);
+
+
+                double fuzzParams[] = fuzzyOperator.get();
+
+                ArrayList<String> params = new ArrayList<String>();
+
+                //if this operator has no parameter or is default then just return an empty list of params
+                if(fuzzParams.length == 0 || fuzzyOperator.isDefault()){
+                    return params;
+                }
+
+                for(int i=0; i<fuzzParams.length; i++) {
+                    // textform[i+3].setText(""+param[i]);
+                    params.add(fuzzyOperator.parameter[i].getName());
+                }
+
+
+                return params;
+            }
+
+        };
+
 
     /**
     *Get the available Operator for a given Operator Type
@@ -307,6 +345,7 @@ public class OperatorSet{
         return opSet;
     }
     
+
 
     /**
     *Create a FuzzyOperator(fuzzy) with the given id_opType (if its the AND, OR, NOT, etc..)

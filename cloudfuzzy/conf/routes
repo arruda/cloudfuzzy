@@ -57,6 +57,7 @@ GET     /system/:id_sys/type/:id_type/mf/:id_mf/del               controllers.MF
 
 ##AJAX ROUTES
 GET     /ajax/get_num_params_mf                              controllers.MFs.ajaxGetNumParams()
+GET     /ajax/get_num_params_operator_option                              controllers.OperatorSets.ajaxGetNumParamsForOption()
 
 #JS Routing
 #GET     /javascriptRoutes     controllers.Application.javascriptRoutes

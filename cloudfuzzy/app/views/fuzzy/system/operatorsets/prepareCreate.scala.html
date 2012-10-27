@@ -21,7 +21,8 @@
                             field("name").value.getOrElse("")
                         )
                     ),
-        '_label -> field("name").value
+        '_label -> field("name").value,
+        '_class -> "option_field"
     )          
 
 
@@ -77,5 +78,41 @@
             }
  
     </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            var l;
+            // getParamsForOption();
+            //get parameters for a given operator selected option
+            function getParamsForOption(option) { 
+                //$("#operators_0__selectedOption")
+                var id_option = option.val();
+                var id_opType = option.attr('id').split("operators_")[1].split("__selectedOption")[0];
+
+                console.log("getParamsForOption(" + id_opType + "," + id_option + ")");
+                //get the parameters for the operator
+                $.get('/ajax/get_num_params_operator_option',
+                      {
+                        id_option: id_option,
+                        id_opType: id_opType
+                      },
+                      function(data) {
+                        console.log(data);
+                });
+            }
+
+            $("[id$='selectedOption']").each(function() {
+                $(this).change(function(){
+                    getParamsForOption($(this));
+
+                });
+                getParamsForOption($(this));
+            });
+
+        });
+                
+    </script>
     
 }
