@@ -65,8 +65,12 @@ public class OperatorSet{
             @Constraints.Required
             public String selectedOption;
 
+            // //the available options list
+            // public List<Parameter> options;
+
             //the params for the selectedOption list
             public List<Parameter> params;
+
 
 
             /**
@@ -79,13 +83,13 @@ public class OperatorSet{
                 newOperator.id = id_opType;
                 newOperator.name = oplabel[id_opType];
                 newOperator.selectedOption = "0";
-                newOperator.options =  new ArrayList<Parameter>();
+                newOperator.params =  new ArrayList<Parameter>();
 
                 Vector available = getAvailableOptionsForOperatorsByOPType(id_opType);
                 for(int op_pos=0; op_pos < available.size(); op_pos++){ 
-                    //add to options                        
-                    Parameter option = new Parameter(String.valueOf(available.elementAt(op_pos)));
-                    newOperator.options.add(option);   
+                    // //add to options                        
+                    // Parameter option = new Parameter(String.valueOf(available.elementAt(op_pos)));
+                    // newOperator.options.add(option);   
                     //if its the default one wont try the cast to definition             
                     if(op_pos == 0){
                         continue;
@@ -97,17 +101,22 @@ public class OperatorSet{
                         def.getName().equals(fuzzyOperator.name)){
                             //set as the selected option
                             newOperator.selectedOption=String.valueOf(op_pos);
+
+                            //add params for it
+                            double fuzzParams[] = fuzzyOperator.get();
+                            for(int i=0; i< fuzzParams.length; i++){
+
+                                newOperator.params.add(
+                                        new Parameter(
+                                            fuzzyOperator.parameter[i].getName(), 
+                                            fuzzParams[i]
+                                            )
+                                        );
+                            }
+
                      }
                 }
 
-
-                //add the parameters
-
-                 // public double[] get() {
-                 //  double[] p = new double[parameter.length];
-                 //  for(int i=0; i<parameter.length; i++) p[i] = parameter[i].value;
-                 //  return p;
-                 // }
 
                 return newOperator;
             }
@@ -129,7 +138,7 @@ public class OperatorSet{
             */
             public static List<Parameter> getParamsForOption(int id_opType, int id_option){
 
-                FuzzyOperator fuzzyOperator = OperatorSet.createFuzzyOperatorByOpType(id_opType, id_option);
+                FuzzyOperator fuzzyOperator = createFuzzyOperatorByOpType(id_opType, id_option);
 
 
                 double fuzzParams[] = fuzzyOperator.get();
@@ -153,6 +162,50 @@ public class OperatorSet{
 
 
                 return params;
+            }
+
+            /**
+            *Create a FuzzyOperator(fuzzy) with the given id_opType (if its the AND, OR, NOT, etc..)
+            * and id_option (which option was selected from the Operator.options)
+            * OBS: This dont add the FuzzyOperator parameters, they need to be populated after this.
+            */
+            public static FuzzyOperator createFuzzyOperatorByOpType(Integer id_opType, Integer id_option){
+                Definition def = null;
+                FuzzyOperator operator;
+                
+
+                try{
+                    def = (Definition) getAvailableOptionsForOperatorsByOPType(id_opType).elementAt(id_option);
+                }
+                catch(Exception ex) {
+                }
+
+                //Enters here if id_opType was the one for default
+                if(def == null)
+                {
+                    operator = xfuzzy.lang.Operatorset.getDefault(opcode[id_opType]);
+                }
+                //if is not the Default one, then isntantiate it from the definition
+                else 
+                {
+                    //get the new operator
+                    operator = (FuzzyOperator) def.instantiate();
+                }
+                //if this operator has no parameter or is default then just return it
+                if(operator.get().length == 0 || operator.isDefault()){
+                    // copy.set(operator,opcode[id_opType]);
+                    return operator;
+                }
+                //if has more then one parameter and is not the default one
+                //then need to get the parameter for it.
+                // else {
+                    // ParamDialog dialog = new ParamDialog(xfeditor, operator, id_opType);
+                    // if(dialog.showDialog()){
+                    //     copy.set(operator,opcode[id_opType]);
+                    // }    
+                // }
+
+               return operator;
             }
 
         };
@@ -242,15 +295,15 @@ public class OperatorSet{
         for(int i=0; i<opcode.length; i++){
             Operator op = new Operator();
             op.name = oplabel[i];
-            op.options = new ArrayList<Parameter>();
+            op.params = new ArrayList<Parameter>();
 
-            //get the available options for this operator
-            Vector available = getAvailableOptionsForOperatorsByOPType(i);
-            for(int op_pos=0; op_pos < available.size(); op_pos++){
-                op.options.add(
-                        new Parameter( String.valueOf(available.elementAt(op_pos)) )
-                    );
-            }
+            // //get the available options for this operator
+            // Vector available = getAvailableOptionsForOperatorsByOPType(i);
+            // for(int op_pos=0; op_pos < available.size(); op_pos++){
+            //     op.options.add(
+            //             new Parameter( String.valueOf(available.elementAt(op_pos)) )
+            //         );
+            // }
 
             //leaves the default as the default selected option
             op.selectedOption = String.valueOf(0);
@@ -316,7 +369,7 @@ public class OperatorSet{
 
             // FuzzyOperator newFuzOp = createFuzzyOperatorByOpType(id_opType, id_option)
             newFuzzyOpSet.set( 
-                    createFuzzyOperatorByOpType(id_opType, id_option),  
+                    Operator.createFuzzyOperatorByOpType(id_opType, id_option),  
                     //the FuzzyOperator Kind, ex: FuzzyOperator.AND
                     opcode[id_opType]
                     );
@@ -352,48 +405,5 @@ public class OperatorSet{
     }
     
 
-
-    /**
-    *Create a FuzzyOperator(fuzzy) with the given id_opType (if its the AND, OR, NOT, etc..)
-    * and id_option (which option was selected from the Operator.options)
-    */
-    public static FuzzyOperator createFuzzyOperatorByOpType(Integer id_opType, Integer id_option){
-        Definition def = null;
-        FuzzyOperator operator;
-        
-
-        try{
-            def = (Definition) getAvailableOptionsForOperatorsByOPType(id_opType).elementAt(id_option);
-        }
-        catch(Exception ex) {
-        }
-
-        //Enters here if id_opType was the one for default
-        if(def == null)
-        {
-            operator = xfuzzy.lang.Operatorset.getDefault(opcode[id_opType]);
-        }
-        //if is not the Default one, then isntantiate it from the definition
-        else 
-        {
-            //get the new operator
-            operator = (FuzzyOperator) def.instantiate();
-        }
-        //if this operator has no parameter or is default then just return it
-        if(operator.get().length == 0 || operator.isDefault()){
-            // copy.set(operator,opcode[id_opType]);
-            return operator;
-        }
-        //if has more then one parameter and is not the default one
-        //then need to get the parameter for it.
-        // else {
-            // ParamDialog dialog = new ParamDialog(xfeditor, operator, id_opType);
-            // if(dialog.showDialog()){
-            //     copy.set(operator,opcode[id_opType]);
-            // }    
-        // }
-
-       return operator;
-    }
 
 }

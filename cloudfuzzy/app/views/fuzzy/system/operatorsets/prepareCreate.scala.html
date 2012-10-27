@@ -55,17 +55,18 @@
                         
                         @operatorField(operator)
 
-                        @repeat(operator("options")) { option =>
-                            
-                            @hiddenField(option("name"), "parameter")
-                            @hiddenField(option("value"), "parameter")
-                            
-                        }   
                         
                     }   
 
 
                     @****
+
+                        @repeat(operator("params")) { params =>
+                            
+                            @hiddenField(params("name"), "parameter")
+                            @hiddenField(params("value"), "parameter")
+                            
+                        }   
 
                     @operatorField(
                         newOPSetForm("operators[0]")
@@ -87,8 +88,8 @@
  
     </div>
     <div id="dialog-modal" title="Parameters Information">
+        <p>This option requires the definition of some parameters, please expecify them.</p>
         <form id="params-dl-form">
-
         </form>
     </div>
 
@@ -97,11 +98,58 @@
         $(document).ready(function() {
 
             $( "#dialog-modal" ).dialog({
-                height: 300,
-                width: 350,
                 autoOpen: false,
-                height: 140,
-                modal: true
+                modal: true,
+                buttons: {
+                    Ok: function() {
+                        var dl_form = $( this ).find("#params-dl-form");
+
+                        var option = $( this ).data("option");
+                        var id_opType = $( this ).data("id_opType");
+                        var id_option = $( this ).data("id_option");
+
+                        var newParams = [];
+
+                        dl_form.find("label").each(function(){
+                            var newParam = {};
+                            var name = $( this ).html();
+                            var val = $("#" + $( this ).attr("for")).val();
+                            newParam.name =name;
+                            newParam.value = val;
+                            newParams.push(newParam);
+                        });
+
+                        setParamsHtmls(option, id_opType, id_option, newParams);
+
+                        $( this ).dialog( "close" );
+                        dl_form.contents("input").remove();
+                        dl_form.contents("label").remove();
+                    },
+                    Cancel: function() {
+                        $( this ).dialog( "close" );
+                        var dl_form = $( this ).find("#params-dl-form");
+                        var option = $($( this ).data("option"));
+                        option.val(option.data("prev"));
+                        option.find("option:selected").attr("selected",false);
+                        option.find("[value='"+ option.val() +"']").attr("selected",true);
+                        //console.log(option);
+
+                        dl_form.contents("input").remove();
+                        dl_form.contents("label").remove();
+                    }
+                },
+                close: function() {                   
+                    $( this ).dialog( "close" );
+                    var dl_form = $( this ).find("#params-dl-form");
+                    var option = $($( this ).data("option"));
+                    option.val(option.data("prev"));
+                    option.find("option:selected").attr("selected",false);
+                    option.find("[value='"+ option.val() +"']").attr("selected",true);
+                    //console.log(option);
+
+                    dl_form.contents("input").remove();
+                    dl_form.contents("label").remove();
+                }
             });
 
             //get parameters for a given operator selected option
@@ -119,21 +167,30 @@
                       },
                       function(data) {
                         var newParams = data;
-                        setParamsHtmls(option, id_opType, id_option, newParams);
-                        // $( "#dialog-modal" ).dialog( "open" );
+                        //if has params then open dialog, else will probably just remove any that was there before
+                        if(newParams.length == 0){
+                            setParamsHtmls(option, id_opType, id_option, newParams);                            
+                        }
+                        else{
+                            openDialogForParams(option, id_opType, id_option, newParams);
+                        }
                         
                 });
             }
 
             $("[id$='selectedOption']").each(function() {
-                $(this).change(function(){
-                    getParamsForOption($(this));
+                var jqThis = $(this);
+                jqThis.data("prev",jqThis.val())
+                jqThis.change(function(){
+                    console.log("prev:"+ jqThis.data("prev"))
+                    getParamsForOption(jqThis);
+                    jqThis.data("prev",jqThis.val())
 
                 });
                 //getParamsForOption($(this));
             });
 
-            /* Creates the html for the new param hidden input */
+            /* Creates the html for the new param hidden inputs */
             function getNewParamHtml(newParamInfo, name, value){
                 var paramNameHTML ='<input type="hidden" name="NAME" value="VAL" class="parameter">';
 
@@ -149,22 +206,55 @@
                 return paramNameHTML + paramValueHTML;
             }
 
+            /* Adds the html for the inputs of each new param in the form, and remove the old ones if any */
             function setParamsHtmls(option, id_opType, id_option, newParams){
+
+                console.log("setParamsHtmls: " + option.attr('id') + ", " + id_opType + ", "+id_option + ", " + newParams); 
+                console.log("newParams: "); 
+                console.log(newParams); 
+
                 var form = $("#newOPSetForm");
                 // operators[0].options[1].name
-                var oldParams = $("[name^='operators["+ id_opType +"].options["+ id_option +"].']");
+
+                //see if should add the i or the newParams[i]
+                var oldParams = $("[name^='operators["+ id_opType +"].params']");
 
                 //remove if any
                 oldParams.each(function(){
+                    console.log("removing: "+ $(this).attr('name'));
                     $(this).remove();
                 });
                 for (var i = 0; i < newParams.length; i++) {
-                    //see if should add the i or the newParams[i]
-                    var newParamInfo = "operators[" + id_opType + "].options[" + i +"]";
+
+                    //add new params inputs
+                    var newParamInfo = "operators[" + id_opType + "].params[" + i +"]";
                     var newParamHtml = getNewParamHtml(newParamInfo, newParams[i].name, newParams[i].value);
                     form.append(newParamHtml);
                     console.log("adding: "+newParamHtml + "\n" +"to: " + form.attr('id'));
                 };
+            }
+
+            /* Open the dialog to input the data of the new params */
+            function openDialogForParams(option, id_opType, id_option, newParams){
+                var dialog = $( "#dialog-modal" );
+
+
+                var dl_form = dialog.find("#params-dl-form");
+
+                for (var i = 0; i < newParams.length; i++) {
+                    var param_label= "<label for='param_"+ i +"_value'>"+ newParams[i].name +"</label>";
+                    var param_input= "<input type='text' id='param_"+ i +"_value' name='param[" + i + "].value' value='" + newParams[i].value + "' >";                            
+                    dl_form.append(param_label+param_input);
+                    console.log("adding: "+param_label+param_input + "\n" +"to: " + dl_form.attr('id'));
+                };
+                                
+
+                dialog.data("option", option);
+                dialog.data("id_opType", id_opType);
+                dialog.data("id_option", id_option);
+                dialog.data("newParams", newParams);
+                dialog.dialog( "open" );
+
             }
 
 
