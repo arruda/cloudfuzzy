@@ -65,9 +65,8 @@ public class OperatorSet{
             @Constraints.Required
             public String selectedOption;
 
-            //the available options list
-            @Valid
-            public List<Parameter> options;
+            //the params for the selectedOption list
+            public List<Parameter> params;
 
 
             /**

@@ -3,9 +3,9 @@
 @import helper._
 
 
-@hiddenField(field: Field) = {
+@hiddenField(field: Field, className: String = "") = {
     @input(field, '_label -> null , '_class -> null ) { (id, name, value, _) =>
-        <input type="hidden" name="@name" value="@value"> 
+        <input type="hidden" name="@name" value="@value" class="@className"> 
     }
 }
 
@@ -54,8 +54,16 @@
                     @repeat(newOPSetForm("operators")) { operator =>
                         
                         @operatorField(operator)
+
+                        @repeat(operator("options")) { option =>
+                            
+                            @hiddenField(option("name"), "parameter")
+                            @hiddenField(option("value"), "parameter")
+                            
+                        }   
                         
                     }   
+
 
                     @****
 
@@ -78,10 +86,23 @@
             }
  
     </div>
+    <div id="dialog-modal" title="Parameters Information">
+        <form id="params-dl-form">
+
+        </form>
+    </div>
 
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            $( "#dialog-modal" ).dialog({
+                height: 300,
+                width: 350,
+                autoOpen: false,
+                height: 140,
+                modal: true
+            });
 
             //get parameters for a given operator selected option
             function getParamsForOption(option) { 
@@ -99,7 +120,7 @@
                       function(data) {
                         var newParams = data;
                         setParamsHtmls(option, id_opType, id_option, newParams);
-
+                        // $( "#dialog-modal" ).dialog( "open" );
                         
                 });
             }
@@ -109,7 +130,7 @@
                     getParamsForOption($(this));
 
                 });
-                getParamsForOption($(this));
+                //getParamsForOption($(this));
             });
 
             /* Creates the html for the new param hidden input */
@@ -129,19 +150,20 @@
             }
 
             function setParamsHtmls(option, id_opType, id_option, newParams){
-                // var form = $("#newOPSetForm");
-                var opParent = $("#"+option.attr('id')+"_field");//option.parentElement.parentElement;
+                var form = $("#newOPSetForm");
+                // operators[0].options[1].name
+                var oldParams = $("[name^='operators["+ id_opType +"].options["+ id_option +"].']");
 
                 //remove if any
-                opParent.find(".parameter").each(function(){
+                oldParams.each(function(){
                     $(this).remove();
                 });
                 for (var i = 0; i < newParams.length; i++) {
                     //see if should add the i or the newParams[i]
                     var newParamInfo = "operators[" + id_opType + "].options[" + i +"]";
                     var newParamHtml = getNewParamHtml(newParamInfo, newParams[i].name, newParams[i].value);
-                    opParent.append(newParamHtml);
-                    console.log("adding: "+newParamHtml + "\n" +"to: " + opParent.attr('id'));
+                    form.append(newParamHtml);
+                    console.log("adding: "+newParamHtml + "\n" +"to: " + form.attr('id'));
                 };
             }
 
