@@ -120,7 +120,7 @@
                         });
 
                         setParamsHtmls(option, id_opType, id_option, newParams);
-
+                        option.data("prev", option.val());
                         $( this ).dialog( "close" );
                         dl_form.contents("input").remove();
                         dl_form.contents("label").remove();
@@ -129,9 +129,9 @@
                         $( this ).dialog( "close" );
                         var dl_form = $( this ).find("#params-dl-form");
                         var option = $($( this ).data("option"));
-                        option.val(option.data("prev"));
-                        option.find("option:selected").attr("selected",false);
-                        option.find("[value='"+ option.val() +"']").attr("selected",true);
+                        option.val("" + option.data("prev"));
+                        //option.find("option:selected").attr("selected",false);
+                        //option.find("[value='"+ option.val() +"']").attr("selected",true);
                         //console.log(option);
 
                         dl_form.contents("input").remove();
@@ -141,11 +141,14 @@
                 close: function() {                   
                     $( this ).dialog( "close" );
                     var dl_form = $( this ).find("#params-dl-form");
-                    var option = $($( this ).data("option"));
+                    var option =  $($( this ).data("option"));
+                    //var option = $("#operators_2__selectedOption");
+                    // option.find("option:selected").attr("selected",false);
+                    // option.find("[value='"+ option.val() +"']").attr("selected",true);
                     option.val(option.data("prev"));
-                    option.find("option:selected").attr("selected",false);
-                    option.find("[value='"+ option.val() +"']").attr("selected",true);
-                    //console.log(option);
+                    // console.log(option);
+                    // console.log(option.val());
+                    // console.log(option.data("prev"));
 
                     dl_form.contents("input").remove();
                     dl_form.contents("label").remove();
@@ -169,7 +172,11 @@
                         var newParams = data;
                         //if has params then open dialog, else will probably just remove any that was there before
                         if(newParams.length == 0){
-                            setParamsHtmls(option, id_opType, id_option, newParams);                            
+                            setParamsHtmls(option, id_opType, id_option, newParams);                           
+                            console.log(option.data("prev")); 
+                            console.log("setting new val:"+ id_option);
+                            option.data("prev", option.val());                          
+                            console.log(option.data("prev"));
                         }
                         else{
                             openDialogForParams(option, id_opType, id_option, newParams);
@@ -184,7 +191,7 @@
                 jqThis.change(function(){
                     console.log("prev:"+ jqThis.data("prev"))
                     getParamsForOption(jqThis);
-                    jqThis.data("prev",jqThis.val())
+                    // jqThis.data("prev new:",jqThis.val())
 
                 });
                 //getParamsForOption($(this));
