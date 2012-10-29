@@ -75,10 +75,27 @@ public class OperatorSets extends Controller {
           
           System.out.println("newOPSet:"+newOPSet);
           for(OperatorSet.Operator op : newOPSet.operators){
-            System.out.println("op:"+op.name+ "->" + op.selectedOption);
+            System.out.println("op:"+op.name+ "->" + op.selectedOption );
+            if(op.params != null){
+              for(Parameter param : op.params){
+                System.out.println(">>Param:"+param.name+ "->" + param.value);
+
+              }
+
+            }
 
           }
-         OperatorSet.create(newOPSet,spec);
+
+         try{
+            OperatorSet.create(newOPSet,spec);
+         }
+         catch(Exception e){
+            filledForm.reject("params", "Invalid parameters");  
+
+            return badRequest(
+                prepareCreate.render(systemId,filledForm)
+            );
+         }
          return redirect(routes.Systems.detail(systemId)); 
       }
   }

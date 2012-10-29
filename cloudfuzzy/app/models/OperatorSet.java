@@ -208,6 +208,42 @@ public class OperatorSet{
                return operator;
             }
 
+            /**
+            *Create a FuzzyOperator(fuzzy) with the given id_opType (if its the AND, OR, NOT, etc..)
+            * and id_option (which option was selected from the Operator.options)
+            * This will also add the parameters to the fuzzy operator.
+            */
+            public static FuzzyOperator createFuzzyOperatorByOpTypeAndParameters(
+                                                Integer id_opType, Integer id_option,
+                                                 List<Parameter> params) throws Exception{
+                
+                FuzzyOperator operator = Operator.createFuzzyOperatorByOpType(id_opType, id_option);
+                
+                //if this operator has no parameter or is default then just return it
+                if(operator.get().length == 0 || operator.isDefault()){
+                    // copy.set(operator,opcode[id_opType]);
+                    return operator;
+                }
+                //if has more then one parameter and is not the default one
+                //then need to add the parameter to it.
+                else {
+                    
+                    double paramsValue[] = new double[params.size()];
+                    for(int i=0; i<paramsValue.length; i++)
+                    {
+                        paramsValue[i] = params.get(i).value;
+                    }
+                    operator.set(paramsValue);
+                    if(!operator.test()) {
+                        throw new Exception("Invalid parameters");
+                    } 
+
+
+                }
+
+               return operator;
+            }
+
         };
 
 
@@ -357,19 +393,21 @@ public class OperatorSet{
     /**
     *Create a OperatorSet(fuzzy) with the given OperatorSet as source, adding it to the given spec.
     */
-    public static void create(OperatorSet newOpSet,  Specification spec){
+    public static void create(OperatorSet newOpSet,  Specification spec) throws Exception{
 
 
 
         //Creates the newFuzzyOpSet with the correct name
         xfuzzy.lang.Operatorset newFuzzyOpSet = new xfuzzy.lang.Operatorset(newOpSet.name);
-
+        
         for(int id_opType =0; id_opType < newOpSet.operators.size(); id_opType++){
             Integer id_option = Integer.valueOf(newOpSet.operators.get(id_opType).selectedOption);
 
-            // FuzzyOperator newFuzOp = createFuzzyOperatorByOpType(id_opType, id_option)
+            FuzzyOperator newFuzOp = Operator.createFuzzyOperatorByOpTypeAndParameters(id_opType, id_option, newOpSet.operators.get(id_opType).params);
+
+
             newFuzzyOpSet.set( 
-                    Operator.createFuzzyOperatorByOpType(id_opType, id_option),  
+                    newFuzOp,  
                     //the FuzzyOperator Kind, ex: FuzzyOperator.AND
                     opcode[id_opType]
                     );
