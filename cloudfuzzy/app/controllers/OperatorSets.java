@@ -168,7 +168,7 @@ public class OperatorSets extends Controller {
     public static Result ajaxGetNumParamsForOption()
     {
 
-        //get the mfKey from request GET
+        //get the keys from request GET
         Map<String,String[]> queryParameters = request().queryString();
         Integer id_opType = Integer.valueOf( queryParameters.get("id_opType")[0] );
         Integer id_option = Integer.valueOf( queryParameters.get("id_option")[0] );

@@ -49,10 +49,42 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-            $.plot($("#mfs_plot"), [ [[0, 0], [1, 1]] ], { yaxis: { max: 1 } });
+
+
+
+            var plotData = []
+            var plotOptions = {
+                lines: { show: true },
+                points: { show: true },
+                xaxis: { tickDecimals: 0, tickSize: 1 }
+            };
+
+            //get parameters for a given operator selected option
+            function getMfsDataAndOptions(id_sys, id_type) { 
+
+                console.log("getMfsDataAndOptions(" + id_sys + "," + id_type + ")");
+
+                $.getJSON('/ajax/get_mfs_plot_data', 
+                      {
+                        id_sys: id_sys,
+                        id_type: id_type
+                      },
+                    function(data) {
+                        var newData  = data.datas;
+                        var newOptions  = data.options;
+                        console.log(newData);
+                        console.log(newOptions);
+                       plotData = newData;
+                       plotOptions = newOptions;
+                        $.plot($("#mfs_plot"), plotData, plotOptions);
+                        
+                });
+            }
+
+            getMfsDataAndOptions(@fuzzySystem.id, @tp.id);
 
         });
                 
     </script>
-    
+
 }

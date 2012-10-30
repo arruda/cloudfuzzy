@@ -1,6 +1,9 @@
 package controllers;
 
+import java.util.Map;
+import java.util.ArrayList;
 import java.io.File;
+
 import models.FuzzySystem;
 import models.User;
 // import models.MF;
@@ -9,6 +12,7 @@ import models.Type;
 import play.*;
 import play.mvc.*;
 import play.data.*;
+import play.libs.Json;
 import views.html.fuzzy.system.types.*;
 // import views.html.*;
 
@@ -20,6 +24,11 @@ import xfuzzy.lang.Specification;
 import xfuzzy.lang.Universe;
 import xfuzzy.lang.XflParser;
 // import xfuzzy.util.XConstants;
+
+
+import br.blog.arruda.plot.Plot;
+import br.blog.arruda.plot.data.PlotData;
+
 
 @Security.Authenticated(Secured.class)
 public class Types extends Controller {
@@ -257,179 +266,52 @@ public class Types extends Controller {
       }
   }
 
-//   //=================== Type (Linguistic Variabel Type) ===================//
+   //=================== AJAX ===================//
 
-//   public static Result newType(Long systemId) {
-//       Form<Type> filledForm = newTypeForm.bindFromRequest();
+    /**
+    * Returns a json with the plot data for the mfs of a given id_sys and id_type
+    */
+    public static Result ajaxGetMFsPlotData()
+    {
+        //get the keys from request GET
+        Map<String,String[]> queryParameters = request().queryString();
+        Integer id_sys = Integer.valueOf( queryParameters.get("id_sys")[0] );
+        Integer id_type = Integer.valueOf( queryParameters.get("id_type")[0] );
 
-//       // Check the numMFs
-//       if(!filledForm.field("type").valueOr("").isEmpty()) {
-//           int type = Integer.valueOf(filledForm.field("type").valueOr(""));
-//           //if needed the number of mfs
-//           if(type != 8 || type != 9) {
-//               if(filledForm.field("numMFs").valueOr("").isEmpty()){
-//                   filledForm.reject("numMFs", "Need the number of MFs");                  
-//               }
-//               else{
-//                   int numMFs = Integer.valueOf(filledForm.field("numMFs").valueOr("")); 
-//                   if(numMFs<0){
-//                       filledForm.reject("numMFs", "Need a positive number");    
-                      
-//                   }
-//               }
-              
-//           }
-//       }
-//       FuzzySystem sys = FuzzySystem.find.byId(systemId);
-//       Specification spec=null;
-//       try{
-//           spec = sys.loadSpecification();             
-//       }
-//       catch(Exception e){
-//           e.printStackTrace();
-//       }
-      
-//       //checks if the type exists with this name
-//       if(spec.searchType(filledForm.field("name").valueOr("")) != null){
-//           filledForm.reject("name", "Already exist a type with this name");  
-//       }
-      
-//       if(filledForm.hasErrors()) {
-//         return badRequest(
-//                 views.html.fuzzy.systemDetail.render(FuzzySystem.find.byId(systemId),filledForm)
-//         );
-//       } else {
-//           Type newType = filledForm.get();
-//           Type.create(newType, spec);
-//          return redirect(routes.Fuzzy.list()); 
-//       }
-//   }
 
-//   public static Result detailType(Long id_sys, Integer id_tp) {
-//       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
-//       xfuzzy.lang.Specification spec = sys.getSpecification();
-//       xfuzzy.lang.Type [] tps = spec.getTypes();
 
-      
-//       if(tps.length <= id_tp || id_tp < 0){
-//             return badRequest();
-//       }
-      
-//       Type tp = Type.createFromFuzzyType(tps[id_tp], id_tp);
-//       Form<Type> editTypeForm = form(Type.class).fill(tp);
-      
-//     return ok(
-//             views.html.fuzzy.detailType.render(id_sys,tp,editTypeForm)
-//             ); 
-//   }
+        //populate the axis information with some data
+        ArrayList<Double> xAxis = new ArrayList<Double>();
+        ArrayList<Double> yAxis = new ArrayList<Double>();
+        for (int i =0;i<10;i++){
+                xAxis.add(Double.valueOf(i));
+                yAxis.add(Double.valueOf(i*10));
+        }
+        //populate the axis information with some data
+        ArrayList<Double> xAxis2 = new ArrayList<Double>();
+        ArrayList<Double> yAxis2 = new ArrayList<Double>();
+        for (int i =0;i<10;i++){
+                xAxis2.add(Double.valueOf(i*2));
+                yAxis2.add(Double.valueOf(i*20));
+        }
+        //generate a PlotData from the axis information created above
+        ArrayList<PlotData> datas = new ArrayList<PlotData>();
+        datas.add(Plot.generatePlotData(xAxis, yAxis));
+        // datas.add(Plot.generatePlotData(xAxis2, yAxis2));
 
-//   public static Result editType(Long id_sys, Integer id_tp) {
-//       Form<Type> filledForm = editTypeForm.bindFromRequest();
+        //generate a simple plot using the datas set above and with xlabel and ylabel.
+        Plot plot = Plot.generatePlot(datas, "x axis", "y axis");
 
-//       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
-//       Specification spec=null;
-//       try{
-//           spec = sys.loadSpecification();             
-//       }
-//       catch(Exception e){
-//           e.printStackTrace();
-//       }
-      
+        String jsonData = plot.printData();
+        jsonData = jsonData.substring(0, jsonData.length()-2) + "]";
 
-//       //the types for this modeling
-//       xfuzzy.lang.Type [] tps = spec.getTypes();
 
-//       //ensures that the required type id is within the bounds tps array
-//       if(tps.length <= id_tp || id_tp < 0){
-//             return badRequest();
-//       }
-      
-//       //checks if the type exists with this name
-//       //considering that need to ignore the original type been edited.
-//       xfuzzy.lang.Type search_tp = spec.searchType(filledForm.field("name").valueOr(""));
-//       if(search_tp != null && search_tp != tps[id_tp]){
-//           filledForm.reject("name", "Already exist a type with this name");  
-//       }
-
-      
-//       if(filledForm.hasErrors()) {
-//         return badRequest(
-//                 views.html.fuzzy.detailType.render(id_sys, null,filledForm)
-//         );
-//       } else {
-
-//           Type editedType = filledForm.get();
-//           Type.edit(editedType,tps[id_tp], spec);
-//          return redirect(routes.Fuzzy.detailSystem(id_sys)); 
-//       }
-//   }
-
-// //  public static 
-  
-// //=================== END Type (Linguistic Variabel Type) ===================//
-
-//   //=================== MF (Membership Function) ===================//
-
-//   public static Result editMF(Long id_sys, Integer id_tp, Integer id_mf) {
-//       Form<MF> filledForm = editMFForm.bindFromRequest();
-
-//       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
-//       Specification spec=null;
-//       try{
-//           spec = sys.loadSpecification();             
-//       }
-//       catch(Exception e){
-//           e.printStackTrace();
-//       }
-       
-
-//       //the types for this modeling
-//       xfuzzy.lang.Type [] tps = spec.getTypes();
-
-//       //ensures that the required type id is within the bounds tps array
-//       if(tps.length <= id_tp || id_tp < 0){
-//             return badRequest();
-//       }
-      
-//       xfuzzy.lang.Type tp = spec.getTypes()[id_tp];
-
-//       //ensures that the required mf  id is within the bounds mfs array
-//       if(tp.getMembershipFunctions().length <= id_mf || id_mf < 0){
-//             return badRequest();
-//       }
-      
-//       //get the mf beein edited
-//       xfuzzy.lang.ParamMemFunc mf = tp.getMembershipFunctions()[id_mf];
-      
-      
-//       //
-
-//       //checks if the type exists with this name
-//        if(!XConstants.isIdentifier(filledForm.field("label").valueOr(""))) {
-//         filledForm.reject("label", "Invalid linguistic label");  
-//        }
-//        ParamMemFunc[] mfs = tp.getMembershipFunctions();
-//        for(int i=0; i<mfs.length; i++)
-//         if(i != id_mf && mfs[i].label.equals(filledForm.field("label").valueOr(""))) {
-//          String msg = "Label "+filledForm.field("label").valueOr("")+" already exists";
-//          filledForm.reject("label", msg);  
-//          break;
-//         }
-
-      
-//       if(filledForm.hasErrors()) {
-//         return badRequest(
-//                 views.html.fuzzy.editMF.render(id_sys, id_tp, filledForm)
-//         );
-//       } else {
-
-//           MF editedMF = filledForm.get();
-//           MF.edit(editedMF,mf, spec);
-//          return redirect(routes.Fuzzy.detailSystem(id_sys)); 
-//       }
-//   }
-  
-//   //=================== END MF (Membership Function) ===================//
+        return ok( 
+                    "{\"datas\": " + 
+                    jsonData + ", \"options\":" + plot.printOptions()
+                    + "}"
+                    );
+    }
 
   
   
