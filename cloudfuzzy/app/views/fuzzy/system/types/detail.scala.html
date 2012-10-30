@@ -4,33 +4,55 @@
 
 @main(fuzzySystem.name + " -> " + tp.name)(fuzzy.system.types.menu(fuzzySystem,tp.id)){   
 
-    <div class="sub_content sub_limited">
-        <h3 class='sub_content_header'>Universe of Discourse</h3>
+    <div class="sub_lefted">
+        <div class="sub_content sub_limited">
+            <h3 class='sub_content_header'>Universe of Discourse</h3>
 
-        <p>Min: @tp.min</p>
-        <p>Max: @tp.max</p>
-        <p>Card: @tp.card</p>
-        
-    </div>
-    <div class="sub_content sub_limited">
-        <h3 class='sub_content_header'>Membership Functions</h3>
-
-        <ul>
-        @for( mf <- tp.MFs ) {
-            <li><a href="@routes.MFs.detail(fuzzySystem.id,tp.id,mf.id)">
-                    @mf.label
-            </a></li>
-         }
-        </ul>
-        
-        <div class="actions">
-            <form action="@routes.MFs.prepareCreate(fuzzySystem.id,tp.id)" method="GET" >
-                
-                <input type="submit" value="Add Membership Function">
-                                    
-            </form>
+            <p>Min: @tp.min</p>
+            <p>Max: @tp.max</p>
+            <p>Card: @tp.card</p>
+            
         </div>
+        <div class="sub_content sub_limited">
+            <h3 class='sub_content_header'>Membership Functions</h3>
+
+            <ul>
+            @for( mf <- tp.MFs ) {
+                <li><a href="@routes.MFs.detail(fuzzySystem.id,tp.id,mf.id)">
+                        @mf.label
+                </a></li>
+             }
+            </ul>
+            
+            <div class="actions">
+                <form action="@routes.MFs.prepareCreate(fuzzySystem.id,tp.id)" method="GET" >
+                    
+                    <input type="submit" value="Add Membership Function">
+                                        
+                </form>
+            </div>
+        </div>
+
     </div>
+    <div class="sub_righted">
+        <div class="sub_content">
+            <h3 class='sub_content_header'>Membership Functions Plot</h3>
+            <div id="mfs_plot" style="width:500px;height:300px" class="sub_limited">
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $.plot($("#mfs_plot"), [ [[0, 0], [1, 1]] ], { yaxis: { max: 1 } });
+
+        });
+                
+    </script>
     
 }
-        
