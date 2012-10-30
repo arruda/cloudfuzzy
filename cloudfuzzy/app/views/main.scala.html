@@ -16,7 +16,14 @@
 
 @jsExtra = {
     <script src="@routes.Assets.at("javascripts/bootstrap-button.js")" type="text/javascript"></script>
+    @***
+    Used for the nice modal panels
+    ***@
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    @***
+    Used to generate the plots 
+    ***@
+    <script src="@routes.Assets.at("javascripts/flot/jquery.flot.js")" type="text/javascript"></script>
     
 <!--  
 <script src="@routes.Assets.at("javascripts/jquery-cookie/jquery.cookie.js")" type="text/javascript"></script>
@@ -56,8 +63,9 @@
 
     }
 
-    $("#login_post").live("click", function(){
-      do_login();
+    $("#login_post").live("click", function(event){
+        event.preventDefault();
+        do_login();
     });
 
 
