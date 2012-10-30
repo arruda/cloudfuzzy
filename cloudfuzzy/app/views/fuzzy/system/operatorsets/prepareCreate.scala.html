@@ -55,29 +55,15 @@
                         
                         @operatorField(operator)
 
-                        
-                    }   
-
-
-                    @****
-
                         @repeat(operator("params")) { params =>
                             
                             @hiddenField(params("name"), "parameter")
                             @hiddenField(params("value"), "parameter")
                             
                         }   
+                        
+                    }   
 
-                    @operatorField(
-                        newOPSetForm("operators[0]")
-                    )
-
-	                @repeat(contactForm("informations")) { information =>
-	                
-	                    @informationGroup(information)
-	                
-	                }
-	                ****@
                 </fieldset>         
                 
                 <div class="actions">
