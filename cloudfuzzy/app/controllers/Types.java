@@ -291,13 +291,13 @@ public class Types extends Controller {
         ArrayList<Double> xAxis2 = new ArrayList<Double>();
         ArrayList<Double> yAxis2 = new ArrayList<Double>();
         for (int i =0;i<10;i++){
-                xAxis2.add(Double.valueOf(i*2));
+                xAxis2.add(Double.valueOf(i*i));
                 yAxis2.add(Double.valueOf(i*20));
         }
         //generate a PlotData from the axis information created above
         ArrayList<PlotData> datas = new ArrayList<PlotData>();
         datas.add(Plot.generatePlotData(xAxis, yAxis));
-        // datas.add(Plot.generatePlotData(xAxis2, yAxis2));
+        datas.add(Plot.generatePlotData(xAxis2, yAxis2));
 
         //generate a simple plot using the datas set above and with xlabel and ylabel.
         Plot plot = Plot.generatePlot(datas, "x axis", "y axis");
