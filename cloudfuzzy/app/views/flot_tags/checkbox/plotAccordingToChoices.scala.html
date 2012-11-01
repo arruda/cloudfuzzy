@@ -1,0 +1,16 @@
+@(plotContainer : String , plotDataVar : String = "plotData", plotOptionsVar : String = "plotOptions", choiceContainer : String = "#choices")
+
+    function plotAccordingToChoices() {
+        var choiceContainer = $("@choiceContainer");  
+        var newdata = [];
+        choiceContainer.find("input:checked").each(function () {
+            var key = $(this).attr("name");
+            if (key)
+                if (@{plotDataVar + "[key]"})
+                    newdata.push(@{plotDataVar + "[key]"});
+        });
+        if (newdata.length > 0)
+            $.plot($("@plotContainer"), newdata, @plotOptionsVar);
+        
+    }
+	

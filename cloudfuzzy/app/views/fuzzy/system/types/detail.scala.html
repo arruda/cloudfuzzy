@@ -37,6 +37,7 @@
     <div class="sub_righted">
         <div class="sub_content">
             <h3 class='sub_content_header'>Membership Functions Plot</h3>
+            <table id="choices" style="font-weight: bold"><tr ><td>Show:</td></tr></table>
             <div id="mfs_plot" style="width:500px;height:300px" class="sub_limited">
             </div>
 
@@ -50,14 +51,11 @@
 
         $(document).ready(function() {
 
+                 
+  
 
-
-            var plotData = []
-            var plotOptions = {
-                lines: { show: true },
-                points: { show: true },
-                xaxis: { tickDecimals: 0, tickSize: 1 }
-            };
+            var plotData = [];
+            var plotOptions = {};
 
             //get parameters for a given operator selected option
             function getMfsDataAndOptions(id_sys, id_type) { 
@@ -74,12 +72,19 @@
                         var newOptions  = data.options;
                         console.log(newData);
                         console.log(newOptions);
-                       plotData = newData;
-                       plotOptions = newOptions;
-                        $.plot($("#mfs_plot"), plotData, plotOptions);
+                        plotData = newData;
+                        plotOptions = newOptions;
+
+
+                        @flot_tags.checkbox.prepareChoices("#mfs_plot") 
+
+                        plotAccordingToChoices();
                         
                 });
             }
+
+            @flot_tags.checkbox.plotAccordingToChoices("#mfs_plot") 
+
 
             getMfsDataAndOptions(@fuzzySystem.id, @tp.id);
 

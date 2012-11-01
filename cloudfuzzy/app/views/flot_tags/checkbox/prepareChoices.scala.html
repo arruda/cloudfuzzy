@@ -1,0 +1,23 @@
+@(plotContainer : String , plotDataVar : String = "plotData", plotOptionsVar : String = "plotOptions", choiceContainer : String = "#choices")
+    
+        // hard-code color indices to prevent them from shifting as
+        // datas are turned on/off
+        var i = 1;
+        $.each(@plotDataVar, function(key, val) {
+            val.color = i;
+            ++i;
+        });
+
+        // insert checkboxes                    
+        var choiceContainer = $("@choiceContainer");  
+        var iterator = 0;
+        $.each(@plotDataVar, function(key, val) {
+                if(iterator % 2==0){
+                    choiceContainer.append('<td style="padding-right: 10px"><input type="checkbox" name="' + key +
+                   '" checked="checked" id="id' + key + '"/>' +
+                   '<label for="id' + key + '">'
+                    + val.label + '</label></td>');                             
+                }
+        });
+        choiceContainer.find("input").click(plotAccordingToChoices);
+    
