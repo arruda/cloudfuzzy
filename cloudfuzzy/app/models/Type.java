@@ -20,6 +20,10 @@ import xfuzzy.lang.Universe;
 import xfuzzy.lang.XflException;
 import xfuzzy.lang.ParamMemFunc;
 
+
+import br.blog.arruda.plot.Plot;
+import br.blog.arruda.plot.data.PlotData;
+
 public class Type {
 	
 	/**
@@ -186,5 +190,28 @@ public class Type {
 		  spec.save();		  
     }
     
-    
+    /**
+    * Return the MFs Plot for this given id_type and id_sys
+    */
+    public static Plot getMFsPlots(xfuzzy.lang.Type tp){
+
+        xfuzzy.lang.ParamMemFunc[] mfs = tp.getAllMembershipFunctions();
+
+        ArrayList<PlotData> datas = new ArrayList<PlotData>();
+        for(int i=0; i<mfs.length; i++){
+            datas.add(MF.getMFPlotData(mfs[i],tp));
+        } 
+
+        //generate a simple plot using the datas set above and with xlabel and ylabel.
+        Plot plot = Plot.generatePlot(datas, "x axis", "y axis");
+        return plot;
+    }
+
+
+
+  // private void paintFunctions() {
+  //  ParamMemFunc[] mf = copy.getAllMembershipFunctions();
+  //  for(int i=0; i<mf.length; i++) if(mf[i]!=mfexcl) paintFunction(mf[i],gmf);
+  //  if(mfsel != null && mfsel.test() ) paintFunction(mfsel,gsel);
+  // }
 }

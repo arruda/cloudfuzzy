@@ -269,38 +269,35 @@ public class Types extends Controller {
    //=================== AJAX ===================//
 
     /**
-    * Returns a json with the plot data for the mfs of a given id_sys and id_type
+    * Returns a json with the plot data for the mfs of a given id_sys and id_tp
     */
     public static Result ajaxGetMFsPlotData()
     {
         //get the keys from request GET
         Map<String,String[]> queryParameters = request().queryString();
-        Integer id_sys = Integer.valueOf( queryParameters.get("id_sys")[0] );
-        Integer id_type = Integer.valueOf( queryParameters.get("id_type")[0] );
+        Long id_sys = Long.valueOf( queryParameters.get("id_sys")[0] );
+        Integer id_tp = Integer.valueOf( queryParameters.get("id_type")[0] );
 
 
+          FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+          Specification spec=null;
+          try{
+              spec = sys.getSpecification();             
+          }
+          catch(Exception e){
+              e.printStackTrace();
+          }
 
-        //populate the axis information with some data
-        ArrayList<Double> xAxis = new ArrayList<Double>();
-        ArrayList<Double> yAxis = new ArrayList<Double>();
-        for (int i =0;i<10;i++){
-                xAxis.add(Double.valueOf(i));
-                yAxis.add(Double.valueOf(i*10));
-        }
-        //populate the axis information with some data
-        ArrayList<Double> xAxis2 = new ArrayList<Double>();
-        ArrayList<Double> yAxis2 = new ArrayList<Double>();
-        for (int i =0;i<10;i++){
-                xAxis2.add(Double.valueOf(i*i));
-                yAxis2.add(Double.valueOf(i*20));
-        }
-        //generate a PlotData from the axis information created above
-        ArrayList<PlotData> datas = new ArrayList<PlotData>();
-        datas.add(Plot.generatePlotData(xAxis, yAxis));
-        datas.add(Plot.generatePlotData(xAxis2, yAxis2));
+          xfuzzy.lang.Type fuzzyType = null;
+          try{
+            fuzzyType = Type.getFuzzy(sys,id_tp);
+          }
+          catch(Exception e){
+            return badRequest();        
+          }
 
         //generate a simple plot using the datas set above and with xlabel and ylabel.
-        Plot plot = Plot.generatePlot(datas, "x axis", "y axis");
+        Plot plot = Type.getMFsPlots(fuzzyType);
         plot.getDatas().get(0).setLabel("Dt1");
         plot.getDatas().get(1).setLabel("Dt2");
 
