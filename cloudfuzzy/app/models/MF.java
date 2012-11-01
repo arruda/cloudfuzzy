@@ -313,8 +313,8 @@ public class MF{
                 yp = yi;
                 next += step;
 
-                xAxis.add(xp);
-                yAxis.add(yp);
+                // xAxis.add(xp);
+                // yAxis.add(yp);
             }
             double yi = fuzzyMF.compute(x);
             //what should do here?  

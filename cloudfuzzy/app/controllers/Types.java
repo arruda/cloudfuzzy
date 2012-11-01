@@ -298,8 +298,6 @@ public class Types extends Controller {
 
         //generate a simple plot using the datas set above and with xlabel and ylabel.
         Plot plot = Type.getMFsPlots(fuzzyType);
-        plot.getDatas().get(0).setLabel("Dt1");
-        plot.getDatas().get(1).setLabel("Dt2");
 
         String jsonData = plot.printData();
         jsonData = jsonData.substring(0, jsonData.length()-2) + "]";
