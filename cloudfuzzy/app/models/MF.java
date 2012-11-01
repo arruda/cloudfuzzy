@@ -298,9 +298,9 @@ public class MF{
 
         double next = min + step;
         double xp = 0;
-        double yp = fuzzyMF.compute(min);
-        xAxis.add(xp);
-        yAxis.add(yp);
+        double yp = fuzzyMF.compute(min); //should be 0 here
+        // xAxis.add(xp);
+        // yAxis.add(yp);
         for(int xi=0+1; xi<=100; xi++) {
             double x = min + xi*(max-min)/100;
 
@@ -309,20 +309,20 @@ public class MF{
 
                 //what should do here?
                 //gc.drawLine(xp,yp,xi,yi);
+                xAxis.add(xp);
+                yAxis.add(yp);
                 xp = xi;
                 yp = yi;
                 next += step;
 
-                // xAxis.add(xp);
-                // yAxis.add(yp);
             }
             double yi = fuzzyMF.compute(x);
             //what should do here?  
             // gc.drawLine(xp,yp,xi,yi);
+            // xAxis.add(xp);
+            // yAxis.add(yp);
             xp = xi;
             yp = yi;
-            xAxis.add(xp);
-            yAxis.add(yp);
         }
 
         plotData = Plot.generatePlotData(xAxis, yAxis);
