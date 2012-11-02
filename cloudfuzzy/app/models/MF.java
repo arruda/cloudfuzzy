@@ -281,48 +281,48 @@ public class MF{
     public static PlotData getMFPlotData(xfuzzy.lang.ParamMemFunc fuzzyMF, xfuzzy.lang.Type tp){
         PlotData plotData;
 
+        int numSamples = 300;
         ArrayList<Double> xAxis = new ArrayList<Double>();
         ArrayList<Double> yAxis = new ArrayList<Double>();
         double min = tp.getUniverse().min(); 
         double max = tp.getUniverse().max(); 
         double step = tp.getUniverse().step(); 
 
-        // if(fuzzyMF instanceof pkg.xfl_mf_singleton) {
-        //     double value = fuzzyMF.get()[0];
-        //     double x = (value - min)/(max-min);
+        //If its a singleton, the do only this and return the plot
+        if(fuzzyMF instanceof pkg.xfl_mf_singleton) {
+            double value = fuzzyMF.get()[0];
+            double x = value;
 
-        //     //what should do here?
-        //     // if(x>=x0 && x<=x1) gc.drawLine(x,y0,x,y1);
-        //     // return;
-        // }
+            if(x>=min && x<=numSamples){
 
-        double next = min + step;
-        double xp = 0;
-        double yp = fuzzyMF.compute(min); //should be 0 here
-        // xAxis.add(xp);
-        // yAxis.add(yp);
-        for(int xi=0+1; xi<=100; xi++) {
-            double x = min + xi*(max-min)/100;
+                xAxis.add(x);
+                xAxis.add(x);
+                yAxis.add(0.0);
+                yAxis.add(1.0);
+                plotData = Plot.generatePlotData(xAxis, yAxis);
+                plotData.setLabel(fuzzyMF.label);
 
-            while(x >= next) {
-                double yi = fuzzyMF.compute(next);
-
-                //what should do here?
-                //gc.drawLine(xp,yp,xi,yi);
-                xAxis.add(xp);
-                yAxis.add(yp);
-                xp = xi;
-                yp = yi;
-                next += step;
-
+                return plotData;
             }
-            double yi = fuzzyMF.compute(x);
+        }
+
+        //for other types it should go from min->max(for X Axis) in a universe of numSamples
+        //And for Y axis it will go from the computation of each X Axis value(0->1)
+
+        double xp = min;
+        double yp = fuzzyMF.compute(min); //should be 0 here
+        xAxis.add(xp);
+        yAxis.add(yp);
+        for(int xi=0; xi<=numSamples; xi++) {
+            double x = min + xi*((max-min)/numSamples);
+
+            double y =fuzzyMF.compute(x);
             //what should do here?  
             // gc.drawLine(xp,yp,xi,yi);
-            // xAxis.add(xp);
-            // yAxis.add(yp);
-            xp = xi;
-            yp = yi;
+            xAxis.add(xp);
+            yAxis.add(yp);
+            xp = x;
+            yp = y;
         }
 
         plotData = Plot.generatePlotData(xAxis, yAxis);
@@ -331,33 +331,5 @@ public class MF{
 
     }
 
-  // private void paintFunction(ParamMemFunc mf, Graphics2D gc) {
-  //  double min = copy.getUniverse().min(); 
-  //  double max = copy.getUniverse().max(); 
-  //  double step = copy.getUniverse().step(); 
-  //  if(mf instanceof pkg.xfl_mf_singleton) {
-  //   double value = mf.get()[0];
-  //   int x = (int) ((value - min)*(x1-x0)/(max-min)) + x0;
-  //   if(x>=x0 && x<=x1) gc.drawLine(x,y0,x,y1);
-  //   return;
-  //  }
-  //  double next = min + step;
-  //  int xp = x0;
-  //  int yp = (int) (mf.compute(min)*(y1-y0)) + y0;
-  //  for(int xi=x0+1; xi<=x1; xi++) {
-  //   double x = min + (xi-x0)*(max-min)/(x1-x0);
-  //   while(x >= next) {
-  //    int yi = (int) (mf.compute(next)*(y1-y0)) + y0;
-  //    gc.drawLine(xp,yp,xi,yi);
-  //    xp = xi;
-  //    yp = yi;
-  //    next += step;
-  //   }
-  //   int yi = (int) (mf.compute(x)*(y1-y0)) + y0;
-  //   gc.drawLine(xp,yp,xi,yi);
-  //   xp = xi;
-  //   yp = yi;
-  //  }
-  // }
     
 }

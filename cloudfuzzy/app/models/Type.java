@@ -191,7 +191,7 @@ public class Type {
     }
     
     /**
-    * Return the MFs Plot for this given id_type and id_sys
+    * Return the MFs Plot for this given Fuzzy Type
     */
     public static Plot getMFsPlots(xfuzzy.lang.Type tp){
 

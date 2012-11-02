@@ -296,7 +296,7 @@ public class Types extends Controller {
             return badRequest();        
           }
 
-        //generate a simple plot using the datas set above and with xlabel and ylabel.
+        //generate a simple plot using the datas set bellow and with xlabel and ylabel.
         Plot plot = Type.getMFsPlots(fuzzyType);
 
         String jsonData = plot.printData();
