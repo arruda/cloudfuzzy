@@ -2,7 +2,11 @@
 
 @import helper._
 
-@main(fuzzySystem.name + " -> " + tp.name + " -> " + mf.label)(fuzzy.system.types.mfs.menu(fuzzySystem, tp, mf)){   
+@navHeader = {
+    My Fuzzy Systems
+}  
+
+@main(fuzzySystem.name + " -> " + tp.name + " -> " + mf.label)(navHeader)(fuzzy.system.types.mfs.menu(fuzzySystem, tp, mf)){   
 
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>General Information</h3>

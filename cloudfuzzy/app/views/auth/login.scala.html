@@ -1,9 +1,12 @@
 @(loginForm: Form[Authentication.Login])
 
 @import helper._
-  
 
-@main("Login")(menu_default()){
+@navHeader = {
+    Login
+}  
+
+@main("Login")(navHeader)(menu_default()){
     @***
     @auth.login(loginForm)
     ***@

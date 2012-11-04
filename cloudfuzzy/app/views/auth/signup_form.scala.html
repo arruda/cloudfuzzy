@@ -3,7 +3,11 @@
 @import helper._
 
   
-@main("Register")(menu_default()) {
+@navHeader = {
+    Register
+}  
+
+@main("Register")(navHeader)(menu_default()) {
 
     @helper.form(action = routes.Authentication.submit, 'id -> "registerForm") {
         

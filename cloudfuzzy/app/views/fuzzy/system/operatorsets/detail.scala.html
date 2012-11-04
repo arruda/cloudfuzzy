@@ -2,7 +2,12 @@
 
 @import helper._
 
-@main(fuzzySystem.name + " -> " + opSet.name)(menu_default()){   
+  
+@navHeader = {
+    @fuzzySystem.name + " -> " + @opSet.name
+}  
+
+@main("")(navHeader)(menu_default()){   
 
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>General Information</h3>

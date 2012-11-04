@@ -2,7 +2,11 @@
 
 @import helper._
 
-@main("XFL content for " + fuzzySystem.name +  " System" )(fuzzy.system.menu(fuzzySystem)){   
+@navHeader = {
+    My Fuzzy Systems
+}  
+
+@main("XFL content for " + fuzzySystem.name +  " System" )(navHeader)(fuzzy.system.menu(fuzzySystem)){   
 
         @defining(fuzzySystem.getSpecification()){ spec =>
             <textarea name="xfl" disabled="true" rows="40" cols="60">@spec.toXfl()</textarea>             

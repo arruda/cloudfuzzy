@@ -1,4 +1,4 @@
-@(title: String)(menu: Html)(content: Html)
+@(title: String)(navHeader: Html)(menu: Html)(content: Html)
 
 @***
 @cloudFuzzyDesc = "CloudFuzzy - The Online Fuzzy Toolbox Solution."
@@ -86,7 +86,7 @@
 
     <div id='content_area'>
       <div id='content'>
-        <h2 class='content_header'>@title</h2>
+        <h2 class='content_header'>@navHeader</h2>
         @content
       </div>  
     </div>
