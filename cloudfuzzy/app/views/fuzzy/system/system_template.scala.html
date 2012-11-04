@@ -1,3 +1,6 @@
 @(fuzzySystem : FuzzySystem, content: Html)
+@***
+This is a template that should be used in anyview like System Detail.
+***@
 
-@main(fuzzySystem.name)(menu_default())(content)
+@main(fuzzySystem.name)(fuzzy.system.menu(fuzzySystem))(content)
