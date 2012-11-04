@@ -304,9 +304,7 @@ public class Types extends Controller {
 
 
         return ok( 
-                    "{\"datas\": " + 
-                    jsonData + ", \"options\":" + plot.printOptions()
-                    + "}"
+                    plot.printAll()
                     );
     }
 
