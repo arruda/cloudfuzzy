@@ -2,7 +2,7 @@
 
 @import helper._
 
-@fuzzy.system.system_template{   
+@main("My Fuzzy Systems")(menu_default()){ 
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Fuzzy System</h3> 
             @helper.form(action = routes.Systems.create, 'id -> "systemForm") {

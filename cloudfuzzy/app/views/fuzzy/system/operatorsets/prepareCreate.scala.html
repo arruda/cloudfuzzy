@@ -31,7 +31,7 @@
 @*** 
 @main("Fuzzy System")(fuzzy.system.operatorsets.menu_add(systemId)){ 
 ***@
-@fuzzy.system.system_template{    
+@main("")(menu_default()){    
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Fuzzy Operator Set</h3> 
             @helper.form(action = routes.OperatorSets.create(systemId), 'id -> "newOPSetForm") {
