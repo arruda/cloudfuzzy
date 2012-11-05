@@ -1,0 +1,12 @@
+@(fuzzySystem : FuzzySystem, rb : models.RuleBase)(content: Html)
+@***
+This is a template that should be used in anyview like RuleBase Detail.
+***@
+
+
+@navHeader = {
+    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>>
+    @rb.name
+}  
+
+@main("Rule Base")(navHeader)(fuzzy.system.rulebases.menu(fuzzySystem,rb))(content)

@@ -1,0 +1,31 @@
+@(fuzzySystem: FuzzySystem,  newRBForm: Form[models.RuleBase])
+
+@import helper._
+
+
+
+@fuzzy.system.system_template(fuzzySystem){   
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>New RuleBase</h3> 
+            @helper.form(action = routes.OperatorSets.create(fuzzySystem.id), 'id -> "newRBForm") {
+                
+                <fieldset>
+                    <legend>General Information for the new Operator Set</legend>
+                    
+                    @inputText(
+                        newRBForm("name"), 
+                        '_label -> "Name", 
+                        '_help -> "The name of this Rule Base."
+                    )                
+
+                </fieldset>           
+                
+                
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Create">
+                </div>
+                
+            }
+ 
+    </div>
+}

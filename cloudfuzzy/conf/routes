@@ -55,6 +55,10 @@ GET     /system/:id_sys/type/:id_type/mf/:id_mf               controllers.MFs.de
 GET     /system/:id_sys/type/:id_type/mf/:id_mf/del               controllers.MFs.delete(id_sys: Long, id_type: java.lang.Integer, id_mf: java.lang.Integer)
 
 
+##OperatorSet
+GET     /system/:id_sys/rb/new                 controllers.RuleBases.prepareCreate(id_sys: Long)
+
+
 ##AJAX ROUTES
 GET     /ajax/get_num_params_mf                              controllers.MFs.ajaxGetNumParams()
 GET     /ajax/get_mfs_plot_data                              controllers.Types.ajaxGetMFsPlotData()

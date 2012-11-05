@@ -12,7 +12,7 @@ import play.*;
 import play.mvc.*;
 import play.data.*;
 import play.libs.Json;
-// import views.html.fuzzy.system.rulebases.*;
+import views.html.fuzzy.system.rulebases.*;
 
 import xfuzzy.lang.XflParser;
 import xfuzzy.lang.Specification;
@@ -24,19 +24,17 @@ public class RuleBases extends Controller {
   
 
   //=================== CRUD ===================//
-  // /**
-  // * prepare to creates a new Fuzzy RuleBase.
-  // */
-  // public static Result prepareCreate(Long systemId) {
-  //     FuzzySystem sys = FuzzySystem.find.byId(systemId);
-      
-  //     OperatorSet opSetWithOperators = new OperatorSet();
-  //     opSetWithOperators.setDefaultOperatorsList();
 
-  //     return ok(
-  //              prepareCreate.render(sys,newOPSetForm.fill(opSetWithOperators))
-  //             );
-  // }
+  /**
+  * prepare to creates a new Fuzzy RuleBase.
+  */
+  public static Result prepareCreate(Long systemId) {
+      FuzzySystem sys = FuzzySystem.find.byId(systemId);
+      
+      return ok(
+               prepareCreate.render(sys,newRBForm)
+              );
+  }
 
 
 
