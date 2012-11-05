@@ -137,13 +137,16 @@ header {
 }
 
 .content_header {
-margin: 0px -10px 0px;
-padding: 5px 10px 2px;
-border-radius: 10px 10px 0 0;
-text-decoration: none!important;
-color: #555;
-border-bottom: 1px solid #AAA;
-background: #DDD;
+    margin: 0px -10px 0px;
+    padding: 5px 10px 2px;
+    border-radius: 10px 10px 0 0;
+    text-decoration: none!important;
+    color: #555;
+    border-bottom: 1px solid #AAA;
+    background: #DDD;
+}
+.content_header a{
+    text-decoration: none;
 }
 
 /********************************-SUB-CONTENT--********************************/

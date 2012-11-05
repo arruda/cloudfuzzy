@@ -5,7 +5,8 @@ This is a template that should be used in anyview like Type Detail.
 
 
 @navHeader = {
-    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a> -> @tp.name
+    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>>
+    @tp.name
 }  
 
 @main("Type")(navHeader)(fuzzy.system.types.menu(fuzzySystem,tp))(content)

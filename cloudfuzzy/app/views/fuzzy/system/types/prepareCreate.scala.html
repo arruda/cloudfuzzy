@@ -1,4 +1,4 @@
-@(systemId: Long, newTypeForm: Form[models.Type])
+@(fuzzySystem: FuzzySystem, newTypeForm: Form[models.Type])
 
 @import helper._
 
@@ -6,10 +6,10 @@
     My Fuzzy Systems
 }  
 
-@main("")(navHeader)(menu_default()){      
+@fuzzy.system.system_template(fuzzySystem){      
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Fuzzy Type</h3> 
-            @helper.form(action = routes.Types.create(systemId), 'id -> "newTypeForm") {
+            @helper.form(action = routes.Types.create(fuzzySystem.id), 'id -> "newTypeForm") {
                 
                 <fieldset>
                     <legend>General Information for the new Type</legend>

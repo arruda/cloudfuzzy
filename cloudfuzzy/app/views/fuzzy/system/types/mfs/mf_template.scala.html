@@ -1,0 +1,13 @@
+@(fuzzySystem : FuzzySystem, tp : models.Type, mf : models.MF)(content: Html)
+@***
+This is a template that should be used in anyview like MF Detail.
+***@
+
+
+@navHeader = {
+    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>>
+    <a href="@routes.Types.detail(fuzzySystem.id, tp.id)">@tp.name</a>>
+    @mf.label
+}  
+
+@main("Type")(navHeader)(fuzzy.system.types.mfs.menu(fuzzySystem,tp,mf))(content)

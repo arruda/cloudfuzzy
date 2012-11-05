@@ -43,8 +43,10 @@ public class Types extends Controller {
   * prepare to creates a new Fuzzy Type.
   */
   public static Result prepareCreate(Long systemId) {
+
+      FuzzySystem sys = FuzzySystem.find.byId(systemId);
       return ok(
-               prepareCreate.render(systemId,newTypeForm)
+               prepareCreate.render(sys,newTypeForm)
                // index.render()
               );
   }
@@ -92,12 +94,12 @@ public class Types extends Controller {
       
       if(filledForm.hasErrors()) {
         return badRequest(
-          prepareCreate.render(systemId,filledForm)
+          prepareCreate.render(sys,filledForm)
         );
       } else {
           Type newType = filledForm.get();
           Type.create(newType, spec);
-         return redirect(routes.Systems.detail(systemId)); 
+         return redirect(routes.Systems.detail(sys.id)); 
       }
   }
 
