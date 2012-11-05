@@ -16,13 +16,11 @@ import play.libs.Json;
 
 import xfuzzy.lang.XflParser;
 import xfuzzy.lang.Specification;
-// import xfuzzy.util.XConstants;
 
 @Security.Authenticated(Secured.class)
 public class RuleBases extends Controller {
   
   static Form<RuleBase> newRBForm = form(RuleBase.class);
-  // static Form<Type> editTypeForm = form(Type.class);
   
 
   //=================== CRUD ===================//

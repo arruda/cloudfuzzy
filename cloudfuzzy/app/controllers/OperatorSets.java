@@ -18,7 +18,6 @@ import views.html.fuzzy.system.operatorsets.*;
 
 import xfuzzy.lang.XflParser;
 import xfuzzy.lang.Specification;
-// import xfuzzy.util.XConstants;
 
 @Security.Authenticated(Secured.class)
 public class OperatorSets extends Controller {
