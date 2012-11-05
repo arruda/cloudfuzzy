@@ -121,6 +121,9 @@ public class FuzzySystem extends Model {
   
   ////////// Queries END //////////
 
+
+
+
   /**
   *Return the vector o loaded pkgs
   */
@@ -232,4 +235,44 @@ public class FuzzySystem extends Model {
 		return modeling;
   }
   
+
+
+    /**
+    * Get the OperatorSet map for a given FuzzySystem id.
+    * this map is the id (pos in the array) -> name
+    * and the -1 is the default?
+    */
+    public static Map<String,String> getAvailableOperatorSetForFuzzySystem(FuzzySystem sys){
+
+      Specification spec=null;
+      try{
+        spec = sys.getSpecification(); 
+      }
+      catch(Exception e){
+        e.printStackTrace();
+      }
+
+      Map<String,String> availableOperatorSets = new HashMap<String, String>();
+
+  // nameform.setText(copy.getName());
+  // Vector opsetlist = new Vector();
+  // opsetlist.add("default");
+  // for(int i=0; i<opsetdef.length; i++) opsetlist.add(opsetdef[i]);
+  // opsetbox.setList(opsetlist);
+  // Operatorset used = copy.getOperatorset();
+  // if(used == null || used.isDefault()) opsetbox.setSelectedIndex(0);
+  // else opsetbox.setSelectedItem(used);
+
+      //adds default as -1 index
+      availableOperatorSets.put("-1","Default");
+
+      xfuzzy.lang.Operatorset[] fuzzyOpSetList = spec.getOperatorsets();    
+      for (int i=0; i< fuzzyOpSetList.length; i++ ) {
+        // OperatorSet opSet = OperatorSet.createFromFuzzyOperatorSet(fuzzyOpSetList[i], i);
+
+        availableOperatorSets.put(String.valueOf(i), fuzzyOpSetList[i].getName());
+      }
+
+      return availableOperatorSets;
+    }
 }
