@@ -1,0 +1,8 @@
+@(fuzzySystem : FuzzySystem, opset : models.OperatorSet)
+@***
+Represents the menu for a detailed fuzzy OperatorSet view.
+***@
+
+<li ><a class='left_menu' href="@routes.Systems.detail(fuzzySystem.id)">Back</a></li>
+<li><a href="#">Edit</a></li>
+<li ><a  href="@routes.OperatorSets.delete(fuzzySystem.id,opset.id)">Delete</a></li>

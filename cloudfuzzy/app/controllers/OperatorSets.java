@@ -32,11 +32,13 @@ public class OperatorSets extends Controller {
   * prepare to creates a new Fuzzy OperatorSet.
   */
   public static Result prepareCreate(Long systemId) {
+      FuzzySystem sys = FuzzySystem.find.byId(systemId);
+      
       OperatorSet opSetWithOperators = new OperatorSet();
       opSetWithOperators.setDefaultOperatorsList();
 
       return ok(
-               prepareCreate.render(systemId,newOPSetForm.fill(opSetWithOperators))
+               prepareCreate.render(sys,newOPSetForm.fill(opSetWithOperators))
               );
   }
 
@@ -68,7 +70,7 @@ public class OperatorSets extends Controller {
       if(filledForm.hasErrors()) {
           System.out.println("erros:"+filledForm.errors());
         return badRequest(
-          prepareCreate.render(systemId,filledForm)
+          prepareCreate.render(sys,filledForm)
         );
       } else {
           OperatorSet newOPSet = filledForm.get();
@@ -93,7 +95,7 @@ public class OperatorSets extends Controller {
             filledForm.reject("params", "Invalid parameters");  
 
             return badRequest(
-                prepareCreate.render(systemId,filledForm)
+                prepareCreate.render(sys,filledForm)
             );
          }
          return redirect(routes.Systems.detail(systemId)); 

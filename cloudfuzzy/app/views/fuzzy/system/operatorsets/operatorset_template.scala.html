@@ -1,0 +1,12 @@
+@(fuzzySystem : FuzzySystem, opset : models.OperatorSet)(content: Html)
+@***
+This is a template that should be used in anyview like OperatorSet Detail.
+***@
+
+
+@navHeader = {
+    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>>
+    @opset.name
+}  
+
+@main("OperatorSet")(navHeader)(fuzzy.system.operatorsets.menu(fuzzySystem,opset))(content)
