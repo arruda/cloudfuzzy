@@ -10,7 +10,7 @@ import play.data.validation.Constraints;
 public class Variable{
     
     /**
-     * This ID is the position of the fuzzy mf in the array of
+     * This ID is the position of the fuzzy variable in the array of
      * Variables(can be input or output).
      */
     public Integer id;
@@ -27,6 +27,6 @@ public class Variable{
     private int kind;
 
     /* if its an out put this is set */
-    // public RuleBase ruleBase;
+    public RuleBase ruleBase;
     
 }
