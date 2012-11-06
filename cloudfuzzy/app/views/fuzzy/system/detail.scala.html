@@ -56,6 +56,32 @@
             </div>
         </div>
 
+
+        <div class="sub_content sub_limited">
+            <h3 class='sub_content_header'>Rule Bases</h3>
+
+                 @if(spec.getRulebases().length <= 0){
+                    <p>There are no Rule Bases yet.</br>
+                    Create a <a href="@routes.RuleBases.prepareCreate(fuzzySystem.id)">new one!</a></p>
+                 } else {
+                    <ul>
+                    @for( i <- 0 to spec.getRulebases().length-1 ) {
+                        <li><a href="#">
+                                @spec.getRulebases()(i).getName()
+                        </a></li>
+                     }
+                    </ul>
+                }
+                 
+            <div class="actions">
+                <form action="@routes.RuleBases.prepareCreate(fuzzySystem.id)" method="GET" >
+                    
+                    <input type="submit" value="Add Rule Base">
+                                        
+                </form>
+            </div>
+        </div>
+
     }   
     
 }
