@@ -7,7 +7,7 @@
 @fuzzy.system.system_template(fuzzySystem){   
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>New Rule Base</h3> 
-            @helper.form(action = routes.OperatorSets.create(fuzzySystem.id), 'id -> "newRBForm") {
+            @helper.form(action = routes.RuleBases.create(fuzzySystem.id), 'id -> "newRBForm") {
                 
                 <fieldset>
                     <legend>General Information for the new Rule Bas</legend>
@@ -19,7 +19,7 @@
                     )                
 
                     @select(
-                        newRBForm("operatorSet"),
+                        newRBForm("idOperatorSet"),
                         options =  options(                        
                                         models.FuzzySystem.getAvailableOperatorSetForFuzzySystem(
                                             fuzzySystem

@@ -55,8 +55,9 @@ GET     /system/:id_sys/type/:id_type/mf/:id_mf               controllers.MFs.de
 GET     /system/:id_sys/type/:id_type/mf/:id_mf/del               controllers.MFs.delete(id_sys: Long, id_type: java.lang.Integer, id_mf: java.lang.Integer)
 
 
-##OperatorSet
+##RuleBase
 GET     /system/:id_sys/rb/new                 controllers.RuleBases.prepareCreate(id_sys: Long)
+POST     /system/:id_sys/rb/new                 controllers.RuleBases.create(id_sys: Long)
 
 
 ##AJAX ROUTES

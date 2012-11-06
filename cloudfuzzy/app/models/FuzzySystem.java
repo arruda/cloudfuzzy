@@ -264,7 +264,7 @@ public class FuzzySystem extends Model {
   // else opsetbox.setSelectedItem(used);
 
       //adds default as -1 index
-      availableOperatorSets.put("-1","Default");
+      availableOperatorSets.put("","Default");
 
       xfuzzy.lang.Operatorset[] fuzzyOpSetList = spec.getOperatorsets();    
       for (int i=0; i< fuzzyOpSetList.length; i++ ) {
