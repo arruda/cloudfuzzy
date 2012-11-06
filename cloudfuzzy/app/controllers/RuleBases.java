@@ -85,6 +85,23 @@ public class RuleBases extends Controller {
       }
   }
 
+  public static Result detail(Long id_sys, Integer id_rb){
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
 
+      RuleBase rb = null;
+      try{
+            rb = RuleBase.get(sys,id_rb);
+      }
+      catch(Exception e){
+        e.printStackTrace();
+        return badRequest();
+      }
+      
+      return ok(
+              detail.render(sys,rb)
+              ); 
+
+
+  }
 
 }

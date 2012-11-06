@@ -19,8 +19,9 @@ public class Variable{
     @Constraints.Required
     public String name;
 
+    /* the type ID */
     @Constraints.Required
-    public Type type;
+    public String idType;
 
 
     /* this is what xFuzzy calls access, determines if this variable is input, output or inner */

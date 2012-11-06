@@ -1,0 +1,141 @@
+@(fuzzySystem : FuzzySystem, rb : models.RuleBase)
+
+@import helper._
+
+  
+@navHeader = {
+    @fuzzySystem.name + " -> " + @rb.name
+}  
+
+@fuzzy.system.rulebases.rulebase_template(fuzzySystem, rb){   
+
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>General Information</h3>
+
+        <p>Name: @rb.name</p>
+
+        <p>Operator Set: @FuzzySystem.getAvailableOperatorSetForFuzzySystem(fuzzySystem)(rb.idOperatorSet)</p>
+        
+    </div>
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>Input Variables</h3>         
+        <div id="input_vars">    	
+        	@if(rb.inputvars != null){
+	            <ul>
+	            @for( i <- 0 to rb.inputvars.length-1 ) {
+	                <li>	
+                        @rb.inputvars(i).name
+	                </li>
+	             }
+	            </ul>
+        	}
+        </div>  
+        <input id="new_ivar" type="button" class="btn secondary" value="Add New Variable" />
+
+    </div>
+    <div class="sub_content sub_limited">
+        <h3 class='sub_content_header'>Output Variables</h3>
+        <div id="output_vars">
+        </div>  
+        <input id="new_ovar" type="button" class="btn secondary" value="Add New Variable" />
+
+    </div>
+    <div id="dialog-modal" title="New Variable">
+        <form id="variable-dl-form">
+        	<ul>
+    			<li>
+		        	<label for="inputvars_X__name">Name</label>
+		        	<input type="text" id="inputvars_X__name" name="inputvars[X].name" value="" >
+				</li>
+    			<li>
+		        	<label for="inputvars_X__idType">Type</label></br>
+					<select id="inputvars_X__idType" name="inputvars[X].idType" >
+
+			            @for( i <- 0 to fuzzySystem.getSpecification().getTypes().length-1 ) {
+						
+								<option value="@i" selected>
+									@fuzzySystem.getSpecification().getTypes()(i).getName()
+								</option>
+		                        
+			             }
+					</select>
+				</li>
+    		</ul>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+        	var num_ivars = 0;
+        	@if(rb.inputvars != null){
+	            num_ivars = rb.inputvars.length;
+        	}
+        	var num_ovars = 0;
+        	@if(rb.outputvars != null){
+	            num_ovars = rb.outputvars.length;
+        	}
+
+            $( "#dialog-modal" ).dialog({
+                autoOpen: false,
+                modal: true,
+                buttons: {
+                    Ok: function() {
+                        $( this ).dialog( "close" );
+                        var dl_form = $( this ).find("#variable-dl-form");
+
+                        dl_form.contents("input").remove();
+                        dl_form.contents("label").remove();
+                    },
+                    Cancel: function() {
+                        $( this ).dialog( "close" );
+                        var dl_form = $( this ).find("#variable-dl-form");
+
+                        dl_form.contents("input").remove();
+                        dl_form.contents("label").remove();
+                    }
+                },
+                close: function() {                   
+                    $( this ).dialog( "close" );
+                    var dl_form = $( this ).find("#variable-dl-form");
+
+                    dl_form.contents("input").remove();
+                    dl_form.contents("label").remove();
+                }
+            });
+
+            
+            /* Add a new variable to the form, passing if its an isInputVar */
+            function addVariable(isInputVar){
+                var dialog = $( "#dialog-modal" );
+                var title = "Create New KIND Variable"
+                if(isInputVar){
+                    title = title.replace(/KIND/g, "Input");
+                }
+                else{
+                    title = title.replace(/KIND/g, "Output");                    
+                }
+                $('.ui-dialog-title').html(title);  
+                dialog.dialog( "open" );    
+            }
+
+            //change the add buttons to add new vars
+            $('#new_ivar').click(function(){
+                event.preventDefault();
+                console.log("new_ivar");
+                addVariable(true);
+            });
+            $('#new_ovar').click(function(){
+                event.preventDefault();
+                console.log("new_ovar");
+                addVariable(false);
+            });
+
+
+        });
+                
+    </script>
+    
+}
+        
