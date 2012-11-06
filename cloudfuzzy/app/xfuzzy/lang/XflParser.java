@@ -748,18 +748,24 @@ public class XflParser implements XflParserConstants {
                         newmod = newRulebase(tmod);
     tryVariables(newmod);
     tryUsingOp(newmod);
-    label_5:
-    while (true) {
-      rule(newmod);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IF:
-      case 43:
-        ;
-        break;
-      default:
-        jj_la1[11] = jj_gen;
-        break label_5;
-      }
+    //doing a simple fix here, if gets a parse exception then just ignore the rules...
+    try{
+        label_5:
+        while (true) {
+          rule(newmod);
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case IF:
+          case 43:
+            ;
+            break;
+          default:
+            jj_la1[11] = jj_gen;
+            break label_5;
+          }
+        }
+    }
+    catch(ParseException pe){
+      pe.printStackTrace();
     }
     jj_consume_token(39);
   }
