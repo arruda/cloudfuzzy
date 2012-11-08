@@ -118,12 +118,23 @@ public class RuleBase {
         // System.out.println("Oparation : " + fRB.operation.getName());      
         //put the correct idOperatorSet
         for (Map.Entry<String,String> entry : operatorSetsMap.entrySet()) {
-            // System.out.println(entry.getKey() + " : " + entry.getValue());
             if( entry.getValue().equals(fRB.operation.getName()) ){
                 rb.idOperatorSet = entry.getKey();
             }
         }
-                
+
+        //add the input/output vars    
+        rb.inputvars = new ArrayList<Variable>();
+        xfuzzy.lang.Variable inputVars[] = fRB.getInputs();    
+        for(int i =0; i< inputVars.length; i++){
+            rb.inputvars.add(Variable.createFromFuzzyVariable(sys,inputVars[i],i));
+        } 
+        rb.outputvars = new ArrayList<Variable>();
+        xfuzzy.lang.Variable outputVars[]= fRB.getOutputs();    
+        for(int i =0; i< outputVars.length; i++){
+            rb.outputvars.add(Variable.createFromFuzzyVariable(sys,outputVars[i],i));
+        }
+
         return rb;
     }
 }

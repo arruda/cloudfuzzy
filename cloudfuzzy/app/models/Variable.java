@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 import play.data.validation.Constraints;
@@ -27,7 +28,30 @@ public class Variable{
     /* this is what xFuzzy calls access, determines if this variable is input, output or inner */
     private int kind;
 
-    /* if its an out put this is set */
-    public RuleBase ruleBase;
+    /* if its an output this is set */
+    public String idRuleBase;
     
+
+
+    /**
+    * Creates a Variable using a XFuzzy Variable as base
+    */
+    public static Variable createFromFuzzyVariable(FuzzySystem sys, xfuzzy.lang.Variable fVar, Integer id_var){
+        Variable var = new Variable();
+        var.id = id_var;
+        var.name = fVar.getName();
+
+
+        //add the input/output vars    
+        Map<String,String> availableTypesMap = FuzzySystem.getAvailableTypesMapForFuzzySystem(sys); 
+
+        //put the correct idType
+        for (Map.Entry<String,String> entry : availableTypesMap.entrySet()) {
+            if( entry.getValue().equals(fVar.getName()) ){
+                var.idType = entry.getKey();
+            }
+        }
+        
+        return var;
+    }
 }

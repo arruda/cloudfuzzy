@@ -275,4 +275,40 @@ public class FuzzySystem extends Model {
 
       return availableOperatorSets;
     }
+
+
+    /**
+    * Get the Types map for a given FuzzySystem id.
+    * this map is the id (pos in the array) -> name
+    */
+    public static Map<String,String> getAvailableTypesMapForFuzzySystem(FuzzySystem sys){
+
+      Specification spec=null;
+      try{
+        spec = sys.getSpecification(); 
+      }
+      catch(Exception e){
+        e.printStackTrace();
+      }
+
+      Map<String,String> availableTypes = new HashMap<String, String>();
+
+  // nameform.setText(copy.getName());
+  // Vector opsetlist = new Vector();
+  // opsetlist.add("default");
+  // for(int i=0; i<opsetdef.length; i++) opsetlist.add(opsetdef[i]);
+  // opsetbox.setList(opsetlist);
+  // Operatorset used = copy.getOperatorset();
+  // if(used == null || used.isDefault()) opsetbox.setSelectedIndex(0);
+  // else opsetbox.setSelectedItem(used);
+
+
+      xfuzzy.lang.Type[] fuzzyTypeList = spec.getTypes();    
+      for (int i=0; i< fuzzyTypeList.length; i++ ) {
+
+        availableTypes.put(String.valueOf(i), fuzzyTypeList[i].getName());
+      }
+
+      return availableTypes;
+    }
 }

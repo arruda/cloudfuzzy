@@ -36,6 +36,15 @@
     <div class="sub_content sub_limited">
         <h3 class='sub_content_header'>Output Variables</h3>
         <div id="output_vars">
+            @if(rb.outputvars != null){
+                <ul>
+                @for( i <- 0 to rb.outputvars.length-1 ) {
+                    <li>    
+                        @rb.outputvars(i).name
+                    </li>
+                 }
+                </ul>
+            }
         </div>  
         <input id="new_ovar" type="button" class="btn secondary" value="Add New Variable" />
 
@@ -70,11 +79,11 @@
 
         	var num_ivars = 0;
         	@if(rb.inputvars != null){
-	            num_ivars = rb.inputvars.length;
+	            num_ivars = @rb.inputvars.length;
         	}
         	var num_ovars = 0;
         	@if(rb.outputvars != null){
-	            num_ovars = rb.outputvars.length;
+	            num_ovars = @rb.outputvars.length;
         	}
 
             $( "#dialog-modal" ).dialog({

@@ -8,6 +8,8 @@ type t1 [1.0,100.0;100] {
   mf6 xfl.triangle(83.5,100.0,116.5);
  }
 
+rulebase aa (t1 vi1 : t1 vo1)  {
+ }
 
 system ( : ) {
  }

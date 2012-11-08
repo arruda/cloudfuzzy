@@ -90,13 +90,14 @@ public class RuleBases extends Controller {
 
       RuleBase rb = null;
       try{
-            rb = RuleBase.get(sys,id_rb);
+        rb = RuleBase.get(sys,id_rb);
       }
       catch(Exception e){
         e.printStackTrace();
         return badRequest();
       }
       
+
       return ok(
               detail.render(sys,rb)
               ); 
