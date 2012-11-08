@@ -7,6 +7,7 @@ import java.util.Map;
 import models.FuzzySystem;
 import models.User;
 import models.RuleBase;
+import models.Variable;
 
 import play.*;
 import play.mvc.*;
@@ -96,7 +97,7 @@ public class RuleBases extends Controller {
         e.printStackTrace();
         return badRequest();
       }
-      
+
 
       return ok(
               detail.render(sys,rb)
@@ -104,5 +105,46 @@ public class RuleBases extends Controller {
 
 
   }
+
+   //=================== AJAX ===================//
+
+    /**
+    * Adds a new variable for a given rule id.
+    * looks for the keys:
+    * 'id_sys' -> FuzzySystem id
+    * 'id_rb' -> RuleBase id
+    * 'name' -> the name of the new variable
+    * 'kind' -> if is input, output or inner.
+    * 'id_tp' -> the type's id for this new variable
+    * 
+    * If new var is ok, then add it to the rulebase
+    * if not then return the list of errors.
+    */
+    public static Result ajaxAddVariable()
+    {
+        //get the mfKey from request GET
+        Map<String,String[]> queryParameters = request().queryString();
+        Long id_sys = Long.valueOf( queryParameters.get("id_sys")[0] );
+        Integer id_rb = Integer.valueOf( queryParameters.get("id_rb")[0] );
+        Integer kind = Integer.valueOf( queryParameters.get("kind")[0] );
+        String name = queryParameters.get("name")[0];
+        Integer id_tp = Integer.valueOf( queryParameters.get("id_tp")[0] );
+
+        Variable newVar = new Variable();
+        newVar.name = name;
+
+        newVar.idRuleBase = String.valueOf(id_rb);
+        newVar.kind = kind;
+        newVar.idType = String.valueOf(id_tp);
+
+
+        //next should call a method from RuleBase that adds a new variable to it,
+        //givin a Variable as parameter
+        //or get any errors that might appear.
+        
+        return ok(
+                    Json.toJson("")
+                    );
+    }
 
 }

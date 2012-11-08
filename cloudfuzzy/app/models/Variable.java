@@ -26,7 +26,7 @@ public class Variable{
 
 
     /* this is what xFuzzy calls access, determines if this variable is input, output or inner */
-    private int kind;
+    public int kind;
 
     /* if its an output this is set */
     public String idRuleBase;
