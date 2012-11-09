@@ -65,6 +65,7 @@ GET     /system/:id_sys/rb/:id_rb             controllers.RuleBases.detail(id_sy
 GET     /ajax/get_num_params_mf                              controllers.MFs.ajaxGetNumParams()
 GET     /ajax/get_mfs_plot_data                              controllers.Types.ajaxGetMFsPlotData()
 GET     /ajax/get_num_params_operator_option                              controllers.OperatorSets.ajaxGetNumParamsForOption()
+POST     /ajax/ajax_add_variable_rb/:id_sys/:id_rb      controllers.RuleBases.ajaxAddVariable(id_sys: Long, id_rb: java.lang.Integer)
 
 
 #JS Routing

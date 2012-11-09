@@ -51,24 +51,27 @@
     </div>
     <div id="dialog-modal" title="New Variable">
         <form id="variable-dl-form">
-        	<ul>
+        	<ul style="list-style:none;">
     			<li>
-		        	<label for="inputvars_X__name">Name</label>
-		        	<input type="text" id="inputvars_X__name" name="inputvars[X].name" value="" >
+		        	<label for="name">Name</label>
+		        	<input type="text" id="var_name" name="name" value="" >
 				</li>
     			<li>
-		        	<label for="inputvars_X__idType">Type</label></br>
-					<select id="inputvars_X__idType" name="inputvars[X].idType" >
+		        	<label for="idType">Type</label></br>
+					<select id="var_idType" name="idType" >
 
 			            @for( i <- 0 to fuzzySystem.getSpecification().getTypes().length-1 ) {
 						
-								<option value="@i" selected>
+								<option value="@i" >
 									@fuzzySystem.getSpecification().getTypes()(i).getName()
 								</option>
 		                        
 			             }
 					</select>
 				</li>
+                <li>
+                    <input type="hidden" id="var_kind" name="kind" value="" > 
+                </li>
     		</ul>
         </form>
     </div>
@@ -91,54 +94,103 @@
                 modal: true,
                 buttons: {
                     Ok: function() {
-                        $( this ).dialog( "close" );
-                        var dl_form = $( this ).find("#variable-dl-form");
+                        var new_var_form = $( this ).find("#variable-dl-form");
 
-                        dl_form.contents("input").remove();
-                        dl_form.contents("label").remove();
+                        postNewVar(function(data){
+                            console.log(data);
+
+
+
+                            //add the new var to the list
+                            var var_list = $("#input_vars");
+                            if(new_var_form.find("[name='kind']").val() == @Variable.OUTPUT){
+                                var var_list = $("#output_vars");
+                            }
+                            var_list = var_list.find("ul");
+                            var_list.append("<li>" + new_var_form.find("[name='name']").val() + "</li>");
+
+                            $( "#dialog-modal" ).dialog( "close" );
+
+                        });
+
                     },
                     Cancel: function() {
                         $( this ).dialog( "close" );
-                        var dl_form = $( this ).find("#variable-dl-form");
-
-                        dl_form.contents("input").remove();
-                        dl_form.contents("label").remove();
                     }
                 },
                 close: function() {                   
                     $( this ).dialog( "close" );
-                    var dl_form = $( this ).find("#variable-dl-form");
+                    var new_var_form = $( this ).find("#variable-dl-form");
 
-                    dl_form.contents("input").remove();
-                    dl_form.contents("label").remove();
+                    new_var_form.find("input").val("");
+                    new_var_form.find(".error").remove();   
                 }
             });
 
             
             /* Add a new variable to the form, passing if its an isInputVar */
-            function addVariable(isInputVar){
+            function addVariableDialog(isInputVar){
                 var dialog = $( "#dialog-modal" );
+                var new_var_form = $("#variable-dl-form");
+
                 var title = "Create New KIND Variable"
                 if(isInputVar){
                     title = title.replace(/KIND/g, "Input");
+                    //sets the val of the kind find  to be the correct one.
+                    //based on xfuzzy definition
+                    new_var_form.find("[name='kind']").val(@models.Variable.INPUT);
                 }
                 else{
-                    title = title.replace(/KIND/g, "Output");                    
+                    title = title.replace(/KIND/g, "Output");         
+                    //sets the val of the kind find  to be the correct one.
+                    //based on xfuzzy definition          
+                    new_var_form.find("[name='kind']").val(@models.Variable.OUTPUT); 
                 }
                 $('.ui-dialog-title').html(title);  
+
                 dialog.dialog( "open" );    
+            }
+
+            /* Post the new variable */
+            function postNewVar(callback){
+                var new_var_form = $("#variable-dl-form");
+                var post_url = '/ajax/ajax_add_variable_rb/ID_SYS/ID_RB';                
+                    post_url = post_url.replace(/ID_SYS/g, "@fuzzySystem.id");     
+                    post_url = post_url.replace(/ID_RB/g, "@rb.id");     
+
+                $.post(post_url,
+                    new_var_form.serialize(),
+                    function(data) {
+                        callback(data);
+                    },"json")
+                    .error(function(xhr, textStatus, errorThrown) {
+                        var errors = JSON.parse(xhr.responseText);
+
+                        //for each field in the errrors
+                        $.each(errors, function(key, value) { 
+                           var field = new_var_form.find("[name='" + key + "']");
+
+                            //add each error to the given field
+                            $.each(value, function(index, val){
+                               field.parent().append("<span class='error'>"+val+"</span></br>");
+
+                            });
+                        });
+
+                        console.log(errors); 
+                    });
             }
 
             //change the add buttons to add new vars
             $('#new_ivar').click(function(){
                 event.preventDefault();
                 console.log("new_ivar");
-                addVariable(true);
+                addVariableDialog(true);
             });
             $('#new_ovar').click(function(){
                 event.preventDefault();
                 console.log("new_ovar");
-                addVariable(false);
+                addVariableDialog(false);
             });
 
 

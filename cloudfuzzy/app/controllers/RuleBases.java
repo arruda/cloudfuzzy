@@ -8,6 +8,7 @@ import models.FuzzySystem;
 import models.User;
 import models.RuleBase;
 import models.Variable;
+import models.Type;
 
 import play.*;
 import play.mvc.*;
@@ -120,31 +121,88 @@ public class RuleBases extends Controller {
     * If new var is ok, then add it to the rulebase
     * if not then return the list of errors.
     */
-    public static Result ajaxAddVariable()
+    public static Result ajaxAddVariable(Long id_sys, Integer id_rb)
     {
-        //get the mfKey from request GET
-        Map<String,String[]> queryParameters = request().queryString();
-        Long id_sys = Long.valueOf( queryParameters.get("id_sys")[0] );
-        Integer id_rb = Integer.valueOf( queryParameters.get("id_rb")[0] );
-        Integer kind = Integer.valueOf( queryParameters.get("kind")[0] );
-        String name = queryParameters.get("name")[0];
-        Integer id_tp = Integer.valueOf( queryParameters.get("id_tp")[0] );
+        Form<Variable> filledForm = form(Variable.class).bindFromRequest();
 
-        Variable newVar = new Variable();
-        newVar.name = name;
+        FuzzySystem sys = FuzzySystem.find.byId(id_sys);
 
-        newVar.idRuleBase = String.valueOf(id_rb);
-        newVar.kind = kind;
-        newVar.idType = String.valueOf(id_tp);
+        xfuzzy.lang.Rulebase fRB = null;
+        try{
+          fRB = RuleBase.getFuzzy(sys,id_rb);
+        }
+        catch(Exception e){
+          e.printStackTrace();
+          return badRequest();
+        }
+
+
+        //checks if the rulebase exists with this name
+        if(fRB.searchVariable(filledForm.field("name").valueOr("")) != null){
+            filledForm.reject("name", "Already exist a Variable with this name in this Rule Base");  
+        }
+        if(!FuzzySystem.isIdentifier(filledForm.field("name").valueOr(""))) {
+          filledForm.reject("name", "Invalid name");  
+        }
+
+        if(filledForm.hasErrors()) {
+          System.out.println("errors:"+ filledForm.errors());
+          return badRequest(
+            filledForm.errorsAsJson()
+          );
+        }else{
+          Variable newVar = filledForm.get();
+          newVar.idRuleBase = String.valueOf(id_rb);
+
+          try{
+
+            Variable.create(
+                  newVar,
+                  Type.getFuzzy(sys,Integer.valueOf(newVar.idType)),
+                  fRB,
+                  sys.getSpecification()
+            );
+
+          }
+          catch(Exception e){
+            filledForm.reject("Invalid");  
+
+            return badRequest(
+              filledForm.errorsAsJson()
+            );
+
+          }
+
+          
+
+          System.out.println("newVar"+ newVar.name);
+
+          return ok(
+                      Json.toJson("ok")
+                      );
+
+        }
+
+        // //get the mfKey from request GET
+        // Map<String,String[]> queryParameters = request().queryString();
+        // Long id_sys = Long.valueOf( queryParameters.get("id_sys")[0] );
+        // Integer id_rb = Integer.valueOf( queryParameters.get("id_rb")[0] );
+        // Integer kind = Integer.valueOf( queryParameters.get("kind")[0] );
+        // String name = queryParameters.get("name")[0];
+        // Integer id_tp = Integer.valueOf( queryParameters.get("id_tp")[0] );
+
+        // Variable newVar = new Variable();
+        // newVar.name = name;
+
+        // newVar.idRuleBase = String.valueOf(id_rb);
+        // newVar.kind = kind;
+        // newVar.idType = String.valueOf(id_tp);
 
 
         //next should call a method from RuleBase that adds a new variable to it,
         //givin a Variable as parameter
         //or get any errors that might appear.
         
-        return ok(
-                    Json.toJson("")
-                    );
     }
 
 }

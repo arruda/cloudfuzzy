@@ -6,6 +6,7 @@ import java.util.Map;
 
 import play.data.validation.Constraints;
 
+import xfuzzy.lang.Specification;
 
 
 public class Variable{
@@ -31,6 +32,9 @@ public class Variable{
     /* if its an output this is set */
     public String idRuleBase;
     
+    public final static int INPUT = xfuzzy.lang.Variable.INPUT;
+    public final static int OUTPUT = xfuzzy.lang.Variable.OUTPUT;
+    public final static int INNER = xfuzzy.lang.Variable.INNER;
 
 
     /**
@@ -54,4 +58,32 @@ public class Variable{
         
         return var;
     }
+
+    /**
+    *Create a Variable(fuzzy) with the given Variable as source, with a given type(fuzzy).
+    * in this case its for creating a variable in a rulebase, so a rulebase has to be passed too.
+    */
+    public static void create(Variable var, xfuzzy.lang.Type type, xfuzzy.lang.Rulebase fRB, Specification spec)
+    throws Exception{
+
+        xfuzzy.lang.Variable fVar;
+        if(var.kind == Variable.INPUT){
+            fVar = new xfuzzy.lang.Variable(var.name,type,Variable.INPUT);
+        } 
+        else{
+            fVar = new xfuzzy.lang.Variable(var.name,type,fRB);
+        } 
+
+        if(var.kind == xfuzzy.lang.Variable.INPUT){
+             fRB.addInputVariable(fVar);
+        }
+        else{
+            fRB.addOutputVariable(fVar);
+        } 
+        // spec.exchangeRulebase(original,copy);
+        spec.setModified(true);
+        spec.save();
+
+    }
+
 }
