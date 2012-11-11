@@ -10,7 +10,7 @@ import play.libs.F.*;
 
 import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 //use with application test
 import testhelper.WithApplication;
@@ -34,4 +34,17 @@ public class UserTests  extends WithApplication {
         // assertThat(bob).isEqualsTo();
         assertEquals("Bob", bob.name);
     }    
+    
+    @Test
+    public void tryAuthenticateUser() {
+        User newUser = new User();
+        newUser.email = "bob@gmail.com";
+        newUser.name = "Bob";
+        newUser.password = "secret";
+        newUser.save();
+
+        assertNotNull(User.authenticate("bob@gmail.com", "secret"));
+        assertNull(User.authenticate("bob@gmail.com", "badpassword"));
+        assertNull(User.authenticate("tom@gmail.com", "secret"));
+    }
 }

@@ -5,7 +5,7 @@ users:
 
     - !!models.User
         email:      test@test.com
-        name:       Test test
+        name:       Test
         password:   test
 
     - !!models.User
