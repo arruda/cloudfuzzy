@@ -765,7 +765,8 @@ public class XflParser implements XflParserConstants {
         }
     }
     catch(ParseException pe){
-      pe.printStackTrace();
+      System.out.println(pe.getMessage());
+      // pe.printStackTrace();
     }
     jj_consume_token(39);
   }
