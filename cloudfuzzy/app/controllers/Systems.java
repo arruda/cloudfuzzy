@@ -62,7 +62,7 @@ public class Systems extends Controller {
          FuzzySystem newSys = filledForm.get();
          newSys.fileName = newSys.name+".xfl";
          newSys.user = User.findByEmail(request().username());
-         FuzzySystem.create(filledForm.get());
+         FuzzySystem.create(newSys);
 
             return redirect(routes.Systems.list()); 
       }

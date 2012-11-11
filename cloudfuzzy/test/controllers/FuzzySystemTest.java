@@ -102,6 +102,54 @@ public class FuzzySystemTest  extends WithApplication {
 
     }
 
+    @Test
+    public void deleteSystem() {
+
+        //first create a new fuzzy system
+        ImmutableMap post_data = 
+                ImmutableMap.of(
+                    "name", "newsystem",
+                    "description", "a new fuzzy System"
+                );
+
+        Result result = callAction(
+            controllers.routes.ref.Systems.create(),
+            fakeRequest().withSession("email", "test@test.com")
+            .withFormUrlEncodedBody(post_data)
+        );
+        //check if this new system was created
+        FuzzySystem newSystem = FuzzySystem.find.where().eq("name", "newsystem").findUnique();
+
+        assertNotNull(newSystem);
+
+
+        //now can delete it
+        result = callAction(
+            controllers.routes.ref.Systems.delete(newSystem.id),
+            fakeRequest().withSession("email", "test@test.com")
+        );
+
+        //check if this new system was deleted
+        newSystem = FuzzySystem.find.where().eq("name", "newsystem").findUnique();
+
+        assertNull(newSystem);
+
+    }
+
+    @Test
+    public void deleteSystemWrongUser() {
+        Long system_id = 1l;
+
+        Result result = callAction(
+            controllers.routes.ref.Systems.delete(system_id),
+            fakeRequest().withSession("email", "test2@test.com")
+        );
+        assertEquals(FORBIDDEN, status(result));
+
+
+    }
+
+
     //delete the fuzzy systems that where created in this tests
     @After
     public void cleanFuzzySystems(){
