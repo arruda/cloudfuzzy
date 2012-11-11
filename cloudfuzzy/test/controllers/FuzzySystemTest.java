@@ -1,4 +1,4 @@
-package models;
+package controllers;
 
 import org.junit.*;
 
@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableMap;
 import testhelper.WithApplication;
 
 import models.FuzzySystem;
+import models.User;
 
 public class FuzzySystemTest  extends WithApplication {
 
