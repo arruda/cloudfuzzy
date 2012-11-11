@@ -22,7 +22,6 @@ users:
 systems:
 
     - !!models.FuzzySystem
-        id:         1 
         name:       test
         description:   test
         fileName:   test.xfl

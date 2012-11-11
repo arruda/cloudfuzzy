@@ -3,3 +3,4 @@
 .classpath
 extraFiles/xfls/*@*
 *.sublime-*
+extraFiles/*.db
