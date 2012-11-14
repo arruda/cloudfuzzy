@@ -50,7 +50,7 @@
             <input id="new_ovar" type="button" class="btn secondary" value="Add New Variable" />
 
         </div>
-        <div id="dialog-modal" title="New Variable">
+        <div id="var-dialog-modal" title="New Variable">
             <form id="variable-dl-form">
             	<ul style="list-style:none;">
         			<li>
@@ -98,7 +98,7 @@
 	            num_ovars = @rb.outputvars.length;
         	}
 
-            $( "#dialog-modal" ).dialog({
+            $( "#var-dialog-modal" ).dialog({
                 autoOpen: false,
                 modal: true,
                 buttons: {
@@ -118,7 +118,7 @@
                             var_list = var_list.find("ul");
                             var_list.append("<li>" + new_var_form.find("[name='name']").val() + "</li>");
 
-                            $( "#dialog-modal" ).dialog( "close" );
+                            $( "#var-dialog-modal" ).dialog( "close" );
 
                         });
 
@@ -139,7 +139,7 @@
             
             /* Add a new variable to the form, passing if its an isInputVar */
             function addVariableDialog(isInputVar){
-                var dialog = $( "#dialog-modal" );
+                var dialog = $( "#var-dialog-modal" );
                 var new_var_form = $("#variable-dl-form");
 
                 var title = "Create New KIND Variable"
