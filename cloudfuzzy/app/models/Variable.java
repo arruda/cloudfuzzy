@@ -51,11 +51,12 @@ public class Variable{
 
         //put the correct idType
         for (Map.Entry<String,String> entry : availableTypesMap.entrySet()) {
-            if( entry.getValue().equals(fVar.getName()) ){
+            if( entry.getValue().equals(fVar.getType().getName()) ){
                 var.idType = entry.getKey();
             }
         }
         
+
         return var;
     }
 
@@ -84,6 +85,19 @@ public class Variable{
         spec.setModified(true);
         spec.save();
 
+    }
+
+    /**
+    * Return the type of this variable using the attribute idType
+    *passing the given FuzzySystem
+    */
+    public Type getType(FuzzySystem sys){
+        try{
+            return Type.get(sys, Integer.valueOf(this.idType));
+        }
+        catch(Exception e){
+            return null;
+        }
     }
 
 }

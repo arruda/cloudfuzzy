@@ -94,15 +94,17 @@
 
 					<!-- Inputs -->    
 
-		                @for(i <- 0 to rb.inputvars.length -1){ 
+		                @for(i <- 0 to rb.inputvars.length -1){
 							<td>
 
 		    					<select id="rule_input__@{i}__" name="input[@i]" >
-
-		    			            @for( j <- 0 to fuzzySystem.getSpecification().getTypes().length-1 ) {
+    								<option value="" ></option>
+		    			            @for( id_mf <- 0 to rb.inputvars(i).getType(fuzzySystem).MFs.length-1 ) {
 		    						
-		    								<option value="@i" >
-		    									@fuzzySystem.getSpecification().getTypes()(j).getName()
+		    								<option value="@id_mf" >
+		    									@rb.inputvars(i).name 
+		    									== 
+		    									@rb.inputvars(i).getType(fuzzySystem).MFs(id_mf).label
 		    								</option>
 		    		                        
 		    			             }
@@ -118,12 +120,25 @@
 
 
 					<!-- Outputs -->    
-						<td>
-							vo1 == mf0
-						</td>
-						<td>
-							vo2 == mf1
-						</td>
+
+		                @for(i <- 0 to rb.outputvars.length -1){ 
+							<td>
+
+		    					<select id="rule_output__@{i}__" name="output[@i]" >
+
+    								<option value="" ></option>
+		    			            @for( id_mf <- 0 to rb.outputvars(i).getType(fuzzySystem).MFs.length-1 ) {
+		    						
+		    								<option value="@id_mf" >
+		    									@rb.outputvars(i).name 
+		    									== 
+		    									@rb.outputvars(i).getType(fuzzySystem).MFs(id_mf).label
+		    								</option>
+		    		                        
+		    			             }
+		    					</select>
+							</td>
+		             	}
 
 
 		       </tr>	
@@ -156,6 +171,7 @@
                 var new_var_form = $( this ).find("#rule-dl-form");
 
                 new_var_form.find("input").val("");
+                new_var_form.find("select").val("");                
                 new_var_form.find(".error").remove();   
             }
         });

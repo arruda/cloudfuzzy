@@ -111,10 +111,8 @@ public class RuleBases extends Controller {
    //=================== AJAX ===================//
 
     /**
-    * Adds a new variable for a given rule id.
+    * Adds a new variable for a given rule id and fuzzy system id.
     * looks for the keys:
-    * 'id_sys' -> FuzzySystem id
-    * 'id_rb' -> RuleBase id
     * 'name' -> the name of the new variable
     * 'kind' -> if is input, output or inner.
     * 'id_tp' -> the type's id for this new variable
@@ -185,5 +183,29 @@ public class RuleBases extends Controller {
         }
 
     }
+
+    /**
+    * Adds a new rule for a given rule base id and fuzzy system id.
+    * looks for the keys:
+    * 'degree' -> the degree of the new rule
+    * 'input[x]' -> whats the mf id selected for this input (x is the id of the inputs of the rulebase)
+    * 'output[x]' -> whats the mf id selected for this output (x is the id of the outputs of the rulebase)
+    * 
+    * If new rule is ok, then add it to the rulebase and return 'ok'
+    * if not then return the list of errors.
+    */
+    public static Result ajaxAddRuleFromTable(Long id_sys, Integer id_rb)
+    {
+      //get the mfKey from request GET
+      Map<String,String[]> queryParameters = request().queryString();
+
+      String mfKey = queryParameters.get("mf_key")[0];
+
+      //Get the number of parameters for this MFType.
+      Integer numParams = MF.getNumParamsForMFType(Integer.valueOf(mfKey));
+      return ok(
+                  Json.toJson(numParams)
+                  );
+    } 
 
 }
