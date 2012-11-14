@@ -63,5 +63,99 @@
 
 <div id="rule-dialog-modal" title="New Rule">
     <form id="rule-dl-form">
+
+		<table border="1">
+		    <thead>
+		           <tr>
+						<th>Weigth</th>
+						<th>  </th>
+
+						<!-- Inputs -->  
+			                @for(vinput <- rb.inputvars ){
+								<th>@vinput.name</th>
+								<th>  </th>
+			             	}
+
+						<!-- Outputs -->    
+			                @for(voutput <- rb.outputvars ){
+								<th>@voutput.name</th>
+			             	}
+		           </tr>
+		    </thead>
+
+		    <tbody>
+		        <tr>
+					<td>						
+    		        	<input type="text" id="var_name" name="name" value="" >
+					</td>	
+
+					<td>if</td>
+
+
+					<!-- Inputs -->    
+						<td>
+							vi1 == mf0
+						</td>
+
+						<td>&</td>
+
+						<td>
+							vi2 == mf1
+						</td>
+
+
+					<td>-></td>
+
+
+					<!-- Outputs -->    
+						<td>
+							vo1 == mf0
+						</td>
+						<td>
+							vo2 == mf1
+						</td>
+
+
+		       </tr>	
+		    </tbody>
+
+		</table>
     </form>
 </div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $( "#rule-dialog-modal" ).dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                Ok: function() {
+                    var new_rule_form = $( this ).find("#rule-dl-form");
+
+
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {                   
+                $( this ).dialog( "close" );
+                var new_var_form = $( this ).find("#rule-dl-form");
+
+                new_var_form.find("input").val("");
+                new_var_form.find(".error").remove();   
+            }
+        });
+
+        //change the add buttons to add new vars
+        $('#new_rule').click(function(){
+            event.preventDefault();
+            console.log("new_rule");
+            $( "#rule-dialog-modal" ).dialog( "open" );
+        });
+    });
+                
+</script>
