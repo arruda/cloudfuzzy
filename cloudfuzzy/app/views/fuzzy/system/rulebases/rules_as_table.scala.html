@@ -1,11 +1,11 @@
-@(rb : models.RuleBase)
+@(fuzzySystem : FuzzySystem, rb : models.RuleBase)
 
 <table border="1">
 
 
     <thead>
            <tr>
-				<th>Weigth</th>
+				<th>Degree</th>
 				<th>  </th>
 
 				<!-- Inputs -->  
@@ -67,7 +67,7 @@
 		<table border="1">
 		    <thead>
 		           <tr>
-						<th>Weigth</th>
+						<th>Degree</th>
 						<th>  </th>
 
 						<!-- Inputs -->  
@@ -86,25 +86,35 @@
 		    <tbody>
 		        <tr>
 					<td>						
-    		        	<input type="text" id="var_name" name="name" value="" >
+    		        	<input type="text" id="rule_degree" name="degree" value="" >
 					</td>	
 
 					<td>if</td>
 
 
 					<!-- Inputs -->    
-						<td>
-							vi1 == mf0
-						</td>
 
-						<td>&</td>
+		                @for(i <- 0 to rb.inputvars.length -1){ 
+							<td>
 
-						<td>
-							vi2 == mf1
-						</td>
+		    					<select id="rule_input__@{i}__" name="input[@i]" >
 
+		    			            @for( j <- 0 to fuzzySystem.getSpecification().getTypes().length-1 ) {
+		    						
+		    								<option value="@i" >
+		    									@fuzzySystem.getSpecification().getTypes()(j).getName()
+		    								</option>
+		    		                        
+		    			             }
+		    					</select>
+							</td>
+							@if(i != rb.inputvars.length -1){
+								<td>&</td>
 
-					<td>-></td>
+							}else{
+								<td> -> </td>
+							}
+		             	}
 
 
 					<!-- Outputs -->    
