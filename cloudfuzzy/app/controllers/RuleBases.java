@@ -107,6 +107,7 @@ public class RuleBases extends Controller {
 
   }
 
+
    //=================== AJAX ===================//
 
     /**
@@ -183,26 +184,6 @@ public class RuleBases extends Controller {
 
         }
 
-        // //get the mfKey from request GET
-        // Map<String,String[]> queryParameters = request().queryString();
-        // Long id_sys = Long.valueOf( queryParameters.get("id_sys")[0] );
-        // Integer id_rb = Integer.valueOf( queryParameters.get("id_rb")[0] );
-        // Integer kind = Integer.valueOf( queryParameters.get("kind")[0] );
-        // String name = queryParameters.get("name")[0];
-        // Integer id_tp = Integer.valueOf( queryParameters.get("id_tp")[0] );
-
-        // Variable newVar = new Variable();
-        // newVar.name = name;
-
-        // newVar.idRuleBase = String.valueOf(id_rb);
-        // newVar.kind = kind;
-        // newVar.idType = String.valueOf(id_tp);
-
-
-        //next should call a method from RuleBase that adds a new variable to it,
-        //givin a Variable as parameter
-        //or get any errors that might appear.
-        
     }
 
 }

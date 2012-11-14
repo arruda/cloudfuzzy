@@ -1,0 +1,62 @@
+@(rb : models.RuleBase)
+
+<table border="1">
+
+
+    <thead>
+           <tr>
+				<th>Weigth</th>
+				<th>  </th>
+
+				<!-- Inputs -->  
+	                @for(vinput <- rb.inputvars ){
+						<th>@vinput.name</th>
+						<th>  </th>
+	             	}
+
+				<!-- Outputs -->    
+	                @for(voutput <- rb.outputvars ){
+						<th>@voutput.name</th>
+	             	}
+           </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+			<td>
+				1.0
+			</td>	
+
+			<td>if</td>
+
+
+			<!-- Inputs -->    
+				<td>
+					vi1 == mf0
+				</td>
+
+				<td>&</td>
+
+				<td>
+					vi2 == mf1
+				</td>
+
+
+			<td>-></td>
+
+
+			<!-- Outputs -->    
+				<td>
+					vo1 == mf0
+				</td>
+				<td>
+					vo2 == mf1
+				</td>
+
+
+       </tr>	
+    </tbody>
+
+</table>
+<input id="new_rule" type="button" class="btn secondary" value="New Rule" />	
+
