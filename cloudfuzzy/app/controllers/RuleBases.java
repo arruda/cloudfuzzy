@@ -196,16 +196,39 @@ public class RuleBases extends Controller {
     */
     public static Result ajaxAddRuleFromTable(Long id_sys, Integer id_rb)
     {
-      //get the mfKey from request GET
-      Map<String,String[]> queryParameters = request().queryString();
+      Form<forms.RuleTableForm> filledForm = form(forms.RuleTableForm.class).bindFromRequest();
 
-      String mfKey = queryParameters.get("mf_key")[0];
 
-      //Get the number of parameters for this MFType.
-      Integer numParams = MF.getNumParamsForMFType(Integer.valueOf(mfKey));
-      return ok(
-                  Json.toJson(numParams)
-                  );
+      FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+      xfuzzy.lang.Rulebase fRB = null;
+      try{
+        fRB = RuleBase.getFuzzy(sys,id_rb);
+      }
+      catch(Exception e){
+        e.printStackTrace();
+        return badRequest();
+      }
+
+      if(filledForm.hasErrors()) {
+        System.out.println("errors:"+ filledForm.errors());
+        return badRequest(
+          filledForm.errorsAsJson()
+        );
+      }else{
+        xfuzzy.lang.Rule newRule = filledForm.get().getFuzzyRule(fRB);
+
+        System.out.println("newrule:"+ newRule);
+        fRB.addRule(newRule);
+        Specification spec = sys.getSpecification();
+
+        //save the spec.
+        spec.setModified(true);
+        spec.save();        
+        return ok(
+                    Json.toJson("ok")
+                    );
+      }
     } 
 
 }

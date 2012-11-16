@@ -97,7 +97,7 @@
 		                @for(i <- 0 to rb.inputvars.length -1){
 							<td>
 
-		    					<select id="rule_input__@{i}__" name="input[@i]" >
+		    					<select id="rule_input__@{i}__" name="inputs[@i]" >
     								<option value="" ></option>
 		    			            @for( id_mf <- 0 to rb.inputvars(i).getType(fuzzySystem).MFs.length-1 ) {
 		    						
@@ -124,7 +124,7 @@
 		                @for(i <- 0 to rb.outputvars.length -1){ 
 							<td>
 
-		    					<select id="rule_output__@{i}__" name="output[@i]" >
+		    					<select id="rule_output__@{i}__" name="outputs[@i]" >
 
     								<option value="" ></option>
 		    			            @for( id_mf <- 0 to rb.outputvars(i).getType(fuzzySystem).MFs.length-1 ) {
@@ -161,6 +161,27 @@
                     var new_rule_form = $( this ).find("#rule-dl-form");
 
 
+                    $.post('@routes.RuleBases.ajaxAddRuleFromTable(fuzzySystem.id, rb.id)',
+                        new_rule_form.serialize(),
+                        function(data) {
+                            console.log(data);
+                        },"json")
+                        .error(function(xhr, textStatus, errorThrown) {
+                            var errors = JSON.parse(xhr.responseText);
+
+                            // //for each field in the errrors
+                            // $.each(errors, function(key, value) { 
+                            //    var field = new_var_form.find("[name='" + key + "']");
+
+                            //     //add each error to the given field
+                            //     $.each(value, function(index, val){
+                            //        field.parent().append("<span class='error'>"+val+"</span></br>");
+
+                            //     });
+                            // });
+
+                            console.log(errors); 
+                        });
                 },
                 Cancel: function() {
                     $( this ).dialog( "close" );
