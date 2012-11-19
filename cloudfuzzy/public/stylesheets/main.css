@@ -196,6 +196,10 @@ width: 560px;
 /*height: 380px;*/
 }
 
+.sub_full {
+    position: relative;
+    float: left;
+}
 .actions{
     margin: 0px -10px -2px;
     padding: 5px 10px 2px;

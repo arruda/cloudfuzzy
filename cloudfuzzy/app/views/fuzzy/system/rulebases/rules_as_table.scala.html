@@ -167,6 +167,8 @@
                         new_rule_form.serialize(),
                         function(data) {
                             console.log(data);
+                            $("#rule-dialog-modal").dialog( "close" );
+                            location.reload();
                         },"json")
                         .error(function(xhr, textStatus, errorThrown) {
                             var errors = JSON.parse(xhr.responseText);

@@ -8,7 +8,9 @@ type t1 [1.0,100.0;100] {
   mf6 xfl.triangle(83.5,100.0,116.5);
  }
 
-rulebase aa (t1 vi1, t1 vi2 : t1 vo1, t1 vo2)  {
+rulebase aa (t1 vi1, t1 vi2, t1 vi3, t1 vi4 : t1 vo1, t1 vo2)  {
+  if(vi1 == mf0 & vi2 == mf1 & vi4 == mf3) -> vo2 = mf5;
+  [0.8]if(vi2 == mf1 & vi3 == mf2) -> vo1 = mf1, vo2 = mf3;
  }
 
 system ( : ) {

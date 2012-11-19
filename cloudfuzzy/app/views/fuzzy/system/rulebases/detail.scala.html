@@ -8,81 +8,86 @@
 }  
 
 @fuzzy.system.rulebases.rulebase_template(fuzzySystem, rb){   
+    
+    <div class="sub_full">
+        <div class="sub_lefted">
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>General Information</h3>
 
-    <div class="sub_lefted">
-        <div class="sub_content sub_limited">
-            <h3 class='sub_content_header'>General Information</h3>
+                <p>Name: @rb.name</p>
 
-            <p>Name: @rb.name</p>
-
-            <p>Operator Set: @FuzzySystem.getAvailableOperatorSetForFuzzySystem(fuzzySystem)(rb.idOperatorSet)</p>
-            
+                <p>Operator Set: @FuzzySystem.getAvailableOperatorSetForFuzzySystem(fuzzySystem)(rb.idOperatorSet)</p>
+                
+            </div>
         </div>
-        <div class="sub_content sub_limited">
-            <h3 class='sub_content_header'>Input Variables</h3>         
-            <div id="input_vars">    	
-            	@if(rb.inputvars != null){
-    	            <ul>
-    	            @for( i <- 0 to rb.inputvars.length-1 ) {
-    	                <li>	
-                            @rb.inputvars(i).name
-    	                </li>
-    	             }
-    	            </ul>
-            	}
-            </div>  
-            <input id="new_ivar" type="button" class="btn secondary" value="Add New Variable" />
+        <div class="sub_righted">
 
-        </div>
-        <div class="sub_content sub_limited">
-            <h3 class='sub_content_header'>Output Variables</h3>
-            <div id="output_vars">
-                @if(rb.outputvars != null){
-                    <ul>
-                    @for( i <- 0 to rb.outputvars.length-1 ) {
-                        <li>    
-                            @rb.outputvars(i).name
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>Input Variables</h3>         
+                <div id="input_vars">       
+                    @if(rb.inputvars != null){
+                        <ul>
+                        @for( i <- 0 to rb.inputvars.length-1 ) {
+                            <li>    
+                                @rb.inputvars(i).name
+                            </li>
+                         }
+                        </ul>
+                    }
+                </div>  
+                <input id="new_ivar" type="button" class="btn secondary" value="Add New Variable" />
+
+            </div>
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>Output Variables</h3>
+                <div id="output_vars">
+                    @if(rb.outputvars != null){
+                        <ul>
+                        @for( i <- 0 to rb.outputvars.length-1 ) {
+                            <li>    
+                                @rb.outputvars(i).name
+                            </li>
+                         }
+                        </ul>
+                    }
+                </div>  
+                <input id="new_ovar" type="button" class="btn secondary" value="Add New Variable" />
+
+            </div>
+            <div id="var-dialog-modal" title="New Variable">
+                <form id="variable-dl-form">
+                    <ul style="list-style:none;">
+                        <li>
+                            <label for="name">Name</label>
+                            <input type="text" id="var_name" name="name" value="" >
                         </li>
-                     }
+                        <li>
+                            <label for="idType">Type</label></br>
+                            <select id="var_idType" name="idType" >
+
+                                @for( i <- 0 to fuzzySystem.getSpecification().getTypes().length-1 ) {
+                                
+                                        <option value="@i" >
+                                            @fuzzySystem.getSpecification().getTypes()(i).getName()
+                                        </option>
+                                        
+                                 }
+                            </select>
+                        </li>
+                        <li>
+                            <input type="hidden" id="var_kind" name="kind" value="" > 
+                        </li>
                     </ul>
-                }
-            </div>  
-            <input id="new_ovar" type="button" class="btn secondary" value="Add New Variable" />
-
-        </div>
-        <div id="var-dialog-modal" title="New Variable">
-            <form id="variable-dl-form">
-            	<ul style="list-style:none;">
-        			<li>
-    		        	<label for="name">Name</label>
-    		        	<input type="text" id="var_name" name="name" value="" >
-    				</li>
-        			<li>
-    		        	<label for="idType">Type</label></br>
-    					<select id="var_idType" name="idType" >
-
-    			            @for( i <- 0 to fuzzySystem.getSpecification().getTypes().length-1 ) {
-    						
-    								<option value="@i" >
-    									@fuzzySystem.getSpecification().getTypes()(i).getName()
-    								</option>
-    		                        
-    			             }
-    					</select>
-    				</li>
-                    <li>
-                        <input type="hidden" id="var_kind" name="kind" value="" > 
-                    </li>
-        		</ul>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-    <div class="sub_righted">
+
+    <div class="sub_full">
         <div class="sub_content">
             <h3 class='sub_content_header'>Rules</h3>
             @rules_as_table(fuzzySystem, rb)
         </div>
-
     </div>
 
     <script type="text/javascript">
@@ -119,6 +124,7 @@
                             var_list.append("<li>" + new_var_form.find("[name='name']").val() + "</li>");
 
                             $( "#var-dialog-modal" ).dialog( "close" );
+                            location.reload();
 
                         });
 
