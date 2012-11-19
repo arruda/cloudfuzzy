@@ -68,4 +68,98 @@ public class RuleTableForm{
        return newrule;
     }
     
+
+    /**
+    * This method will return all the relations of a given relation in a "reading" order.
+    * left->right
+    */
+
+    public static ArrayList<xfuzzy.lang.Relation> getFuzzyRelationsAsList(xfuzzy.lang.Relation parentRel){
+
+        // xfuzzy.lang.Relation parentRel=rule.getPremise();
+
+        ArrayList<xfuzzy.lang.Relation> relations = new ArrayList<xfuzzy.lang.Relation>();
+
+        if(parentRel!=null){
+            xfuzzy.lang.Relation lRelation=parentRel.getLeftRelation();
+            xfuzzy.lang.Relation rRelation=parentRel.getRightRelation();
+
+            relations.addAll( getFuzzyRelationsAsList(lRelation) );
+            relations.addAll( getFuzzyRelationsAsList(rRelation) );
+
+            //if has no left or right relation, than is a node
+            //then should add itself to the list and return.
+            if(lRelation == null && rRelation == null){
+                relations.add(parentRel);
+            }
+
+        }
+        return relations;
+    }
+
+    public static ArrayList<Map<String,ArrayList<String>>> getInfoMapForTableRule(FuzzySystem sys, Integer id_rb){
+        ArrayList<Map<String,ArrayList<String>>> infoMaps = new ArrayList<Map<String,ArrayList<String>>>();
+         new HashMap<String, ArrayList<String>>();
+        xfuzzy.lang.Rulebase fRB =null;
+        try{
+            fRB= models.RuleBase.getFuzzy(sys,id_rb);
+        }
+        catch(Exception e){
+            return infoMaps;
+        }
+
+
+        for(xfuzzy.lang.Rule rule : fRB.getRules()){
+            Map<String, ArrayList<String>> ruleInfos = new HashMap<String, ArrayList<String>>();
+
+            //degree
+            ArrayList<String> degreeInfos = new ArrayList<String>();
+            degreeInfos.add( String.valueOf(rule.getDegree()) );
+            ruleInfos.put("degree",degreeInfos);
+
+
+            ArrayList<xfuzzy.lang.Relation> relations = RuleTableForm.getFuzzyRelationsAsList(rule.getPremise());
+
+            //inputs
+            ArrayList<String> inputVarsInfo = new ArrayList<String>();
+
+            for(xfuzzy.lang.Variable ivar : fRB.getInputs()){
+                String ivarInfo = "";
+                //tries to find the relation of this input var
+                for(xfuzzy.lang.Relation relation : relations){
+                    if(relation.getVariable().getName().equals(ivar.getName())){
+                        ivarInfo = relation.toXfl();
+                        break;
+                    }
+                }
+
+                inputVarsInfo.add(ivarInfo);
+            }
+            ruleInfos.put("inputs",inputVarsInfo);
+
+
+            //outputs
+            ArrayList<String> outputVarsInfo = new ArrayList<String>();
+
+            for(xfuzzy.lang.Variable ovar : fRB.getOutputs()){
+                String ovarInfo = "";
+                //tries to find the conclusion of this out var
+                for(xfuzzy.lang.Conclusion conclusion : rule.getConclusions()){
+                    if(conclusion.getVariable().getName().equals(ovar.getName())){
+                        ovarInfo = conclusion.toXfl();
+                        break;
+                    }
+                }
+
+                outputVarsInfo.add(ovarInfo);
+            }
+            ruleInfos.put("outputs",outputVarsInfo);
+
+
+            infoMaps.add(ruleInfos);
+        }
+
+
+        return infoMaps;
+    }
 }

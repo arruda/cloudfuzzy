@@ -22,39 +22,40 @@
     </thead>
 
     <tbody>
-        <tr>
-			<td>
-				1.0
-			</td>	
+        @for(rule <- forms.RuleTableForm.getInfoMapForTableRule(fuzzySystem,rb.id)){
+            <tr>
+                <td>
+                    @rule.get("degree")(0)
+                </td>   
 
-			<td>if</td>
-
-
-			<!-- Inputs -->    
-				<td>
-					vi1 == mf0
-				</td>
-
-				<td>&</td>
-
-				<td>
-					vi2 == mf1
-				</td>
+                <td>if</td>
 
 
-			<td>-></td>
+                <!-- Inputs -->    
+                @for(i <- 0 to rule.get("inputs").length -1){
+                    <td>
+                        @rule.get("inputs")(i)
+                    </td>
+                    @if(i != rule.get("inputs").length -1){
+                        <td>&</td>
+                    }
+                }
 
 
-			<!-- Outputs -->    
-				<td>
-					vo1 == mf0
-				</td>
-				<td>
-					vo2 == mf1
-				</td>
+                <td>-></td>
 
 
-       </tr>	
+                <!-- Outputs -->    
+
+                @for(output <- rule.get("outputs")){
+                    <td>
+                        @output
+                    </td>
+                }
+
+
+           </tr>    
+        }
     </tbody>
 
 </table>
