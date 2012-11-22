@@ -16,8 +16,8 @@
                     <ul>
                     @for( i <- 0 to spec.getTypes().length-1 ) {
                         <li><a href="@routes.Types.detail(fuzzySystem.id, i)">
-                                @spec.getTypes()(i).getName()
-                        </a></li>
+                                @spec.getTypes()(i).getName() 
+                        </a> @forms_util.actions_icons(routes.Types.prepareEdit(fuzzySystem.id, i).toString(), routes.Types.delete(fuzzySystem.id, i).toString())</li>
                      }
                     </ul>
                 }
@@ -42,7 +42,7 @@
                     @for( i <- 0 to spec.getOperatorsets().length-1 ) {
                         <li><a href="@routes.OperatorSets.detail(fuzzySystem.id, i)">
                                 @spec.getOperatorsets()(i).getName()
-                        </a></li>
+                        </a>  @forms_util.actions_icons("#", routes.OperatorSets.delete(fuzzySystem.id, i).toString())</li>
                      }
                     </ul>
                 }
@@ -68,7 +68,7 @@
                     @for( i <- 0 to spec.getRulebases().length-1 ) {
                         <li><a href="@routes.RuleBases.detail(fuzzySystem.id, i)">
                                 @spec.getRulebases()(i).getName()
-                        </a></li>
+                        </a> @forms_util.actions_icons("#", "#")</li>
                      }
                     </ul>
                 }
