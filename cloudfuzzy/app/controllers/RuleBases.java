@@ -108,6 +108,61 @@ public class RuleBases extends Controller {
   }
 
 
+  /**
+  * Deletes a given type, the id_tp is nothing related to DB model.
+  * Its the position of the type in the spec.types array.
+  */
+  public static Result deleteVariable(Long id_sys, Integer id_rb, Integer id_variable, Integer kind) {
+    FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+    xfuzzy.lang.Specification spec = sys.getSpecification();
+
+    xfuzzy.lang.Rulebase rb = null;
+    try{
+      rb = RuleBase.getFuzzy(sys,id_rb);
+    }
+    catch(Exception e){
+          return badRequest();        
+    }
+
+    xfuzzy.lang.Variable var = null;
+    try{
+      if(kind == Variable.INPUT){
+        var = rb.getInputs()[id_variable];
+      }
+      else{
+        var = rb.getOutputs()[id_variable];
+      }
+
+    }
+    catch(Exception e){
+        System.out.println(e.getMessage());
+
+          return badRequest();        
+    }
+
+
+    if(var.isLinked()) {
+        String msg = "Cannot remove variable \""+var.getName()+"\".";
+        msg+="\nThere are rules using this variable.";
+        System.out.println(msg); 
+        return badRequest();  
+    }
+  
+    if(kind == Variable.INPUT){
+      rb.removeInputVar(var);
+    } 
+    else{
+      rb.removeOutputVar(var);
+    } 
+
+    spec.setModified(true);
+    spec.save();      
+
+
+    return redirect(routes.RuleBases.detail(id_sys,id_rb)); 
+  }
+
    //=================== AJAX ===================//
 
     /**
