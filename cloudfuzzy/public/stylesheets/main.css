@@ -315,3 +315,32 @@ footer {
     bottom:0;
     background:#777;
 }
+
+
+
+/*****************************-FORMS STYLING-****************************/
+
+.delete{
+
+    background: url(/assets/images/trash.png) no-repeat;
+    text-indent:16px;
+    display:inline-block;
+
+    height:16px;
+    line-height:16px;
+    text-decoration:none;
+    width:16px;
+
+}
+.edit{
+
+    background: url(/assets/images/edit.jpg) no-repeat;
+    text-indent:16px;
+    display:inline-block;
+
+    height:16px;
+    line-height:16px;
+    text-decoration:none;
+    width:16px;
+
+}

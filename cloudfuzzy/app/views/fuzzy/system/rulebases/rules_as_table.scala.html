@@ -18,6 +18,7 @@
 	                @for(voutput <- rb.outputvars ){
 						<th>@voutput.name</th>
 	             	}
+                <th>Actions</th>  
            </tr>
     </thead>
 
@@ -52,6 +53,9 @@
                         @output
                     </td>
                 }
+                    <td>
+                        @forms_util.actions_icons("#","#")
+                    </td>
 
 
            </tr>    
