@@ -60,6 +60,7 @@ GET     /system/:id_sys/rb/new                 controllers.RuleBases.prepareCrea
 POST     /system/:id_sys/rb/new                 controllers.RuleBases.create(id_sys: Long)
 GET     /system/:id_sys/rb/:id_rb             controllers.RuleBases.detail(id_sys: Long, id_rb: java.lang.Integer)
 GET     /system/:id_sys/rb/:id_rb/var/:kind/:id_variable/del             controllers.RuleBases.deleteVariable(id_sys: Long, id_rb: java.lang.Integer, id_variable: java.lang.Integer, kind :java.lang.Integer)
+GET     /system/:id_sys/rb/:id_rb/rule/:id_rule/del             controllers.RuleBases.deleteRule(id_sys: Long, id_rb: java.lang.Integer, id_rule: java.lang.Integer)
 
 
 ##AJAX ROUTES

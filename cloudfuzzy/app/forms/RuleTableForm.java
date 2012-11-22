@@ -108,9 +108,14 @@ public class RuleTableForm{
             return infoMaps;
         }
 
+        for(int i =0; i < fRB.getRules().length; i++){
+            xfuzzy.lang.Rule rule =  fRB.getRules()[i];
 
-        for(xfuzzy.lang.Rule rule : fRB.getRules()){
             Map<String, ArrayList<String>> ruleInfos = new HashMap<String, ArrayList<String>>();
+            //id
+            ArrayList<String> idInfos = new ArrayList<String>();
+            idInfos.add( String.valueOf(i) );            
+            ruleInfos.put("id", idInfos);
 
             //degree
             ArrayList<String> degreeInfos = new ArrayList<String>();

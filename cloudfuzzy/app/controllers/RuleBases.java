@@ -109,8 +109,8 @@ public class RuleBases extends Controller {
 
 
   /**
-  * Deletes a given type, the id_tp is nothing related to DB model.
-  * Its the position of the type in the spec.types array.
+  * Deletes a given rulebase variable, 
+  *passing the system id, the rulebase id, the variable id, and the kind(Variable.INPUT, OUTPUT, or other)
   */
   public static Result deleteVariable(Long id_sys, Integer id_rb, Integer id_variable, Integer kind) {
     FuzzySystem sys = FuzzySystem.find.byId(id_sys);
@@ -155,6 +155,50 @@ public class RuleBases extends Controller {
     else{
       rb.removeOutputVar(var);
     } 
+
+    spec.setModified(true);
+    spec.save();      
+
+
+    return redirect(routes.RuleBases.detail(id_sys,id_rb)); 
+  }
+
+  /**
+  * Deletes a given rulebase rule, 
+  *passing the system id, the rulebase id, the rule id
+  */
+  public static Result deleteRule(Long id_sys, Integer id_rb, Integer id_rule) {
+    FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+    xfuzzy.lang.Specification spec = sys.getSpecification();
+
+    xfuzzy.lang.Rulebase rb = null;
+    try{
+      rb = RuleBase.getFuzzy(sys,id_rb);
+    }
+    catch(Exception e){
+          return badRequest();        
+    }
+
+    xfuzzy.lang.Rule rule = null;
+    try{
+        rule = rb.getRules()[id_rule];
+    }
+    catch(Exception e){
+        System.out.println(e.getMessage());
+
+          return badRequest();        
+    }
+
+
+    // if(rule.isLinked()) {
+    //     String msg = "Cannot remove variable \""+var.getName()+"\".";
+    //     msg+="\nThere are rules using this variable.";
+    //     System.out.println(msg); 
+    //     return badRequest();  
+    // }
+  
+    rb.remove(rule);
 
     spec.setModified(true);
     spec.save();      

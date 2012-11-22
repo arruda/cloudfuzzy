@@ -54,7 +54,11 @@
                     </td>
                 }
                     <td>
-                        @forms_util.actions_icons("#","#")
+                        @forms_util.actions_icons("#",
+                            routes.RuleBases.deleteRule(fuzzySystem.id,rb.id,
+                                java.lang.Integer.valueOf(rule.get("id")(0))
+                            ).toString()
+                        )
                     </td>
 
 
