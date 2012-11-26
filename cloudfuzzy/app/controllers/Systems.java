@@ -3,12 +3,16 @@ package controllers;
 import java.io.File;
 import models.FuzzySystem;
 import models.User;
+import models.Variable;
+import models.Type;
 // import models.MF;
 // import models.Type;
 
 import play.*;
 import play.mvc.*;
 import play.data.*;
+import play.libs.Json;
+
 import views.html.fuzzy.system.*;
 
 import xfuzzy.*;
@@ -100,6 +104,48 @@ public class Systems extends Controller {
 
   }
 
+  /**
+  * Deletes a given FussySystem variable, 
+  *passing the system id, the variable id, and the kind(Variable.INPUT, OUTPUT, or other)
+  */
+  public static Result deleteVariable(Long id_sys, Integer id_variable, Integer kind) {
+    FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+    xfuzzy.lang.Specification spec = sys.getSpecification();
+
+    xfuzzy.lang.Variable var = null;
+    try{
+      if(kind == Variable.INPUT){
+        var = spec.getSystemModule().getInputs()[id_variable];
+      }
+      else{
+        var = spec.getSystemModule().getOutputs()[id_variable];
+      }
+
+    }
+    catch(Exception e){
+        System.out.println(e.getMessage());
+
+          return badRequest();        
+    }
+
+
+    if(var.isLinked()) {
+        String msg = "Cannot remove variable \""+var.getName()+"\".";
+        msg+="\nThere are rules using this variable.";
+        System.out.println(msg); 
+        return badRequest();  
+    }
+
+    spec.getSystemModule().removeVariable(var);
+
+    spec.setModified(true);
+    spec.save();      
+
+
+    return redirect(routes.Systems.detail(id_sys)); 
+  }
+  
   //=================== OTHERS ===================//
   /**
   * Prints the xfl file of the given fuzzy system.
@@ -120,5 +166,71 @@ public class Systems extends Controller {
 
   }
   
+   //=================== AJAX ===================//
+
+    /**
+    * Adds a new variable for a given rule id and fuzzy system id.
+    * looks for the keys:
+    * 'name' -> the name of the new variable
+    * 'kind' -> if is input, output or inner.
+    * 'idType' -> the type's id for this new variable
+    * 
+    * If new var is ok, then add it to the system
+    * if not then return the list of errors.
+    */
+    public static Result ajaxAddVariable(Long id_sys)
+    {
+        Form<Variable> filledForm = form(Variable.class).bindFromRequest();
+
+        FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+        Specification spec = sys.getSpecification();
+
+        //checks if the rulebase exists with this name
+        if(spec.getSystemModule().searchVariable(filledForm.field("name").valueOr("")) != null){
+            filledForm.reject("name", "Already exist a Variable with this name in this System");  
+        }
+        if(!FuzzySystem.isIdentifier(filledForm.field("name").valueOr(""))) {
+          filledForm.reject("name", "Invalid name");  
+        }
+
+        if(filledForm.hasErrors()) {
+          System.out.println("errors:"+ filledForm.errors());
+          return badRequest(
+            filledForm.errorsAsJson()
+          );
+        }else{
+          Variable newVar = filledForm.get();
+
+          try{
+
+            Variable.create(
+                  newVar,
+                  Type.getFuzzy(sys,Integer.valueOf(newVar.idType)),
+                  sys.getSpecification()
+            );
+
+          }
+          catch(Exception e){
+            filledForm.reject("Invalid");  
+
+            return badRequest(
+              filledForm.errorsAsJson()
+            );
+
+          }
+
+          
+
+          System.out.println("newVar"+ newVar.name);
+
+          return ok(
+                      Json.toJson("ok")
+                      );
+
+        }
+
+    }
+
   
 }

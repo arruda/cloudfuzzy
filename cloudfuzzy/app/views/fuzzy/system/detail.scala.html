@@ -6,82 +6,286 @@
 
     @defining(fuzzySystem.getSpecification()){ spec =>  
 
-        <div class="sub_content sub_limited">
-            <h3 class='sub_content_header'>Types for Linguistic Variables</h3>
+    <div class="sub_full">
 
-                 @if(spec.getTypes().length <= 0){
-                    <p>There are no Types yet.</br>
-                    Create a <a href="@routes.Types.prepareCreate(fuzzySystem.id)">new one!</a></p>
-                 } else {
-                    <ul>
-                    @for( i <- 0 to spec.getTypes().length-1 ) {
-                        <li><a href="@routes.Types.detail(fuzzySystem.id, i)">
-                                @spec.getTypes()(i).getName() 
-                        </a> @forms_util.actions_icons(routes.Types.prepareEdit(fuzzySystem.id, i).toString(), routes.Types.delete(fuzzySystem.id, i).toString())</li>
-                     }
-                    </ul>
-                }
-            <div class="actions">
+        <div class="sub_lefted">
 
-                <form action="@routes.Types.prepareCreate(fuzzySystem.id)" method="GET" >
-                    
-                    <input type="submit" value="Add Type">
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>Types for Linguistic Variables</h3>
+
+                     @if(spec.getTypes().length <= 0){
+                        <p>There are no Types yet.</br>
+                        Create a <a href="@routes.Types.prepareCreate(fuzzySystem.id)">new one!</a></p>
+                     } else {
+                        <ul>
+                        @for( i <- 0 to spec.getTypes().length-1 ) {
+                            <li><a href="@routes.Types.detail(fuzzySystem.id, i)">
+                                    @spec.getTypes()(i).getName() 
+                            </a> @forms_util.actions_icons(routes.Types.prepareEdit(fuzzySystem.id, i).toString(), routes.Types.delete(fuzzySystem.id, i).toString())</li>
+                         }
+                        </ul>
+                    }
+                <div class="actions">
+
+                    <form action="@routes.Types.prepareCreate(fuzzySystem.id)" method="GET" >
+                        
+                        <input type="submit" value="Add Type">
+                                            
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>Input Variables</h3>         
+                <div id="input_vars">       
+                    @if(spec.getSystemModule().getInputs() != null){
+                        <ul>
+                        @for( i <- 0 to spec.getSystemModule().getInputs().length-1 ) {
+                            <li>    
+                                @spec.getSystemModule().getInputs()(i).getName() @forms_util.actions_icons("#",routes.Systems.deleteVariable(fuzzySystem.id,i, models.Variable.INPUT).toString())
+                            </li>
+                         }
+                        </ul>
+                    }
+                </div>  
+                <input id="new_ivar" type="button" class="btn secondary" value="Add New Variable" />
+
+            </div>
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>Output Variables</h3>
+                <div id="output_vars">
+                    @if(spec.getSystemModule().getOutputs() != null){
+                        <ul>
+                        @for( i <- 0 to spec.getSystemModule().getOutputs().length-1 ) {
+                            <li>    
+                                @spec.getSystemModule().getOutputs()(i).getName()  @forms_util.actions_icons("#",routes.Systems.deleteVariable(fuzzySystem.id,i, models.Variable.OUTPUT).toString())
+                            </li>
+                         }
+                        </ul>
+                    }
+                </div>  
+                <input id="new_ovar" type="button" class="btn secondary" value="Add New Variable" />
+
+            </div>
+            <div id="var-dialog-modal" title="New Variable">
+                <form id="variable-dl-form">
+                    <ul style="list-style:none;">
+                        <li>
+                            <label for="name">Name</label>
+                            <input type="text" id="var_name" name="name" value="" >
+                        </li>
+                        <li>
+                            <label for="idType">Type</label></br>
+                            <select id="var_idType" name="idType" >
+
+                                @for( i <- 0 to fuzzySystem.getSpecification().getTypes().length-1 ) {
+                                
+                                        <option value="@i" >
+                                            @fuzzySystem.getSpecification().getTypes()(i).getName()
+                                        </option>
                                         
+                                 }
+                            </select>
+                        </li>
+                        <li>
+                            <input type="hidden" id="var_kind" name="kind" value="" > 
+                        </li>
+                    </ul>
                 </form>
             </div>
+
         </div>
+        <div class="sub_righted">
 
-        <div class="sub_content sub_limited">
-            <h3 class='sub_content_header'>Operators Set</h3>
 
-                 @if(spec.getOperatorsets().length <= 0){
-                    <p>There are no Operators Set yet.</br>
-                    Create a <a href="@routes.OperatorSets.prepareCreate(fuzzySystem.id)">new one!</a></p>
-                 } else {
-                    <ul>
-                    @for( i <- 0 to spec.getOperatorsets().length-1 ) {
-                        <li><a href="@routes.OperatorSets.detail(fuzzySystem.id, i)">
-                                @spec.getOperatorsets()(i).getName()
-                        </a>  @forms_util.actions_icons("#", routes.OperatorSets.delete(fuzzySystem.id, i).toString())</li>
-                     }
-                    </ul>
-                }
-                 
-            <div class="actions">
-                <form action="@routes.OperatorSets.prepareCreate(fuzzySystem.id)" method="GET" >
-                    
-                    <input type="submit" value="Add Operator Set">
-                                        
-                </form>
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>Operators Set</h3>
+
+                     @if(spec.getOperatorsets().length <= 0){
+                        <p>There are no Operators Set yet.</br>
+                        Create a <a href="@routes.OperatorSets.prepareCreate(fuzzySystem.id)">new one!</a></p>
+                     } else {
+                        <ul>
+                        @for( i <- 0 to spec.getOperatorsets().length-1 ) {
+                            <li><a href="@routes.OperatorSets.detail(fuzzySystem.id, i)">
+                                    @spec.getOperatorsets()(i).getName()
+                            </a>  @forms_util.actions_icons("#", routes.OperatorSets.delete(fuzzySystem.id, i).toString())</li>
+                         }
+                        </ul>
+                    }
+                     
+                <div class="actions">
+                    <form action="@routes.OperatorSets.prepareCreate(fuzzySystem.id)" method="GET" >
+                        
+                        <input type="submit" value="Add Operator Set">
+                                            
+                    </form>
+                </div>
             </div>
-        </div>
 
 
-        <div class="sub_content sub_limited">
-            <h3 class='sub_content_header'>Rule Bases</h3>
+            <div class="sub_content sub_limited">
+                <h3 class='sub_content_header'>Rule Bases</h3>
 
-                 @if(spec.getRulebases().length <= 0){
-                    <p>There are no Rule Bases yet.</br>
-                    Create a <a href="@routes.RuleBases.prepareCreate(fuzzySystem.id)">new one!</a></p>
-                 } else {
-                    <ul>
-                    @for( i <- 0 to spec.getRulebases().length-1 ) {
-                        <li><a href="@routes.RuleBases.detail(fuzzySystem.id, i)">
-                                @spec.getRulebases()(i).getName()
-                        </a> @forms_util.actions_icons("#", "#")</li>
-                     }
-                    </ul>
-                }
-                 
-            <div class="actions">
-                <form action="@routes.RuleBases.prepareCreate(fuzzySystem.id)" method="GET" >
-                    
-                    <input type="submit" value="Add Rule Base">
-                                        
-                </form>
+                     @if(spec.getRulebases().length <= 0){
+                        <p>There are no Rule Bases yet.</br>
+                        Create a <a href="@routes.RuleBases.prepareCreate(fuzzySystem.id)">new one!</a></p>
+                     } else {
+                        <ul>
+                        @for( i <- 0 to spec.getRulebases().length-1 ) {
+                            <li><a href="@routes.RuleBases.detail(fuzzySystem.id, i)">
+                                    @spec.getRulebases()(i).getName()
+                            </a> @forms_util.actions_icons("#", "#")</li>
+                         }
+                        </ul>
+                    }
+                     
+                <div class="actions">
+                    <form action="@routes.RuleBases.prepareCreate(fuzzySystem.id)" method="GET" >
+                        
+                        <input type="submit" value="Add Rule Base">
+                                            
+                    </form>
+                </div>
             </div>
-        </div>
 
+        </div>
+    </div>
+    <div class="sub_full">
+        <div class="sub_content">
+            <h3 class='sub_content_header'>System Design</h3>
+            ...
+        </div>
+    </div>
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            var num_ivars = 0;
+            @if(spec.getSystemModule().getInputs() != null){
+                num_ivars = @spec.getSystemModule().getInputs().length;
+            }
+            var num_ovars = 0;
+            @if(spec.getSystemModule().getOutputs() != null){
+                num_ovars = @spec.getSystemModule().getOutputs().length;
+            }
+
+            $( "#var-dialog-modal" ).dialog({
+                autoOpen: false,
+                modal: true,
+                buttons: {
+                    Ok: function() {
+                        var new_var_form = $( this ).find("#variable-dl-form");
+
+                        postNewVar(function(data){
+                            console.log(data);
+
+
+
+                            //add the new var to the list
+                            // var var_list = $("#input_vars");
+                            // if(new_var_form.find("[name='kind']").val() == @models.Variable.OUTPUT){
+                            //     var var_list = $("#output_vars");
+                            // }
+                            // var_list = var_list.find("ul");
+                            // var_list.append("<li>" + new_var_form.find("[name='name']").val() + "</li>");
+
+                            $( "#var-dialog-modal" ).dialog( "close" );
+                            location.reload();
+
+                        });
+
+                    },
+                    Cancel: function() {
+                        $( this ).dialog( "close" );
+                    }
+                },
+                close: function() {                   
+                    $( this ).dialog( "close" );
+                    var new_var_form = $( this ).find("#variable-dl-form");
+
+                    new_var_form.find("input").val("");
+                    new_var_form.find(".error").remove();   
+                }
+            });
+
+            
+            /* Add a new variable to the form, passing if its an isInputVar */
+            function addVariableDialog(isInputVar){
+                var dialog = $( "#var-dialog-modal" );
+                var new_var_form = $("#variable-dl-form");
+
+                var title = "Create New KIND Variable"
+                if(isInputVar){
+                    title = title.replace(/KIND/g, "Input");
+                    //sets the val of the kind find  to be the correct one.
+                    //based on xfuzzy definition
+                    new_var_form.find("[name='kind']").val(@models.Variable.INPUT);
+                }
+                else{
+                    title = title.replace(/KIND/g, "Output");         
+                    //sets the val of the kind find  to be the correct one.
+                    //based on xfuzzy definition          
+                    new_var_form.find("[name='kind']").val(@models.Variable.OUTPUT); 
+                }
+                $('.ui-dialog-title').html(title);  
+
+                dialog.dialog( "open" );    
+            }
+
+            /* Post the new variable */
+            function postNewVar(callback){
+                var new_var_form = $("#variable-dl-form");
+                // var post_url = '/ajax/ajax_add_variable/ID_SYS';                
+                var post_url = '@routes.Systems.ajaxAddVariable(fuzzySystem.id)'; 
+                    // post_url = post_url.replace(/ID_SYS/g, "@fuzzySystem.id");     
+
+                $.post(post_url,
+                    new_var_form.serialize(),
+                    function(data) {
+                        callback(data);
+                    },"json")
+                    .error(function(xhr, textStatus, errorThrown) {
+                        var errors = JSON.parse(xhr.responseText);
+
+                        //for each field in the errrors
+                        $.each(errors, function(key, value) { 
+                           var field = new_var_form.find("[name='" + key + "']");
+
+                            //add each error to the given field
+                            $.each(value, function(index, val){
+                               field.parent().append("<span class='error'>"+val+"</span></br>");
+
+                            });
+                        });
+
+                        console.log(errors); 
+                    });
+            }
+
+            //change the add buttons to add new vars
+            $('#new_ivar').click(function(){
+                event.preventDefault();
+                console.log("new_ivar");
+                addVariableDialog(true);
+            });
+            $('#new_ovar').click(function(){
+                event.preventDefault();
+                console.log("new_ovar");
+                addVariableDialog(false);
+            });
+
+
+        });
+                
+    </script>
     }   
     
 }

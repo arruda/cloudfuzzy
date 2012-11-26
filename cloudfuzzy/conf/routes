@@ -30,6 +30,7 @@ GET     /system/new                 controllers.Systems.prepareCreate()
 POST    /system/new                 controllers.Systems.create()
 GET     /system/:id_sys             controllers.Systems.detail(id_sys: Long)
 POST    /system/:id_sys/del         controllers.Systems.delete(id_sys: Long)
+GET    /system/:id_sys/var/:kind/:id_variable/del        controllers.Systems.deleteVariable(id_sys: Long, id_variable: java.lang.Integer, kind :java.lang.Integer)
 
 GET     /system/:id_sys/print             controllers.Systems.print(id_sys: Long)
 
@@ -69,6 +70,7 @@ GET     /ajax/get_mfs_plot_data                              controllers.Types.a
 GET     /ajax/get_num_params_operator_option                              controllers.OperatorSets.ajaxGetNumParamsForOption()
 POST     /ajax/ajax_add_variable_rb/:id_sys/:id_rb      controllers.RuleBases.ajaxAddVariable(id_sys: Long, id_rb: java.lang.Integer)
 POST     /ajax/ajax_add_rule_from_table/:id_sys/:id_rb      controllers.RuleBases.ajaxAddRuleFromTable(id_sys: Long, id_rb: java.lang.Integer)
+POST     /ajax/ajax_add_variable/:id_sys         controllers.Systems.ajaxAddVariable(id_sys: Long)
 
 
 #JS Routing

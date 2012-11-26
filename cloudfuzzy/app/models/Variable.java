@@ -88,6 +88,27 @@ public class Variable{
     }
 
     /**
+    *Create a Variable(fuzzy) with the given Variable as source, with a given type(fuzzy).
+    * in this case its for creating a variable in a FuzzySystem, so don't need to pass a rulebase.
+    */
+    public static void create(Variable var, xfuzzy.lang.Type type,Specification spec)
+    throws Exception{
+
+        xfuzzy.lang.Variable fVar;
+        if(var.kind == Variable.INPUT){
+            fVar = new xfuzzy.lang.Variable(var.name,type,Variable.INPUT);
+        } 
+        else{
+            fVar = new xfuzzy.lang.Variable(var.name,type,Variable.OUTPUT);
+        } 
+
+        spec.getSystemModule().addVariable(fVar);
+        spec.setModified(true);
+        spec.save();
+
+    }
+
+    /**
     * Return the type of this variable using the attribute idType
     *passing the given FuzzySystem
     */
