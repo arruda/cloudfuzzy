@@ -380,7 +380,12 @@ public class XflParser implements XflParserConstants {
   for(int i=0; i<ovar.length; i++) {
    String varname = (String) ov.elementAt(i);
    ovar[i] = spec.getSystemModule().searchVariable( varname );
-   if(ovar[i] != null && !ovar[i].isOutput()) { exception(t,23); return; }
+   
+   if(ovar[i] != null && !ovar[i].isOutput()) {
+     if(!ovar[i].getName().equals("NULL")){
+       exception(t,23); return;   
+     } 
+   }
    if(ovar[i] == null) {
     ovar[i] = new Variable(varname,Variable.INNER);
     spec.getSystemModule().addVariable(ovar[i]);
