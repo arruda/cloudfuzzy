@@ -64,13 +64,22 @@ GET     /system/:id_sys/rb/:id_rb/var/:kind/:id_variable/del             control
 GET     /system/:id_sys/rb/:id_rb/rule/:id_rule/del             controllers.RuleBases.deleteRule(id_sys: Long, id_rb: java.lang.Integer, id_rule: java.lang.Integer)
 
 
-##AJAX ROUTES
+
+
+
+#######AJAX ROUTES
+##MF
 GET     /ajax/get_num_params_mf                              controllers.MFs.ajaxGetNumParams()
 GET     /ajax/get_mfs_plot_data                              controllers.Types.ajaxGetMFsPlotData()
+##Operator
 GET     /ajax/get_num_params_operator_option                              controllers.OperatorSets.ajaxGetNumParamsForOption()
+##RuleBase
 POST     /ajax/ajax_add_variable_rb/:id_sys/:id_rb      controllers.RuleBases.ajaxAddVariable(id_sys: Long, id_rb: java.lang.Integer)
 POST     /ajax/ajax_add_rule_from_table/:id_sys/:id_rb      controllers.RuleBases.ajaxAddRuleFromTable(id_sys: Long, id_rb: java.lang.Integer)
+##System
 POST     /ajax/ajax_add_variable/:id_sys         controllers.Systems.ajaxAddVariable(id_sys: Long)
+##RuleBaseCall
+POST     /ajax/ajax_add_call/:id_sys/:id_rb         controllers.RuleBaseCalls.ajaxAddCall(id_sys: Long, id_rb : java.lang.Integer)
 
 
 #JS Routing
