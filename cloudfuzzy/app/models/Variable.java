@@ -61,6 +61,57 @@ public class Variable{
     }
 
     /**
+    * Return the given Variable(The xFuzzy one) for a given id_var,
+    * Passing it's FuzzySystem, and it's id(the position of this var in the vars of the given kind array)
+    * if any error occours, like the id_var is out of the array bound, then raise an Exception
+    * that should be treated in along
+    *
+    */
+    public static xfuzzy.lang.Variable getFuzzy(FuzzySystem sys,Integer id_rb, Integer id_var, Interger kind)
+    throws Exception {
+      xfuzzy.lang.Variable var=null;
+      Specification spec=null;
+      //can throw an exception
+      spec = sys.getSpecification();  
+      
+
+      if(id_rb != null){
+
+            xfuzzy.lang.Rulebase fRB = spec.getRules()[id_rb];
+            if(kind==Variable.INPUT){
+                if(fRB.getInputs().length <= id_var || id_var < 0){
+                   throw new Exception("Wrong Variable ID:"+id_var);
+                }
+                var = fRB.getInputs()[id_var];
+
+            }
+            else{
+                if(fRB.getOutputs().length <= id_var || id_var < 0){
+                   throw new Exception("Wrong Variable ID:"+id_var);
+                }
+                var = fRB.getOutputs()[id_var];   
+            }
+      }
+      else{
+            if(kind==Variable.INPUT){
+                if(spec.getSystemModule().getInputs().length <= id_var || id_var < 0){
+                   throw new Exception("Wrong Variable ID:"+id_var);
+                }
+                var = spec.getSystemModule().getInputs()[id_var];
+            }
+            else{
+                
+                if(spec.getSystemModule().getOutputs().length <= id_var || id_var < 0){
+                   throw new Exception("Wrong Variable ID:"+id_var);
+                }
+                var = spec.getSystemModule().getOutputs()[id_var];   
+            }
+      }
+
+      return var;
+    }
+
+    /**
     *Create a Variable(fuzzy) with the given Variable as source, with a given type(fuzzy).
     * in this case its for creating a variable in a rulebase, so a rulebase has to be passed too.
     */
