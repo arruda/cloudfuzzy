@@ -74,6 +74,7 @@ public class OperatorSets extends Controller {
       } else {
           OperatorSet newOPSet = filledForm.get();
           
+          System.out.println("operators[0].name:"+filledForm.field("operators[0].name").valueOr(""));
           System.out.println("newOPSet:"+newOPSet);
           for(OperatorSet.Operator op : newOPSet.operators){
             System.out.println("op:"+op.name+ "->" + op.selectedOption );

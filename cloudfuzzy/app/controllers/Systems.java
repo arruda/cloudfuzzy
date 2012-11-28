@@ -137,8 +137,6 @@ public class Systems extends Controller {
         return badRequest();  
     }
 
-    System.out.println("xfl:");
-    System.out.println(var.toXfl());
     spec.getSystemModule().removeVariable(var);
 
     spec.setModified(true);
