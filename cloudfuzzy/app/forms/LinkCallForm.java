@@ -30,48 +30,37 @@ public class LinkCallForm{
 
     public Integer idSysVar;
 
+    public Integer kindSysVar;
+
     public Integer idBaseVar;
+    public Integer kindBaseVar;
 
     public FuzzySystem system;
 
     
-    // public Variable getSysVar(){
-    //     xfuzzy.lang.RulebaseCall rbc = null;
-    //     Integer id_rb = null;
-    //     if(this.idRuleBaseCall != null){
+    public Variable getSysVar(){
+        xfuzzy.lang.RulebaseCall rbc = null;
+        xfuzzy.lang.Rulebase fRB = null;
+        if(this.idRuleBaseCall != null){
 
-    //         rbc = this.system.getRulebaseCalls()[this.idRuleBaseCall];
-    //         id_rb = rbc.getRulebase();
-    //     }
+            rbc = this.system.getSpecification().getSystemModule().getRulebaseCalls()[this.idRuleBaseCall];
+            fRB = rbc.getRulebase();
+        }
 
-    //     Variable models.Variable.getFuzzy(this.system, this.id, Integer id_var, Interger kind);
-    //     Variable outputs[] = rb.getOutputs();
+        Variable var = null;
+        try{
+            
+            if(fRB == null){
+                var = models.Variable.getFuzzy(this.system, this.idSysVar,  this.kindSysVar);
+            }
+            else{            
+                var = models.Variable.getFuzzy(this.system, fRB,  this.idSysVar, this.kindSysVar);
+            }
+        }
+        catch(Exception e){    
+            System.out.println(e.getMessage());
+        }
 
-    //     Relation premise = null;
-    //     for(int j=inputs.length-1; j>=0; j--)  {
-    //         //if the actual input is not blank in the mf selection
-
-    //         if(!this.inputs.get(j).equals("")){
-    //             //get the actual selected mf for the current input var
-    //             ParamMemFunc imf = 
-    //                 inputs[j].getType().getAllMembershipFunctions()[Integer.valueOf(this.inputs.get(j))];
-
-    //             Relation rel = Relation.create(Relation.IS,null,null,inputs[j],imf,null);
-    //             if(premise == null) premise = rel;
-    //             else premise=Relation.create(Relation.AND,rel,premise,null,null,rb);
-    //         }
-    //     }
-
-    //     Rule newrule = new Rule(premise,this.degree);
-    //     for(int j=0; j<outputs.length; j++) {
-    //         if(!this.outputs.get(j).equals("")){
-    //             //get the actual selected mf for the current output var
-    //             ParamMemFunc omf = 
-    //                 outputs[j].getType().getAllMembershipFunctions()[Integer.valueOf(this.outputs.get(j))];
-    //             newrule.add(new Conclusion(outputs[j],omf,rb));
-    //         }
-    //     }
-
-    //    return newrule;
-    // }
+       return var;
+    }
 }

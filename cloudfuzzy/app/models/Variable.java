@@ -60,6 +60,40 @@ public class Variable{
         return var;
     }
 
+
+    /**
+    * Return the given Variable(The xFuzzy one) for a given id_var, and the Fuzzy Rulebase instead of it's id
+    * Passing it's FuzzySystem, and it's id(the position of this var in the vars of the given kind array)
+    * if any error occours, like the id_var is out of the array bound, then raise an Exception
+    * that should be treated in along
+    *
+    */
+    public static xfuzzy.lang.Variable getFuzzy(FuzzySystem sys,xfuzzy.lang.Rulebase fRB, Integer id_var, Integer kind)
+    throws Exception {
+      xfuzzy.lang.Variable var=null;
+      Specification spec=null;
+      //can throw an exception
+      spec = sys.getSpecification();  
+      
+
+
+        if(kind==Variable.INPUT){
+            if(fRB.getInputs().length <= id_var || id_var < 0){
+               throw new Exception("Wrong Variable ID:"+id_var);
+            }
+            var = fRB.getInputs()[id_var];
+
+        }
+        else{
+            if(fRB.getOutputs().length <= id_var || id_var < 0){
+               throw new Exception("Wrong Variable ID:"+id_var);
+            }
+            var = fRB.getOutputs()[id_var];   
+        }
+
+      return var;
+    }
+
     /**
     * Return the given Variable(The xFuzzy one) for a given id_var,
     * Passing it's FuzzySystem, and it's id(the position of this var in the vars of the given kind array)
@@ -67,7 +101,7 @@ public class Variable{
     * that should be treated in along
     *
     */
-    public static xfuzzy.lang.Variable getFuzzy(FuzzySystem sys,Integer id_rb, Integer id_var, Interger kind)
+    public static xfuzzy.lang.Variable getFuzzy(FuzzySystem sys,Integer id_rb, Integer id_var, Integer kind)
     throws Exception {
       xfuzzy.lang.Variable var=null;
       Specification spec=null;
@@ -77,20 +111,8 @@ public class Variable{
 
       if(id_rb != null){
 
-            xfuzzy.lang.Rulebase fRB = spec.getRules()[id_rb];
-            if(kind==Variable.INPUT){
-                if(fRB.getInputs().length <= id_var || id_var < 0){
-                   throw new Exception("Wrong Variable ID:"+id_var);
-                }
-                var = fRB.getInputs()[id_var];
-
-            }
-            else{
-                if(fRB.getOutputs().length <= id_var || id_var < 0){
-                   throw new Exception("Wrong Variable ID:"+id_var);
-                }
-                var = fRB.getOutputs()[id_var];   
-            }
+            xfuzzy.lang.Rulebase fRB = spec.getRulebases()[id_rb];
+            var = Variable.getFuzzy(sys,fRB,id_var,kind);
       }
       else{
             if(kind==Variable.INPUT){
@@ -107,6 +129,39 @@ public class Variable{
                 var = spec.getSystemModule().getOutputs()[id_var];   
             }
       }
+
+      return var;
+    }
+
+    /**
+    * Return the given Variable(The xFuzzy one) for a given id_var, this function returns the variable for a system
+    * so there is no need to pass a rulebase.
+    * Passing it's FuzzySystem, and it's id(the position of this var in the vars of the given kind array)
+    * if any error occours, like the id_var is out of the array bound, then raise an Exception
+    * that should be treated in along
+    *
+    */
+    public static xfuzzy.lang.Variable getFuzzy(FuzzySystem sys, Integer id_var, Integer kind)
+    throws Exception {
+      xfuzzy.lang.Variable var=null;
+      Specification spec=null;
+      //can throw an exception
+      spec = sys.getSpecification();  
+      
+
+        if(kind==Variable.INPUT){
+            if(spec.getSystemModule().getInputs().length <= id_var || id_var < 0){
+               throw new Exception("Wrong Variable ID:"+id_var);
+            }
+            var = spec.getSystemModule().getInputs()[id_var];
+        }
+        else{
+            
+            if(spec.getSystemModule().getOutputs().length <= id_var || id_var < 0){
+               throw new Exception("Wrong Variable ID:"+id_var);
+            }
+            var = spec.getSystemModule().getOutputs()[id_var];   
+        }
 
       return var;
     }
