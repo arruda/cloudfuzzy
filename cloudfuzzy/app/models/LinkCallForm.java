@@ -16,6 +16,7 @@ import xfuzzy.lang.ParamMemFunc;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.Relation;
 import xfuzzy.lang.Rulebase;
+import xfuzzy.lang.RulebaseCall;
 import xfuzzy.lang.Rule;
 import xfuzzy.lang.Conclusion;
 import xfuzzy.lang.Variable;
@@ -43,9 +44,16 @@ public class LinkCallForm{
         public Integer idBaseVar;
         public Integer kindBaseVar;
 
+        public FuzzySystem system;
 
+        //this are populated using the getters and setters
+        private Variable sysVar;
+        private Variable baseVar;
         
-        public Variable getSysVar(FuzzySystem system){
+        public Variable getSysVar(){
+            if(this.sysVar != null){
+                return this.sysVar;
+            }
             xfuzzy.lang.RulebaseCall rbc = null;
             xfuzzy.lang.Rulebase fRB = null;
             if(this.idRuleBaseCall != null){
@@ -70,8 +78,14 @@ public class LinkCallForm{
 
            return var;
         }
+        public void setSysVar(Variable sysVar){
+            this.sysVar = sysVar;
+        }
 
-        public Variable getBaseVar(FuzzySystem system){
+        public Variable getBaseVar(){            
+            if(this.baseVar != null){
+                return this.baseVar;
+            }
             xfuzzy.lang.RulebaseCall rbc = null;
             xfuzzy.lang.Rulebase fRB = null;
             if(this.idRuleBaseCall != null){
@@ -95,6 +109,19 @@ public class LinkCallForm{
             }
 
            return var;
+        }
+        public void setBaseVar(Variable baseVar){
+            this.baseVar = baseVar;
+        }
+
+        public RulebaseCall getRuleBaseCall(){
+            xfuzzy.lang.RulebaseCall rbc = null;
+            if(this.idRuleBaseCall != null){
+
+                rbc = system.getSpecification().getSystemModule().getRulebaseCalls()[this.idRuleBaseCall];
+            }
+            return rbc;
+
         }
     }
 
