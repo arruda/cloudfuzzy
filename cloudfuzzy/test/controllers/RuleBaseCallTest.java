@@ -147,7 +147,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
 
         post_data.put("variableDots[1].idRuleBaseCall", "0");  
         post_data.put("variableDots[1].idSysVar", null);  
-        post_data.put("variableDots[1].kindSysVar", String.valueOf(Variable.INNER));  
+        post_data.put("variableDots[1].kindSysVar", null);  
         post_data.put("variableDots[1].idBaseVar", "0");  
         post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.INPUT));  
 
@@ -183,7 +183,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
 
         post_data.put("variableDots[1].idRuleBaseCall", "0");  
         post_data.put("variableDots[1].idSysVar", null);  
-        post_data.put("variableDots[1].kindSysVar", String.valueOf(Variable.INNER));  
+        post_data.put("variableDots[1].kindSysVar", null);  
         post_data.put("variableDots[1].idBaseVar", "2");  
         post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.INPUT));  
 
@@ -213,7 +213,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         Map<String,String> post_data = new HashMap<String,String>();
         post_data.put("variableDots[0].idRuleBaseCall", "0");  
         post_data.put("variableDots[0].idSysVar", null);  
-        post_data.put("variableDots[0].kindSysVar", String.valueOf(Variable.INNER));  
+        post_data.put("variableDots[0].kindSysVar", null);  
         post_data.put("variableDots[0].idBaseVar", "2");  
         post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.INPUT));  
 
