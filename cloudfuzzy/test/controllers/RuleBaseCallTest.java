@@ -467,4 +467,157 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
 
     }
 
+    /**
+    *This is one of the cases, for the tests of adding a link: A8
+    * +rbc1(bb)
+    * rbc0(aa).vo2 -> rbc1(bb).vi1
+    * +rbc2(aa)
+    * rbc1(bb).vo1 -> rbc2(aa).vi2
+    *
+    */
+    @Test
+    public void ajaxAddLinkA8() {
+
+        //======================== +rbc1(bb) =====================//
+        Integer id_rb = 1;
+        xfuzzy.lang.Rulebase rb = null;
+        try{
+            rb = models.RuleBase.getFuzzy(this.testSystem,id_rb);
+        } 
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        Result result = callAction(
+            controllers.routes.ref.RuleBaseCalls.ajaxAddCall(this.testSystem.id,id_rb),
+            fakeRequest().withSession("email", this.testUser.email)
+        );
+        assertThat(contentAsString(result)).contains("ok");
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        xfuzzy.lang.RulebaseCall rbc =
+              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+        assertEquals(new_rbc_to_xfl, rbc.toXfl());
+
+        //======================== rbc0(aa).vo2 -> rbc1(bb).vi1 =====================//
+
+        Map<String,String> post_data = new HashMap<String,String>();
+        post_data.put("variableDots[0].idRuleBaseCall", "0");  
+        post_data.put("variableDots[0].idSysVar", null);  
+        post_data.put("variableDots[0].kindSysVar", null);  
+        post_data.put("variableDots[0].idBaseVar", "1");  
+        post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.OUTPUT));  
+
+        post_data.put("variableDots[1].idRuleBaseCall", "1");  
+        post_data.put("variableDots[1].idSysVar", null);  
+        post_data.put("variableDots[1].kindSysVar", null);  
+        post_data.put("variableDots[1].idBaseVar", "0");  
+        post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.INPUT));  
+
+        result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        //should be with the link in the given rulebaseCall now
+        xfuzzy.lang.RulebaseCall rbc1 =
+             this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+        xfuzzy.lang.RulebaseCall rbc2 =
+             this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);\n";
+        //special atention to the space before the rulebase name, and the \n in the end
+        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        assertEquals(rbc1ToXfl, rbc1.toXfl());
+        assertEquals(rbc2ToXfl, rbc2.toXfl());
+
+        //======================== +rbc2(aa) =====================//
+
+
+        id_rb = 0;
+        rb = null;
+        try{
+            rb = models.RuleBase.getFuzzy(this.testSystem,id_rb);
+        } 
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        result = callAction(
+            controllers.routes.ref.RuleBaseCalls.ajaxAddCall(this.testSystem.id,id_rb),
+            fakeRequest().withSession("email", this.testUser.email)
+        );
+        assertThat(contentAsString(result)).contains("ok");
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        assertEquals(new_rbc_to_xfl, rbc.toXfl());
+        //======================== rbc1(bb).vo1 -> rbc2(aa).vi2 =====================//
+
+        post_data = new HashMap<String,String>();
+        post_data.put("variableDots[0].idRuleBaseCall", "1");  
+        post_data.put("variableDots[0].idSysVar", null);  
+        post_data.put("variableDots[0].kindSysVar", null);  
+        post_data.put("variableDots[0].idBaseVar", "0");  
+        post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.OUTPUT));  
+
+        post_data.put("variableDots[1].idRuleBaseCall", "2");  
+        post_data.put("variableDots[1].idSysVar", null);  
+        post_data.put("variableDots[1].kindSysVar", null);  
+        post_data.put("variableDots[1].idBaseVar", "1");  
+        post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.INPUT));  
+
+        result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        //should be with the link in the given rulebaseCall now
+        rbc2 = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+        xfuzzy.lang.RulebaseCall rbc3 =
+             this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        rbc2ToXfl = "  bb(i0 : i1);\n";
+        //special atention to the space before the rulebase name, and the \n in the end
+        String rbc3ToXfl = "  aa(NULL, i1, NULL, NULL : NULL, NULL);\n";
+
+        assertEquals(rbc2ToXfl, rbc2.toXfl());
+        assertEquals(rbc3ToXfl, rbc3.toXfl());
+
+    }
+
 }
