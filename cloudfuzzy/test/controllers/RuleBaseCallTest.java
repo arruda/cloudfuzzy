@@ -51,7 +51,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
             "rulebase bb (t1 vi1 : t1 vo1)  {\n"+
               "if(vi1 == mf0) -> vo1 = mf2;\n"+
              "}\n"+
-             
+
             "system (t1 vgi1, t1 vgi2 : t1 vgo1, t1 vgo2) {\n"+
             "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n"+
              "}\n";
@@ -233,6 +233,43 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
 
         //special atention to the space before the rulebase name, and the \n in the end
         String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+
+    }
+
+    /**
+    *This is one of the cases, for the tests of adding a link: A4
+    * 
+    * rbc0(aa).vo1 -> vgo1
+    *
+    */
+    @Test
+    public void ajaxAddLinkA4() {
+
+
+        Map<String,String> post_data = new HashMap<String,String>();
+        post_data.put("variableDots[0].idRuleBaseCall", "0");  
+        post_data.put("variableDots[0].idSysVar", null);  
+        post_data.put("variableDots[0].kindSysVar", null);  
+        post_data.put("variableDots[0].idBaseVar", "0");  
+        post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.OUTPUT));  
+
+        post_data.put("variableDots[1].idRuleBaseCall", null);  
+        post_data.put("variableDots[1].idSysVar", "0");  
+        post_data.put("variableDots[1].kindSysVar", String.valueOf(Variable.OUTPUT));  
+        post_data.put("variableDots[1].idBaseVar", null);  
+        post_data.put("variableDots[1].kindBaseVar", null);  
+
+
+        Result result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        //should be with the link in the given rulebaseCall now
+        xfuzzy.lang.RulebaseCall rbc =
+              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : vgo1, NULL);\n";
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
