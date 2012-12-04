@@ -71,30 +71,66 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
     }
 
     @Test
-    public void ajaxAddLink() {
+    public void ajaxAddCall() {
 
-        Map<String,String> post_data = new HashMap<String,String>();
-        post_data.put("variableDots[0].idRuleBaseCall", "0");  
-        post_data.put("variableDots[0].idSysVar", "0");  
-        post_data.put("variableDots[0].kindSysVar", String.valueOf(Variable.INPUT));  
-        post_data.put("variableDots[0].idBaseVar", "0");  
-        post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.INPUT));  
-
-        post_data.put("variableDots[1].idRuleBaseCall", "0");  
-        post_data.put("variableDots[1].idSysVar", "1");  
-        post_data.put("variableDots[1].kindSysVar", String.valueOf(Variable.OUTPUT));  
-        post_data.put("variableDots[1].idBaseVar", "1");  
-        post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.OUTPUT));  
+        Integer id_rb = 0;
+        xfuzzy.lang.Rulebase rb = null;
+        try{
+            rb = models.RuleBase.getFuzzy(this.testSystem,id_rb);
+        } 
+        catch(Exception e){
+            fail(e.getMessage());
+        }
 
         Result result = callAction(
-            controllers.routes.ref.RuleBaseCalls.ajaxAddLink(this.testSystem.id),
+            controllers.routes.ref.RuleBaseCalls.ajaxAddCall(this.testSystem.id,id_rb),
             fakeRequest().withSession("email", this.testUser.email)
-            .withFormUrlEncodedBody(post_data)
         );
         assertThat(contentAsString(result)).contains("ok");
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        xfuzzy.lang.RulebaseCall rbc =
+              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        assertEquals(new_rbc_to_xfl, rbc.toXfl());
 
 
     }
+
+    // @Test
+    // public void ajaxAddLink() {
+
+    //     Map<String,String> post_data = new HashMap<String,String>();
+    //     post_data.put("variableDots[0].idRuleBaseCall", "0");  
+    //     post_data.put("variableDots[0].idSysVar", "0");  
+    //     post_data.put("variableDots[0].kindSysVar", String.valueOf(Variable.INPUT));  
+    //     post_data.put("variableDots[0].idBaseVar", "0");  
+    //     post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.INPUT));  
+
+    //     post_data.put("variableDots[1].idRuleBaseCall", "0");  
+    //     post_data.put("variableDots[1].idSysVar", "1");  
+    //     post_data.put("variableDots[1].kindSysVar", String.valueOf(Variable.OUTPUT));  
+    //     post_data.put("variableDots[1].idBaseVar", "1");  
+    //     post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.OUTPUT));  
+
+    //     Result result = callAction(
+    //         controllers.routes.ref.RuleBaseCalls.ajaxAddLink(this.testSystem.id),
+    //         fakeRequest().withSession("email", this.testUser.email)
+    //         .withFormUrlEncodedBody(post_data)
+    //     );
+    //     assertThat(contentAsString(result)).contains("ok");
+
+
+    // }
 
     // @Test
     // public void ajaxbla() {
