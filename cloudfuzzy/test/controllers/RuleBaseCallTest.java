@@ -48,6 +48,10 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               "[0.8]if(vi2 == mf1 & vi3 == mf2) -> vo1 = mf1, vo2 = mf3;\n"+
              "}\n"+
 
+            "rulebase bb (t1 vi1 : t1 vo1)  {\n"+
+              "if(vi1 == mf0) -> vo1 = mf2;\n"+
+             "}\n"+
+             
             "system (t1 vgi1, t1 vgi2 : t1 vgo1, t1 vgo2) {\n"+
             "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n"+
              "}\n";
@@ -212,7 +216,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         post_data.put("variableDots[0].kindSysVar", String.valueOf(Variable.INNER));  
         post_data.put("variableDots[0].idBaseVar", "2");  
         post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.INPUT));  
-        
+
         post_data.put("variableDots[1].idRuleBaseCall", null);  
         post_data.put("variableDots[1].idSysVar", "1");  
         post_data.put("variableDots[1].kindSysVar", String.valueOf(Variable.INPUT));  
