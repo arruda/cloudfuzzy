@@ -432,7 +432,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         post_data.put("variableDots[0].idRuleBaseCall", "0");  
         post_data.put("variableDots[0].idSysVar", null);  
         post_data.put("variableDots[0].kindSysVar", null);  
-        post_data.put("variableDots[0].idBaseVar", "0");  
+        post_data.put("variableDots[0].idBaseVar", "1");  
         post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.OUTPUT));  
 
         post_data.put("variableDots[1].idRuleBaseCall", "1");  
@@ -453,11 +453,17 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         }
 
         //should be with the link in the given rulebaseCall now
-        rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+        xfuzzy.lang.RulebaseCall rbc1 =
+             this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+        xfuzzy.lang.RulebaseCall rbc2 =
+             this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  bb(i0 : NULL);\n";
-        assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);\n";
+        //special atention to the space before the rulebase name, and the \n in the end
+        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        assertEquals(rbc1ToXfl, rbc1.toXfl());
+        assertEquals(rbc2ToXfl, rbc2.toXfl());
 
     }
 
