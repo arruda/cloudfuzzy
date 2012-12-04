@@ -196,6 +196,43 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
 
     }
 
+    /**
+    *This is one of the cases, for the tests of adding a link: A3
+    * 
+    * rbc0(aa).vi3 -> vgi2
+    *
+    */
+    @Test
+    public void ajaxAddLinkA3() {
+
+
+        Map<String,String> post_data = new HashMap<String,String>();
+        post_data.put("variableDots[0].idRuleBaseCall", "0");  
+        post_data.put("variableDots[0].idSysVar", null);  
+        post_data.put("variableDots[0].kindSysVar", String.valueOf(Variable.INNER));  
+        post_data.put("variableDots[0].idBaseVar", "2");  
+        post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.INPUT));  
+        
+        post_data.put("variableDots[1].idRuleBaseCall", null);  
+        post_data.put("variableDots[1].idSysVar", "1");  
+        post_data.put("variableDots[1].kindSysVar", String.valueOf(Variable.INPUT));  
+        post_data.put("variableDots[1].idBaseVar", null);  
+        post_data.put("variableDots[1].kindBaseVar", null);  
+
+
+        Result result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        //should be with the link in the given rulebaseCall now
+        xfuzzy.lang.RulebaseCall rbc =
+              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+
+    }
+
 
 
 }

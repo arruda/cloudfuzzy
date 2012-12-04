@@ -104,7 +104,7 @@ public class RuleBaseCalls extends Controller {
     }else{
 
       models.LinkCallForm linkCall = filledForm.get();
-      System.out.println("variableDot:"+ linkCall.variableDots);
+      // System.out.println("variableDot:"+ linkCall.variableDots);
       
       if(linkCall.variableDots == null || linkCall.variableDots.size() != 2){
           filledForm.reject("", "Invalid Link");  
