@@ -73,7 +73,8 @@ public class LinkCallForm{
                 }
             }
             catch(Exception e){    
-                System.out.println(e.getMessage());
+                System.out.println("Variable.getSysVar():"+e.getMessage());
+                var = new Variable("NULL",Variable.INNER);
             }
 
            return var;
@@ -105,7 +106,8 @@ public class LinkCallForm{
                 }
             }
             catch(Exception e){    
-                System.out.println(e.getMessage());
+                System.out.println("Variable.getBaseVar():"+e.getMessage());
+                //var = new Variable("NULL",Variable.INNER);
             }
 
            return var;
