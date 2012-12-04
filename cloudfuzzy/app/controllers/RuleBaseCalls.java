@@ -106,9 +106,10 @@ public class RuleBaseCalls extends Controller {
       models.LinkCallForm linkCall = filledForm.get();
       System.out.println("variableDot:"+ linkCall.variableDots);
       
-      if(linkCall.variableDots != null || linkCall.variableDots.size() != 2){
+      if(linkCall.variableDots == null || linkCall.variableDots.size() != 2){
           filledForm.reject("", "Invalid Link");  
 
+          System.out.println("incorrect number of variable dots:"+linkCall.variableDots.size());
           return badRequest(
             filledForm.errorsAsJson()
           );
@@ -133,6 +134,7 @@ public class RuleBaseCalls extends Controller {
         (b.idBaseVar != null && b.getBaseVar().isOutput()) ) origdot = b;
       if( origdot == null || destdot == null){
         filledForm.reject("", "Invalid Link"); 
+          System.out.println("origdot or destdot are null:"+origdot +" - " + destdot);
 
         return badRequest(
           filledForm.errorsAsJson()
