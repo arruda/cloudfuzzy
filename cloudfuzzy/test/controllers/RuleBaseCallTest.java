@@ -387,5 +387,78 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
     }
 
 
+    /**
+    *This is one of the cases, for the tests of adding a link: A7
+    * 
+    * +rbc1(bb)
+    * rbc0(aa).vo2 -> rbc1(bb).vi1
+    *
+    */
+    @Test
+    public void ajaxAddLinkA7() {
+
+        Integer id_rb = 1;
+        xfuzzy.lang.Rulebase rb = null;
+        try{
+            rb = models.RuleBase.getFuzzy(this.testSystem,id_rb);
+        } 
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        Result result = callAction(
+            controllers.routes.ref.RuleBaseCalls.ajaxAddCall(this.testSystem.id,id_rb),
+            fakeRequest().withSession("email", this.testUser.email)
+        );
+        assertThat(contentAsString(result)).contains("ok");
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        xfuzzy.lang.RulebaseCall rbc =
+              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+        assertEquals(new_rbc_to_xfl, rbc.toXfl());
+
+
+        Map<String,String> post_data = new HashMap<String,String>();
+        post_data.put("variableDots[0].idRuleBaseCall", "0");  
+        post_data.put("variableDots[0].idSysVar", null);  
+        post_data.put("variableDots[0].kindSysVar", null);  
+        post_data.put("variableDots[0].idBaseVar", "0");  
+        post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.OUTPUT));  
+
+        post_data.put("variableDots[1].idRuleBaseCall", "1");  
+        post_data.put("variableDots[1].idSysVar", null);  
+        post_data.put("variableDots[1].kindSysVar", null);  
+        post_data.put("variableDots[1].idBaseVar", "0");  
+        post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.INPUT));  
+
+        result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        //should be with the link in the given rulebaseCall now
+        rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String newLinkToRBCToXfl = "  bb(i0 : NULL);\n";
+        assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+
+    }
 
 }
