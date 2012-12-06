@@ -157,7 +157,7 @@
             <h3 class='sub_content_header'>System Design</h3>
         	
             <div id="system_design">
-            	<div class="rulebasecall">
+            	<div id="drag" class="rulebasecall">
             	<h3>BB</h1>
             	bb
             	</div>
@@ -290,8 +290,14 @@
             });
 
 
+            $( ".rulebasecall" ).draggable({ containment: "#system_design", scroll: false })
         });
                 
+
+		//system design
+        //$(".rulebasecall").each(function() {
+        //    var jqThis = $(this);
+        //});
     </script>
     }   
     
