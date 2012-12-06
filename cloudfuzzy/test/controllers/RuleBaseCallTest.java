@@ -786,6 +786,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         );
         return result;
     }
+
     /**
     *This is one of the cases, for the tests of removing a link: B1
     * vgi2 -> rbc0(aa).vi3
@@ -850,6 +851,156 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         //special atention to the space before the rulebase name, and the \n in the end
         newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+
+    }
+
+    /**
+    *This is one of the cases, for the tests of removing a link: B2
+    * vgi2 -> rbc0(aa).vi3
+    * +rbc1(bb)
+    * rbc1(bb).vi1 ->  rbc0(aa).vo2 
+    * rbc1(bb).vi1 -/-  rbc0(aa).vo2 
+    */
+    @Test
+    public void ajaxRemoveLinkB2() {
+
+        //======================== vgi2 -> rbc0(aa).vi3 =====================//
+        Map<String,String> post_data = new HashMap<String,String>();
+        post_data.put("variableDots[0].idRuleBaseCall", null);  
+        post_data.put("variableDots[0].idSysVar", "1");  
+        post_data.put("variableDots[0].kindSysVar", String.valueOf(Variable.INPUT));  
+        post_data.put("variableDots[0].idBaseVar", null);  
+        post_data.put("variableDots[0].kindBaseVar", null);  
+
+        post_data.put("variableDots[1].idRuleBaseCall", "0");  
+        post_data.put("variableDots[1].idSysVar", null);  
+        post_data.put("variableDots[1].kindSysVar", null);  
+        post_data.put("variableDots[1].idBaseVar", "2");  
+        post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.INPUT));  
+
+        Result result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        //should be with the link in the given rulebaseCall now
+        xfuzzy.lang.RulebaseCall rbc =
+              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+
+
+
+
+
+
+
+
+
+        //======================== +rbc1(bb) =====================//
+        Integer id_rb = 1;
+        xfuzzy.lang.Rulebase rb = null;
+        try{
+            rb = models.RuleBase.getFuzzy(this.testSystem,id_rb);
+        } 
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        result = callAction(
+            controllers.routes.ref.RuleBaseCalls.ajaxAddCall(this.testSystem.id,id_rb),
+            fakeRequest().withSession("email", this.testUser.email)
+        );
+        assertThat(contentAsString(result)).contains("ok");
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        rbc =this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+        assertEquals(new_rbc_to_xfl, rbc.toXfl());
+
+        //======================== rbc0(aa).vo2 -> rbc1(bb).vi1 =====================//
+
+        post_data = new HashMap<String,String>();
+        post_data.put("variableDots[1].idRuleBaseCall", "0");  
+        post_data.put("variableDots[1].idSysVar", null);  
+        post_data.put("variableDots[1].kindSysVar", null);  
+        post_data.put("variableDots[1].idBaseVar", "1");  
+        post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.OUTPUT));  
+
+        post_data.put("variableDots[0].idRuleBaseCall", "1");  
+        post_data.put("variableDots[0].idSysVar", null);  
+        post_data.put("variableDots[0].kindSysVar", null);  
+        post_data.put("variableDots[0].idBaseVar", "0");  
+        post_data.put("variableDots[0].kindBaseVar", String.valueOf(Variable.INPUT));  
+
+        result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        //should be with the link in the given rulebaseCall now
+        xfuzzy.lang.RulebaseCall rbc1 =
+             this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+        xfuzzy.lang.RulebaseCall rbc2 =
+             this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String rbc1ToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, i0);\n";
+        //special atention to the space before the rulebase name, and the \n in the end
+        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        assertEquals(rbc1ToXfl, rbc1.toXfl());
+        assertEquals(rbc2ToXfl, rbc2.toXfl());
+
+        //======================== rbc1(bb).vi1 -/-  rbc0(aa).vo2  =====================//
+
+
+        result = ajaxRemoveLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        //should be with the link in the given rulebaseCall now
+        rbc1 = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+
+        //should be with the link in the given rulebaseCall now
+        rbc2 = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        rbc1ToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        rbc2ToXfl = "  bb(NULL : NULL);\n";
+        assertEquals(rbc1ToXfl, rbc1.toXfl());
+        assertEquals(rbc2ToXfl, rbc2.toXfl());
 
     }
 }
