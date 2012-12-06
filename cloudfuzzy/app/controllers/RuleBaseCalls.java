@@ -89,6 +89,24 @@ public class RuleBaseCalls extends Controller {
     }
 
 
+
+  /**
+  * Add a link for a give id_sys.
+  * The parameters expected for this are:  
+  *
+  *      variableDots[0].idRuleBaseCall
+  *      variableDots[0].idSysVar 
+  *      variableDots[0].kindSysVar 
+  *      variableDots[0].idBaseVar
+  *      variableDots[0].kindBaseVar
+  *
+  *      variableDots[1].idRuleBaseCall
+  *      variableDots[1].idSysVar 
+  *      variableDots[1].kindSysVar 
+  *      variableDots[1].idBaseVar
+  *      variableDots[1].kindBaseVar
+  * The test cases should serve as example of what's the possible cases that exist.
+  */  
   public static Result ajaxAddLink(Long id_sys) {
     
     Form<models.LinkCallForm> filledForm = form(models.LinkCallForm.class).bindFromRequest();
@@ -168,7 +186,7 @@ public class RuleBaseCalls extends Controller {
           return badRequest(
             filledForm.errorsAsJson()
           );
-        };
+        }
 
         if(origdot.getSysVar().equals("NULL") || origdot.getSysVar().isOutput()) {
           String newname = "i0";
@@ -230,56 +248,111 @@ public class RuleBaseCalls extends Controller {
                   Json.toJson("ok")
                 );
     }
-
-  //   VariableDot a, VariableDot b=null;
-  // if(a == null || b == null || a == b) return;
-
-  // VariableDot origdot = null;
-  // VariableDot destdot = null;
-  // if( (a.basevar == null && a.sysvar.isOutput()) ||
-  //     (a.basevar != null && a.basevar.isInput()) ) destdot = a;
-  // if( (b.basevar == null && b.sysvar.isOutput()) ||
-  //     (b.basevar != null && b.basevar.isInput()) ) destdot = b;
-  // if( (a.basevar == null && a.sysvar.isInput()) ||
-  //     (a.basevar != null && a.basevar.isOutput()) ) origdot = a;
-  // if( (b.basevar == null && b.sysvar.isInput()) ||
-  //     (b.basevar != null && b.basevar.isOutput()) ) origdot = b;
-  // if( origdot == null || destdot == null) return;
-
-  // if(origdot.basevar == null && origdot.sysvar.isOutput()) return;
-
-  // if(origdot.call != null && origdot.call == destdot.call) {
-  //  XDialog.showMessage(this,"Cannot make loops");
-  //  return;
-  // }
-
-  // if(origdot.call != null && origdot.call.isPrevious(destdot.call) ) {
-  //  XDialog.showMessage(this,"Cannot make loops");
-  //  return;
-  // }
-
-  // if(destdot.basevar != null) { /* DESTINO A UNA BASE DE REGLAS */
-  //  if(destdot.basevar.isOutput()) return;
-  //  if(origdot.sysvar.equals("NULL") || origdot.sysvar.isOutput()) {
-  //   String newname = "i0";
-  //   for(int i=0; system.searchVariable(newname)!=null; i++) newname="i"+i;
-  //   Variable inner = new Variable(newname,Variable.INNER);
-  //   system.addVariable(inner);
-  //   origdot.call.call.setOutputVariable(origdot.basevar, inner);
-  //   origdot.sysvar = inner;
-  //  }
-  //  destdot.call.call.setInputVariable(destdot.basevar, origdot.sysvar);
-  //  destdot.sysvar = origdot.sysvar;
-  //  reallocate();
-  //  refresh();
-  // }
-  // else { /* DESTINO A UNA VARIABLE GLOBAL */
-  //  if(!destdot.sysvar.isOutput()) return;
-  //  if(origdot.basevar == null) return;
-  //  origdot.call.call.setOutputVariable(origdot.basevar, destdot.sysvar);
-  //  origdot.sysvar = destdot.sysvar;
-  //  refresh();
-  // }
   }
+
+  /**
+  * Removes a link for a give id_sys.
+  * The parameters expected for this are:  
+  *      variableDots[0].idRuleBaseCall
+  *      variableDots[0].idSysVar 
+  *      variableDots[0].kindSysVar 
+  *      variableDots[0].idBaseVar
+  *      variableDots[0].kindBaseVar
+  *
+  *      variableDots[1].idRuleBaseCall
+  *      variableDots[1].idSysVar 
+  *      variableDots[1].kindSysVar 
+  *      variableDots[1].idBaseVar
+  *      variableDots[1].kindBaseVar
+  */  
+  public static Result ajaxRemoveLink(Long id_sys) {
+
+    Form<models.LinkCallForm> filledForm = 
+                      form(models.LinkCallForm.class).bindFromRequest();
+    
+    FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+    xfuzzy.lang.SystemModule sysModule = sys.getSpecification().getSystemModule();
+
+    if(filledForm.hasErrors()) {
+      System.out.println("errors:"+ filledForm.errors());
+      return badRequest(
+        filledForm.errorsAsJson()
+      );
+    }
+    else{
+
+      models.LinkCallForm linkCall = filledForm.get();
+
+      if(linkCall.variableDots == null || linkCall.variableDots.size() != 2){
+          filledForm.reject("", "Invalid Link");  
+
+          System.out.println("incorrect number of variable dots:"+linkCall.variableDots.size());
+          return badRequest(
+            filledForm.errorsAsJson()
+          );
+
+      }
+      //if are equals should give an error too.
+
+
+      models.LinkCallForm.VariableDot a = linkCall.variableDots.get(0);
+      models.LinkCallForm.VariableDot b = linkCall.variableDots.get(1);
+      a.system = sys;
+      b.system = sys;
+
+      models.LinkCallForm.VariableDot origdot = null;
+      models.LinkCallForm.VariableDot destdot = null;
+      if( (a.idBaseVar == null && a.getSysVar().isOutput()) ||
+        (a.idBaseVar != null && a.getBaseVar().isInput()) ) destdot = a;
+      if( (b.idBaseVar == null && b.getSysVar().isOutput()) ||
+        (b.idBaseVar != null && b.getBaseVar().isInput()) ) destdot = b;
+      if( (a.idBaseVar == null && a.getSysVar().isInput()) ||
+        (a.idBaseVar != null && a.getBaseVar().isOutput()) ) origdot = a;
+      if( (b.idBaseVar == null && b.getSysVar().isInput()) ||
+        (b.idBaseVar != null && b.getBaseVar().isOutput()) ) origdot = b;
+      if( origdot == null || destdot == null){
+        filledForm.reject("", "Invalid Link"); 
+          System.out.println("origdot or destdot are null:"+origdot +" - " + destdot);
+
+        return badRequest(
+          filledForm.errorsAsJson()
+        );
+      }
+
+
+
+      xfuzzy.lang.Variable nullvar = sysModule.searchVariable("NULL");
+
+
+      //deleting a link that origins from a rulebase output
+      if(origdot.getBaseVar() != null){        
+          origdot.getRuleBaseCall().setOutputVariable(origdot.getBaseVar(), nullvar);
+          if(destdot.getBaseVar() != null){
+            destdot.getRuleBaseCall().setInputVariable(destdot.getBaseVar(), nullvar);
+          }
+      }
+
+      //deleting a link that origins from a system input
+      if(origdot.getBaseVar() == null){        
+        if(destdot.getBaseVar() != null){
+          destdot.getRuleBaseCall().setInputVariable(destdot.getBaseVar(), nullvar);
+        }
+      }
+
+      Specification spec = sys.getSpecification();
+
+      //save the spec.
+      spec.setModified(true);
+      spec.save();        
+
+
+      return ok(
+                  Json.toJson("ok")
+                );
+
+    } 
+  }
+
+
 
 }
