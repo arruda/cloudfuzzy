@@ -1,7 +1,0 @@
-test-only mod
-test-only controllers.RuleBaseCallTest
-run
-test-only controllers.RuleBaseCallTest
-run
-test-only controllers.RuleBaseCallTest
-test
