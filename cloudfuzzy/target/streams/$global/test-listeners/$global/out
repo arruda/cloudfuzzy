@@ -1,0 +1,52 @@
+[0m[[0minfo[0m] [0mcontrollers.LoginTest[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.LoginTest.loadedFixtures[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.LoginTest.authenticateSuccess[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.LoginTest.authenticated[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.LoginTest.notAuthenticated[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mTotal for test controllers.LoginTest[0m
+[0m[[0minfo[0m] [0m[34mFinished in 5.098 seconds[0m[0m
+[0m[[0minfo[0m] [0m[34m4 tests, 0 failures, 0 errors[0m[0m
+[0m[[0minfo[0m] [0mcontrollers.FuzzySystemTest[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.FuzzySystemTest.loadedFixtures[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.FuzzySystemTest.listSystems[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.FuzzySystemTest.detailSystem[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.FuzzySystemTest.detailSystemWrongUser[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.FuzzySystemTest.addSystem[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.FuzzySystemTest.deleteSystem[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.FuzzySystemTest.deleteSystemWrongUser[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mTotal for test controllers.FuzzySystemTest[0m
+[0m[[0minfo[0m] [0m[34mFinished in 5.342 seconds[0m[0m
+[0m[[0minfo[0m] [0m[34m7 tests, 0 failures, 0 errors[0m[0m
+[0m[[0minfo[0m] [0mcontrollers.TypeTest[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.TypeTest.addType[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.TypeTest.loadedFixtures[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.TypeTest.detailType[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.TypeTest.deleteType[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mTotal for test controllers.TypeTest[0m
+[0m[[0minfo[0m] [0m[34mFinished in 2.859 seconds[0m[0m
+[0m[[0minfo[0m] [0m[34m4 tests, 0 failures, 0 errors[0m[0m
+[0m[[0minfo[0m] [0mcontrollers.RuleBaseCallTest[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.loadedFixtures[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddCall[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA1[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA2[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA3[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA4[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA5[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA6[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA7[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA8[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxAddLinkA9[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxRemoveLinkB1[0m
+[0m[[0minfo[0m] [0m[32m+[0m controllers.RuleBaseCallTest.ajaxRemoveLinkB2[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mTotal for test controllers.RuleBaseCallTest[0m
+[0m[[0minfo[0m] [0m[34mFinished in 9.734 seconds[0m[0m
+[0m[[0minfo[0m] [0m[34m13 tests, 0 failures, 0 errors[0m[0m

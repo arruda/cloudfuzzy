@@ -1,0 +1,87 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
+# Signup
+GET     /signup                     controllers.Authentication.register()
+GET     /users/fakeuser             controllers.Authentication.edit()
+POST    /signup                     controllers.Authentication.submit()
+
+# Authentication
+GET     /login                              controllers.Authentication.login()
+POST    /login                              controllers.Authentication.authenticate()
+GET     /logout                             controllers.Authentication.logout()
+
+
+
+
+#####Fuzzy Systems
+
+##System
+GET     /system/list                controllers.Systems.list()
+GET     /system/new                 controllers.Systems.prepareCreate()
+POST    /system/new                 controllers.Systems.create()
+GET     /system/:id_sys             controllers.Systems.detail(id_sys: Long)
+POST    /system/:id_sys/del         controllers.Systems.delete(id_sys: Long)
+GET    /system/:id_sys/var/:kind/:id_variable/del        controllers.Systems.deleteVariable(id_sys: Long, id_variable: java.lang.Integer, kind :java.lang.Integer)
+
+GET     /system/:id_sys/print             controllers.Systems.print(id_sys: Long)
+
+##OperatorSet
+GET     /system/:id_sys/opset/new                 controllers.OperatorSets.prepareCreate(id_sys: Long)
+POST     /system/:id_sys/opset/new                 controllers.OperatorSets.create(id_sys: Long)
+GET     /system/:id_sys/opset/:id_opset             controllers.OperatorSets.detail(id_sys: Long, id_opset: java.lang.Integer)
+GET     /system/:id_sys/opset/:id_opset/del             controllers.OperatorSets.delete(id_sys: Long, id_opset: java.lang.Integer)
+
+##Type
+GET     /system/:id_sys/type/new                 controllers.Types.prepareCreate(id_sys: Long)
+POST     /system/:id_sys/type/new                 controllers.Types.create(id_sys: Long)
+GET     /system/:id_sys/type/:id_type             controllers.Types.detail(id_sys: Long, id_type: java.lang.Integer)
+GET     /system/:id_sys/type/:id_type/del             controllers.Types.delete(id_sys: Long, id_type: java.lang.Integer)
+GET     /system/:id_sys/type/:id_type/edit             controllers.Types.prepareEdit(id_sys: Long, id_type: java.lang.Integer)
+POST     /system/:id_sys/type/:id_type/edit             controllers.Types.edit(id_sys: Long, id_type: java.lang.Integer)
+
+
+##MF
+GET     /system/:id_sys/type/:id_type/mf/new      controllers.MFs.prepareCreate(id_sys: Long, id_type: java.lang.Integer)
+POST     /system/:id_sys/type/:id_type/mf/new      controllers.MFs.create(id_sys: Long, id_type: java.lang.Integer)
+GET     /system/:id_sys/type/:id_type/mf/:id_mf               controllers.MFs.detail(id_sys: Long, id_type: java.lang.Integer, id_mf: java.lang.Integer)
+GET     /system/:id_sys/type/:id_type/mf/:id_mf/del               controllers.MFs.delete(id_sys: Long, id_type: java.lang.Integer, id_mf: java.lang.Integer)
+
+
+##RuleBase
+GET     /system/:id_sys/rb/new                 controllers.RuleBases.prepareCreate(id_sys: Long)
+POST     /system/:id_sys/rb/new                 controllers.RuleBases.create(id_sys: Long)
+GET     /system/:id_sys/rb/:id_rb             controllers.RuleBases.detail(id_sys: Long, id_rb: java.lang.Integer)
+GET     /system/:id_sys/rb/:id_rb/var/:kind/:id_variable/del             controllers.RuleBases.deleteVariable(id_sys: Long, id_rb: java.lang.Integer, id_variable: java.lang.Integer, kind :java.lang.Integer)
+GET     /system/:id_sys/rb/:id_rb/rule/:id_rule/del             controllers.RuleBases.deleteRule(id_sys: Long, id_rb: java.lang.Integer, id_rule: java.lang.Integer)
+
+
+
+
+
+#######AJAX ROUTES
+##MF
+GET     /ajax/get_num_params_mf                              controllers.MFs.ajaxGetNumParams()
+GET     /ajax/get_mfs_plot_data                              controllers.Types.ajaxGetMFsPlotData()
+##Operator
+GET     /ajax/get_num_params_operator_option                              controllers.OperatorSets.ajaxGetNumParamsForOption()
+##RuleBase
+POST     /ajax/ajax_add_variable_rb/:id_sys/:id_rb      controllers.RuleBases.ajaxAddVariable(id_sys: Long, id_rb: java.lang.Integer)
+POST     /ajax/ajax_add_rule_from_table/:id_sys/:id_rb      controllers.RuleBases.ajaxAddRuleFromTable(id_sys: Long, id_rb: java.lang.Integer)
+##System
+POST     /ajax/ajax_add_variable/:id_sys         controllers.Systems.ajaxAddVariable(id_sys: Long)
+##RuleBaseCall
+POST     /ajax/ajax_add_call/:id_sys/:id_rb         controllers.RuleBaseCalls.ajaxAddCall(id_sys: Long, id_rb : java.lang.Integer)
+POST     /ajax/ajax_add_link/:id_sys         controllers.RuleBaseCalls.ajaxAddLink(id_sys: Long)
+POST     /ajax/ajax_remove_link/:id_sys         controllers.RuleBaseCalls.ajaxRemoveLink(id_sys: Long)
+
+#JS Routing
+#GET     /javascriptRoutes     controllers.Application.javascriptRoutes
