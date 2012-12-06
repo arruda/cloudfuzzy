@@ -5,3 +5,4 @@ extraFiles/xfls/*@*
 *.sublime-*
 extraFiles/*.db
 cloudfuzzy/.target
+cloudfuzzy/target
