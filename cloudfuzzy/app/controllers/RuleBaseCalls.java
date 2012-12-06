@@ -170,9 +170,7 @@ public class RuleBaseCalls extends Controller {
           );
         };
 
-        System.out.println("here1");
         if(origdot.getSysVar().equals("NULL") || origdot.getSysVar().isOutput()) {
-        System.out.println("here2");
           String newname = "i0";
           for(int i=0; sysModule.searchVariable(newname)!=null; i++){
             newname="i"+i;
@@ -184,7 +182,6 @@ public class RuleBaseCalls extends Controller {
           origdot.setSysVar(inner);
         }
 
-        System.out.println("here3");
         destdot.getRuleBaseCall().setInputVariable(destdot.getBaseVar(), origdot.getSysVar());
         destdot.setSysVar(origdot.getSysVar());
       }
