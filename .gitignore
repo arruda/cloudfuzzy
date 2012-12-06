@@ -6,3 +6,4 @@ extraFiles/xfls/*@*
 extraFiles/*.db
 cloudfuzzy/.target
 cloudfuzzy/target
+cloudfuzzy/logs
