@@ -772,4 +772,84 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         assertEquals(rbc3ToXfl, rbc3.toXfl());
 
     }
+
+    /**
+    *Helper to be used in the cases for the ajaxRemoveLink,
+    *this here only do the call and return the result
+    */
+    public Result  ajaxRemoveLinkPostData(Map<String,String> post_data){
+
+        Result result = callAction(
+            controllers.routes.ref.RuleBaseCalls.ajaxRemoveLink(this.testSystem.id),
+            fakeRequest().withSession("email", this.testUser.email)
+            .withFormUrlEncodedBody(post_data)
+        );
+        return result;
+    }
+    /**
+    *This is one of the cases, for the tests of removing a link: B1
+    * vgi2 -> rbc0(aa).vi3
+    * vgi2 -/- rbc0(aa).vi3
+    */
+    @Test
+    public void ajaxRemoveLinkB1() {
+
+        //======================== vgi2 -> rbc0(aa).vi3 =====================//
+        Map<String,String> post_data = new HashMap<String,String>();
+        post_data.put("variableDots[0].idRuleBaseCall", null);  
+        post_data.put("variableDots[0].idSysVar", "1");  
+        post_data.put("variableDots[0].kindSysVar", String.valueOf(Variable.INPUT));  
+        post_data.put("variableDots[0].idBaseVar", null);  
+        post_data.put("variableDots[0].kindBaseVar", null);  
+
+        post_data.put("variableDots[1].idRuleBaseCall", "0");  
+        post_data.put("variableDots[1].idSysVar", null);  
+        post_data.put("variableDots[1].kindSysVar", null);  
+        post_data.put("variableDots[1].idBaseVar", "2");  
+        post_data.put("variableDots[1].kindBaseVar", String.valueOf(Variable.INPUT));  
+
+        Result result = ajaxAddLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        //should be with the link in the given rulebaseCall now
+        xfuzzy.lang.RulebaseCall rbc =
+              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+
+
+        // //======================== vgi2 -/- rbc0(aa).vi3 =====================//
+
+
+        result = ajaxRemoveLinkPostData(post_data);
+        assertThat(contentAsString(result)).contains("ok");
+
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        //should be with the link in the given rulebaseCall now
+        rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
+
+        //special atention to the space before the rulebase name, and the \n in the end
+        newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        assertEquals(newLinkToRBCToXfl, rbc.toXfl());
+
+    }
 }
