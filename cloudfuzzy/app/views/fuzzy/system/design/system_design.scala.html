@@ -1,0 +1,14 @@
+@(fuzzySystem : FuzzySystem, spec: xfuzzy.lang.Specification)
+
+<div id="system_design">
+
+    @for( i <- 0 to spec.getSystemModule().getRulebaseCalls().length-1 ) {    
+    	@defining(spec.getSystemModule().getRulebaseCalls()(i).getRulebase()){ rbc =>  
+	    	
+			<div id="rulebasecall_@i" class="rulebasecall">
+		         	<h3>@rbc.getName()</h1>
+		            	
+		    </div>
+    	}
+    }
+</div>

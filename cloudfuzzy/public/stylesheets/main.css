@@ -349,7 +349,8 @@ footer {
 /*****************************- FUZZY SYSTEM DESIGN -****************************/
 #system_design{
 	padding: 10px;
-	
+	width: 770px;
+	height: 390px;
 }
 
 .rulebasecall{
@@ -358,6 +359,7 @@ footer {
 	padding: 4px; 
 	margin: 0px; 
 	border: 1px solid #AAA;
+	background: white;
 }
 
 .rulebasecall h3{
