@@ -1,8 +1,0 @@
-logs
-project/project
-project/target
-cloudfuzzy/.target/*
-target
-tmp
-.history
-dist
