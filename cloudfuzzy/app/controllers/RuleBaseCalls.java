@@ -127,7 +127,7 @@ public class RuleBaseCalls extends Controller {
       if(linkCall.variableDots == null || linkCall.variableDots.size() != 2){
           filledForm.reject("", "Invalid Link");  
 
-          System.out.println("incorrect number of variable dots:"+linkCall.variableDots.size());
+          System.out.println("incorrect number of variable dots or null");
           return badRequest(
             filledForm.errorsAsJson()
           );

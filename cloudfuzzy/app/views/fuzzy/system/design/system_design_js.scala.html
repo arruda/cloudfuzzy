@@ -35,21 +35,21 @@
 
         	var idRuleBaseCall = allInfo[1].split("-")[1];
         	if(idRuleBaseCall == "n"){
-        		idRuleBaseCall=null;
+        		idRuleBaseCall="";
         	}
         	
         	var idSysVar = allInfo[2].split("-")[1];
         	var kindSysVar = allInfo[2].split("-")[2];
         	if(idSysVar == "n"){
-        		idSysVar=null;
-        		kindSysVar=null;
+        		idSysVar="";
+        		kindSysVar="";
         	}
         	
         	var idBaseVar = allInfo[3].split("-")[1];
         	var kindBaseVar = allInfo[3].split("-")[2];
         	if(idBaseVar == "n"){
-        		idBaseVar=null;
-        		kindBaseVar=null;
+        		idBaseVar="";
+        		kindBaseVar="";
         	}
         	
         	var infos = {};
@@ -76,8 +76,8 @@
             	jqThis.attr("class","link_dot_marked");
 
             	current_link.variableDots.push(jqThis.data("link_info"));
-            	if(current_link.variableDots.length  > 0){
-                	//post_link();
+            	if(current_link.variableDots.length  > 1){
+                	post_link();
             	}            	
             	console.log("current_link");
             	console.log(current_link);
@@ -85,6 +85,39 @@
             });
         });
         
+        function post_link(){
+        	//current_link;
+        	alert("adding_link");
+        	console.log(JSON.stringify(current_link));
+        	
+        	$.post('@routes.RuleBaseCalls.ajaxAddLink(fuzzySystem.id)',
+       			{
+					'variableDots[0].idRuleBaseCall': current_link.variableDots[0].idRuleBaseCall,
+					'variableDots[0].idSysVar': current_link.variableDots[0].idSysVar,
+					'variableDots[0].kindSysVar': current_link.variableDots[0].kindSysVar,
+					'variableDots[0].idBaseVar': current_link.variableDots[0].idBaseVar,
+					'variableDots[0].kindBaseVar': current_link.variableDots[0].kindBaseVar,
+					
+					'variableDots[1].idRuleBaseCall': current_link.variableDots[1].idRuleBaseCall,
+					'variableDots[1].idSysVar': current_link.variableDots[1].idSysVar,
+					'variableDots[1].kindSysVar': current_link.variableDots[1].kindSysVar,
+					'variableDots[1].idBaseVar': current_link.variableDots[1].idBaseVar,
+					'variableDots[1].kindBaseVar': current_link.variableDots[1].kindBaseVar,
+       			},
+                function(data) {
+    				console.log(data);
+        		
+                      
+           	});
+        	
+        	reset_current_link();
+        	
+        }
+        
+        function reset_current_link(){
+        	current_link.variableDots = new Array();
+        	$(".link_dot_marked").attr("class","link_dot");
+        }
         
         
 /**
