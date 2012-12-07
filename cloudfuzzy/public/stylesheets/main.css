@@ -354,8 +354,12 @@ footer {
 }
 
 .rulebasecall{
-	width: 90px;
-	height: 90px;
+	width: 100px;
+	/*
+	min-width: 90px;
+	max-width: 200px;
+	*/
+	/*height: 90px; */
 	padding: 4px; 
 	margin: 0px; 
 	border: 1px solid #AAA;
@@ -392,11 +396,16 @@ footer {
 }
 
 
-.link_dot{
+.link_dot, .link_dot_marked{
 	width: 6px;
 	height: 6px;
 	border: 1px solid #AAA;
+}
+.link_dot{
 	background: black;
+}
+.link_dot_marked{
+	background: white;
 }
 
 

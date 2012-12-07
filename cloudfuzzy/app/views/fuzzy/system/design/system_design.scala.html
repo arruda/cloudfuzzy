@@ -9,7 +9,7 @@
 	    	@defining(spec.getSystemModule().getInputs()(i)){ variable =>  
 		    	
 				<div class="system_input">
-			         	@variable.getName()<div class="link_dot"></div>
+			         	@variable.getName()<div id="link__rulebaseCall-n-__sysVar-@i-@{models.Variable.INPUT}-__baseVar-n-n-"class="link_dot"></div>
     			</div>
 	    	}
 	    }
@@ -19,7 +19,7 @@
 	    	@defining(spec.getSystemModule().getOutputs()(i)){ variable =>  
 		    	
 				<div class="system_output">
-			         	@variable.getName()<div class="link_dot"></div>
+			         	@variable.getName()<div id="link__rulebaseCall-n-__sysVar-@i-@{models.Variable.OUTPUT}-__baseVar-n-n-"class="link_dot"></div>
     			</div>
 	    	}
 	    }
@@ -29,7 +29,39 @@
     	@defining(spec.getSystemModule().getRulebaseCalls()(i).getRulebase()){ rbc =>  
 	    	
 			<div id="rulebasecall_@i" class="rulebasecall">
-		         	<h3>@rbc.getName()</h3>
+				<h3>@rbc.getName()</h3>
+				<table style="width:90%;">
+					<tr>
+						<td align="left" style="padding-right: 18px;">
+							<div class="rulebase_input_wrapper">
+							    @for( iv <- 0 to rbc.getInputs().length-1 ) {    
+							    	@defining(rbc.getInputs()(iv)){ variable =>  
+								    	
+							         	@variable.getName()
+							         	<div id="link__rulebaseCall-@i-__sysVar-n-n-__baseVar-@iv-@{models.Variable.INPUT}-"class="link_dot"></div>
+						    			
+							    	}
+							    }
+						    </div>
+						</td>
+						
+						<td align="right">
+							<div class="rulebase_output_wrapper">
+							    @for( iv <- 0 to rbc.getOutputs().length-1 ) {    
+							    	@defining(rbc.getOutputs()(iv)){ variable =>  
+								    	
+							         	@variable.getName()
+							         	<div id="link__rulebaseCall-@i-__sysVar-n-n-__baseVar-@iv-@{models.Variable.OUTPUT}-"class="link_dot"></div>
+						    			
+							    	}
+							    }
+						    </div>
+						
+						</td>
+					</tr>
+				</table>
+	         	
+	         	
 		            	
 		    </div>
     	}
