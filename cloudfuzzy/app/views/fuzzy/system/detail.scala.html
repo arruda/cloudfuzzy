@@ -284,22 +284,12 @@
             });
 
 
-            $( ".rulebasecall" ).draggable({ 
-            				containment: "#system_design",
-            				scroll: false ,
-            				cursor: "move",
-            				cursorAt: { top: 56, left: 56 },
-            				//revert: true, 
-            				snap: ".rulebasecall"
-            				});
         });
                 
 
-		//system design
-        //$(".rulebasecall").each(function() {
-        //    var jqThis = $(this);
-        //});
+		
     </script>
-    }   
     
+       	@design.system_design_js(fuzzySystem,spec)
+    }   
 }

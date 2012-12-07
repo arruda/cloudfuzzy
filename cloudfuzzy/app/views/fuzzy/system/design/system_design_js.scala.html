@@ -1,0 +1,45 @@
+@(fuzzySystem : FuzzySystem, spec: xfuzzy.lang.Specification)
+
+<script type="text/javascript">
+
+/**
+	Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
+		var angle = Math.atan2(x1-x2,y2-y1);
+		angle = (angle / (2 * Math.PI)) * 360;
+		var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 ).attr("fill","black").rotate((90+angle),x2,y2);
+		var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
+		return [linePath,arrowPath];
+	};
+	
+*/
+	$(document).ready(function() {
+
+        $( ".rulebasecall" ).draggable({ 
+        				containment: "#system_design",
+        				scroll: false ,
+        				cursor: "move",
+        				cursorAt: { top: 56, left: 56 },
+        				//revert: true, 
+//        				snap: ".rulebasecall"
+					});
+        
+/**
+
+			$("#bottomMost").draggable({
+				drag: function(event,ui) {
+						paper.clear();
+						var middleX = ui.position.left + (ui.helper.width())/2 - 8;
+						var middleY = ui.position.top + (ui.helper.height())/2 -34;
+						var arrow = paper.arrow(45,68,middleX,middleY,8);
+				},
+
+				snap: ".rulebasecall"
+			});
+*/
+		
+			// Create initial Raphael canvas
+			//var paper = new Raphael("system_design",770,390);
+			
+	});   
+
+</script>

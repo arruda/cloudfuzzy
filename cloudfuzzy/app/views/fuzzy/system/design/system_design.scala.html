@@ -1,8 +1,9 @@
 @(fuzzySystem : FuzzySystem, spec: xfuzzy.lang.Specification)
 
 <div id="system_design">
-
-    
+@***
+<div id="topMost">&nbsp;</div><div id="bottomMost" class="ui-draggable" style="left: 574px; top: 134px; ">&nbsp;</div>
+***@    
 	<div class="system_input_wrapper">
 	    @for( i <- 0 to spec.getSystemModule().getInputs().length-1 ) {    
 	    	@defining(spec.getSystemModule().getInputs()(i)){ variable =>  
