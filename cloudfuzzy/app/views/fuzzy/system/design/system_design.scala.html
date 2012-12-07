@@ -2,13 +2,36 @@
 
 <div id="system_design">
 
+    
+	<div class="system_input_wrapper">
+	    @for( i <- 0 to spec.getSystemModule().getInputs().length-1 ) {    
+	    	@defining(spec.getSystemModule().getInputs()(i)){ variable =>  
+		    	
+				<div class="system_input">
+			         	@variable.getName()<div class="link_dot"></div>
+    			</div>
+	    	}
+	    }
+    </div>
+	<div class="system_output_wrapper">
+	    @for( i <- 0 to spec.getSystemModule().getOutputs().length-1 ) {    
+	    	@defining(spec.getSystemModule().getOutputs()(i)){ variable =>  
+		    	
+				<div class="system_output">
+			         	@variable.getName()<div class="link_dot"></div>
+    			</div>
+	    	}
+	    }
+    </div>
+    
     @for( i <- 0 to spec.getSystemModule().getRulebaseCalls().length-1 ) {    
     	@defining(spec.getSystemModule().getRulebaseCalls()(i).getRulebase()){ rbc =>  
 	    	
 			<div id="rulebasecall_@i" class="rulebasecall">
-		         	<h3>@rbc.getName()</h1>
+		         	<h3>@rbc.getName()</h3>
 		            	
 		    </div>
     	}
     }
+    
 </div>

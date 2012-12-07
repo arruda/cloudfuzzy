@@ -370,3 +370,32 @@ footer {
 	border-bottom: 1px solid #999DAA;
 	background: #999DAA;
 }
+
+
+.system_input_wrapper, .system_output_wrapper{
+	margin-top: 80px;
+	width: 10px;
+}
+
+.system_input_wrapper{
+	float:left;
+}
+
+.system_output_wrapper{
+	float:right;
+}
+
+
+.system_input, .system_output{
+	text-decoration: underline;
+	margin-top: 15px;
+}
+
+
+.link_dot{
+	width: 6px;
+	height: 6px;
+	border: 1px solid #AAA;
+	background: black;
+}
+
