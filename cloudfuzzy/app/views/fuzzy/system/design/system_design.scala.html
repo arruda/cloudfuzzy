@@ -9,7 +9,7 @@
 	    	@defining(spec.getSystemModule().getInputs()(i)){ variable =>  
 		    	
 				<div class="system_input">
-			         	@variable.getName()<div id="link__rulebaseCall-n-__sysVar-@i-@{models.Variable.INPUT}-__baseVar-n-n-"class="link_dot"></div>
+			         	@variable.getName()<div id="dot__rulebaseCall--__sysVar-@i-@{models.Variable.INPUT}-__baseVar---"class="link_dot"></div>
     			</div>
 	    	}
 	    }
@@ -19,7 +19,7 @@
 	    	@defining(spec.getSystemModule().getOutputs()(i)){ variable =>  
 		    	
 				<div class="system_output">
-			         	@variable.getName()<div id="link__rulebaseCall-n-__sysVar-@i-@{models.Variable.OUTPUT}-__baseVar-n-n-"class="link_dot"></div>
+			         	@variable.getName()<div id="dot__rulebaseCall--__sysVar-@i-@{models.Variable.OUTPUT}-__baseVar---"class="link_dot"></div>
     			</div>
 	    	}
 	    }
@@ -38,7 +38,7 @@
 							    	@defining(rbc.getInputs()(iv)){ variable =>  
 								    	
 							         	@variable.getName()
-							         	<div id="link__rulebaseCall-@i-__sysVar-n-n-__baseVar-@iv-@{models.Variable.INPUT}-"class="link_dot"></div>
+							         	<div id="dot__rulebaseCall-@i-__sysVar---__baseVar-@iv-@{models.Variable.INPUT}-"class="link_dot"></div>
 						    			
 							    	}
 							    }
@@ -51,7 +51,7 @@
 							    	@defining(rbc.getOutputs()(iv)){ variable =>  
 								    	
 							         	@variable.getName()
-							         	<div id="link__rulebaseCall-@i-__sysVar-n-n-__baseVar-@iv-@{models.Variable.OUTPUT}-"class="link_dot"></div>
+							         	<div id="dot__rulebaseCall-@i-__sysVar---__baseVar-@iv-@{models.Variable.OUTPUT}-"class="link_dot"></div>
 						    			
 							    	}
 							    }

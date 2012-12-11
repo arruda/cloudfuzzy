@@ -364,6 +364,9 @@ footer {
 	margin: 0px; 
 	border: 1px solid #AAA;
 	background: white;
+	position: absolute;
+	left: 330px;
+	top: 130px;	
 }
 
 .rulebasecall h3{
@@ -377,22 +380,26 @@ footer {
 
 
 .system_input_wrapper, .system_output_wrapper{
-	margin-top: 80px;
 	width: 10px;
+	position: absolute;
+	top: 100px;
 }
 
 .system_input_wrapper{
 	float:left;
+	left:  26px;
 }
 
 .system_output_wrapper{
 	float:right;
+	left:  730px;
 }
 
 
 .system_input, .system_output{
 	text-decoration: underline;
 	margin-top: 15px;
+	
 }
 
 

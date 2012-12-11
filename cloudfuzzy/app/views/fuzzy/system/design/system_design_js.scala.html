@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 
-/**
+
 	Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
 		var angle = Math.atan2(x1-x2,y2-y1);
 		angle = (angle / (2 * Math.PI)) * 360;
@@ -10,15 +10,34 @@
 		var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
 		return [linePath,arrowPath];
 	};
-	
-*/
+
+
+	Raphael.fn.arrow_elem = function(base, origin, destiny, size) {
+		console.log("origin");
+		console.log(origin);
+		console.log("destiny");
+		console.log(destiny);
+		
+		var x0 = origin.offset().left - base.offset().left;// + 4;
+		var y0 = origin.offset().top -  base.offset().top;// + 4;
+			
+		var x1 = destiny.offset().left - base.offset().left;// + 4;
+		var y1 = destiny.offset().top - base.offset().top;// + 4;
+		console.log("x0:" + x0 + " y0:" + y0 +" x1:" + x1 +" y1:" + y1);
+		return this.arrow(x0,y0,x1,y1,size); 
+	};
+
 
 	//instantiate the global link
 	var current_link = {};
-    current_link.variableDots = new Array();
+    current_link.variableDots = new Array();   
+
+	var paper;
+	
 	
 	$(document).ready(function() {
 
+		
         $( ".rulebasecall" ).draggable({ 
         				containment: "#system_design",
         				scroll: false ,
@@ -29,8 +48,8 @@
 					});
         
         /* return an dict with the datas parsed from the id of the given link */
-        function parseIDforLink(link){
-        	var id = link.attr("id");
+        function parseIDforDot(dot){
+        	var id = dot.attr("id");
         	var allInfo = id.split("__");
 
         	var idRuleBaseCall = allInfo[1].split("-")[1];
@@ -62,20 +81,39 @@
         	infos.kindBaseVar = kindBaseVar;
         	return infos;
         }
+        
+        /* return a variabledot element for a given variableDot object */
+        function getLinkElementForVariableDot(variableDot){
+        	var element_id = "dot__rulebaseCall-RBC-__sysVar-SVI-SVK-__baseVar-BVI-BVK-"
+				console.log("getLinkElementForVariableDot");
+				console.log(variableDot);
+        		element_id = element_id.replace(/RBC/g, variableDot.idRuleBaseCall);
+				element_id = element_id.replace(/SVI/g, variableDot.idSysVar);
+				element_id = element_id.replace(/SVK/g, variableDot.kindSysVar);
+				element_id = element_id.replace(/BVI/g, variableDot.idBaseVar);
+				element_id = element_id.replace(/BVK/g, variableDot.kindBaseVar);
+				console.log("element_id");
+				console.log(element_id);
+				return $("#"+element_id);
+        }
 
        	
         /** adds the logic for the click of each link dot **/
-        $("[id^='link__']").each(function() {
-            console.log("changed link");
+        $("[id^='dot__']").each(function() {
+            console.log("changed dot");
             var jqThis = $(this);
             
-            jqThis.data("link_info",parseIDforLink(jqThis));
-            console.log("link_info:");
-            console.log(jqThis.data("link_info"));
+            jqThis.data("dot_info",parseIDforDot(jqThis));
+            console.log("dot_info:");
+            console.log(jqThis.data("dot_info"));
             jqThis.click(function(evt){
             	jqThis.attr("class","link_dot_marked");
 
-            	current_link.variableDots.push(jqThis.data("link_info"));
+            	if(current_link.variableDots.length  == 2){
+                	current_link.variableDots = new Array();
+            	}
+            	
+            	current_link.variableDots.push(jqThis.data("dot_info"));
             	if(current_link.variableDots.length  > 1){
                 	post_link();
             	}            	
@@ -87,9 +125,8 @@
         
         function post_link(){
         	//current_link;
-        	alert("adding_link");
         	console.log(JSON.stringify(current_link));
-        	
+        	var new_link = current_link;
         	$.post('@routes.RuleBaseCalls.ajaxAddLink(fuzzySystem.id)',
        			{
 					'variableDots[0].idRuleBaseCall': current_link.variableDots[0].idRuleBaseCall,
@@ -106,8 +143,17 @@
        			},
                 function(data) {
     				console.log(data);
-        		
-                      
+					var elem_dot0 = getLinkElementForVariableDot(new_link.variableDots[0]);
+					var elem_dot1 = getLinkElementForVariableDot(new_link.variableDots[1]);
+
+					var system_design = $("#system_design");
+                    console.log("elem_dot0");
+                    console.log(elem_dot0);
+                    console.log("elem_dot1");
+                    console.log(elem_dot1);
+                    console.log("system_design");
+                    console.log(system_design);
+					var arrow = paper.arrow_elem(system_design, elem_dot0, elem_dot1, 8);    
            	});
         	
         	reset_current_link();
@@ -115,7 +161,6 @@
         }
         
         function reset_current_link(){
-        	current_link.variableDots = new Array();
         	$(".link_dot_marked").attr("class","link_dot");
         }
         
@@ -135,8 +180,9 @@
 */
 		
 			// Create initial Raphael canvas
-			//var paper = new Raphael("system_design",770,390);
-			
+			paper = new Raphael("system_design",770,390);
+
+			//var arrow = paper.arrow(28.5,138,290.5,135,8);    				
 	});   
 
 </script>
