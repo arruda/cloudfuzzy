@@ -159,6 +159,7 @@ public class LinkCallForm{
 							varDot.idBaseVar = iov;
 							varDot.kindBaseVar = Variable.OUTPUT;
 							varDot.setBaseVar(linkVariable);
+							varDot.system = sys;
 							return varDot;
 						}
 					}
@@ -182,6 +183,7 @@ public class LinkCallForm{
     						varDot.idSysVar = isiv;
     						varDot.kindSysVar = Variable.INPUT;
     						varDot.setSysVar(sysInputVars[isiv]);
+							varDot.system = sys;
     						return varDot;
     					}
     				}
@@ -195,6 +197,7 @@ public class LinkCallForm{
     						varDot.idSysVar = isov;
     						varDot.kindSysVar = Variable.OUTPUT;
     						varDot.setSysVar(sysOutputVars[isov]);
+							varDot.system = sys;
     						return varDot;
     					}
     				}
@@ -235,6 +238,7 @@ public class LinkCallForm{
 					destDot.idRuleBaseCall = irbc;
 					destDot.idBaseVar = ivi;
 					destDot.kindBaseVar = Variable.INPUT;
+					destDot.system = sys;
 
 					//find the original dot of this connection passing the link variable
 					VariableDot origDot = VariableDot.searchDot(sys, linkVariable);
@@ -266,6 +270,7 @@ public class LinkCallForm{
 					origDot.idRuleBaseCall = irbc;
 					origDot.idBaseVar = ivo;
 					origDot.kindBaseVar = Variable.OUTPUT;
+					origDot.system = sys;
 
 					//find the destdot of this connection passing the link variable
 					VariableDot destDot = VariableDot.searchDot(sys, linkVariable);
