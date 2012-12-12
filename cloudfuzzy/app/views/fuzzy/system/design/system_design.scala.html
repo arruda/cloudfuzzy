@@ -26,16 +26,16 @@
     </div>
     
     @for( i <- 0 to spec.getSystemModule().getRulebaseCalls().length-1 ) {    
-    	@defining(spec.getSystemModule().getRulebaseCalls()(i).getRulebase()){ rbc =>  
+    	@defining(spec.getSystemModule().getRulebaseCalls()(i).getRulebase()){ rb =>  
 	    	
 			<div id="rulebasecall_@i" class="rulebasecall">
-				<h3>@rbc.getName()</h3>
+				<h3>@rb.getName()</h3>
 				<table style="width:90%;">
 					<tr>
 						<td align="left">
 							<div class="rulebase_input_wrapper">
-							    @for( iv <- 0 to rbc.getInputs().length-1 ) {    
-							    	@defining(rbc.getInputs()(iv)){ variable =>  
+							    @for( iv <- 0 to rb.getInputs().length-1 ) {    
+							    	@defining(rb.getInputs()(iv)){ variable =>  
 								    	
 							         	@variable.getName()
 							         	<div id="dot__rulebaseCall-@i-__sysVar---__baseVar-@iv-@{models.Variable.INPUT}-"class="link_dot"></div>
@@ -47,8 +47,8 @@
 						
 						<td align="right">
 							<div class="rulebase_output_wrapper">
-							    @for( iv <- 0 to rbc.getOutputs().length-1 ) {    
-							    	@defining(rbc.getOutputs()(iv)){ variable =>  
+							    @for( iv <- 0 to rb.getOutputs().length-1 ) {    
+							    	@defining(rb.getOutputs()(iv)){ variable =>  
 								    	
 							         	@variable.getName()
 							         	<div id="dot__rulebaseCall-@i-__sysVar---__baseVar-@iv-@{models.Variable.OUTPUT}-"class="link_dot"></div>

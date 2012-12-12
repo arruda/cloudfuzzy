@@ -5,10 +5,117 @@
 	//instantiate the global link
 	var current_link = {};
     current_link.variableDots = new Array();   
-
+	
+    /* The global variable for the canvas */
 	var paper;
-	
-	
+
+    /* return an dict with the datas parsed from the id of the given link */
+    function parseIDforDot(dot){
+    	var id = dot.attr("id");
+    	var allInfo = id.split("__");
+
+    	var idRuleBaseCall = allInfo[1].split("-")[1];
+    	if(idRuleBaseCall == "n"){
+    		idRuleBaseCall="";
+    	}
+    	
+    	var idSysVar = allInfo[2].split("-")[1];
+    	var kindSysVar = allInfo[2].split("-")[2];
+    	if(idSysVar == "n"){
+    		idSysVar="";
+    		kindSysVar="";
+    	}
+    	
+    	var idBaseVar = allInfo[3].split("-")[1];
+    	var kindBaseVar = allInfo[3].split("-")[2];
+    	if(idBaseVar == "n"){
+    		idBaseVar="";
+    		kindBaseVar="";
+    	}
+    	
+    	var infos = {};
+    	infos.idRuleBaseCall = idRuleBaseCall;
+    	
+    	infos.idSysVar = idSysVar;
+    	infos.kindSysVar = kindSysVar;
+    	
+    	infos.idBaseVar = idBaseVar;
+    	infos.kindBaseVar = kindBaseVar;
+    	return infos;
+    }
+    
+    /* return a variabledot element for a given variableDot object */
+    function getLinkElementForVariableDot(variableDot){
+    	var element_id = "dot__rulebaseCall-RBC-__sysVar-SVI-SVK-__baseVar-BVI-BVK-"
+			console.log("getLinkElementForVariableDot");
+			console.log(variableDot);
+    		element_id = element_id.replace(/RBC/g, variableDot.idRuleBaseCall);
+			element_id = element_id.replace(/SVI/g, variableDot.idSysVar);
+			element_id = element_id.replace(/SVK/g, variableDot.kindSysVar);
+			element_id = element_id.replace(/BVI/g, variableDot.idBaseVar);
+			element_id = element_id.replace(/BVK/g, variableDot.kindBaseVar);
+			console.log("element_id");
+			console.log(element_id);
+			return $("#"+element_id);
+    }
+
+
+   	/* creates a link */
+    function post_link(){
+    	//current_link;
+    	console.log(JSON.stringify(current_link));
+    	var new_link = current_link;
+    	$.post('@routes.RuleBaseCalls.ajaxAddLink(fuzzySystem.id)',
+   			{
+				'variableDots[0].idRuleBaseCall': current_link.variableDots[0].idRuleBaseCall,
+				'variableDots[0].idSysVar': current_link.variableDots[0].idSysVar,
+				'variableDots[0].kindSysVar': current_link.variableDots[0].kindSysVar,
+				'variableDots[0].idBaseVar': current_link.variableDots[0].idBaseVar,
+				'variableDots[0].kindBaseVar': current_link.variableDots[0].kindBaseVar,
+				
+				'variableDots[1].idRuleBaseCall': current_link.variableDots[1].idRuleBaseCall,
+				'variableDots[1].idSysVar': current_link.variableDots[1].idSysVar,
+				'variableDots[1].kindSysVar': current_link.variableDots[1].kindSysVar,
+				'variableDots[1].idBaseVar': current_link.variableDots[1].idBaseVar,
+				'variableDots[1].kindBaseVar': current_link.variableDots[1].kindBaseVar,
+   			},
+            function(data) {
+				console.log(data);
+				var elem_dot0 = getLinkElementForVariableDot(new_link.variableDots[0]);
+				var elem_dot1 = getLinkElementForVariableDot(new_link.variableDots[1]);
+
+				var system_design = $("#system_design");
+                console.log("elem_dot0");
+                console.log(elem_dot0);
+                console.log("elem_dot1");
+                console.log(elem_dot1);
+                console.log("system_design");
+                console.log(system_design);
+				var arrow = paper.arrow_elem(system_design, elem_dot0, elem_dot1, 8);    
+       	});
+    	
+    	reset_current_link();
+    	
+    }
+    
+    function reset_current_link(){
+    	$(".link_dot_marked").attr("class","link_dot");
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    /* Add a link to the canvas */
+    function addLinkToCanvas(link){
+    	return;
+    }
+    
+    
+    
 	$(document).ready(function() {
 
 		
@@ -21,56 +128,6 @@
 //        				snap: ".rulebasecall"
 					});
         
-        /* return an dict with the datas parsed from the id of the given link */
-        function parseIDforDot(dot){
-        	var id = dot.attr("id");
-        	var allInfo = id.split("__");
-
-        	var idRuleBaseCall = allInfo[1].split("-")[1];
-        	if(idRuleBaseCall == "n"){
-        		idRuleBaseCall="";
-        	}
-        	
-        	var idSysVar = allInfo[2].split("-")[1];
-        	var kindSysVar = allInfo[2].split("-")[2];
-        	if(idSysVar == "n"){
-        		idSysVar="";
-        		kindSysVar="";
-        	}
-        	
-        	var idBaseVar = allInfo[3].split("-")[1];
-        	var kindBaseVar = allInfo[3].split("-")[2];
-        	if(idBaseVar == "n"){
-        		idBaseVar="";
-        		kindBaseVar="";
-        	}
-        	
-        	var infos = {};
-        	infos.idRuleBaseCall = idRuleBaseCall;
-        	
-        	infos.idSysVar = idSysVar;
-        	infos.kindSysVar = kindSysVar;
-        	
-        	infos.idBaseVar = idBaseVar;
-        	infos.kindBaseVar = kindBaseVar;
-        	return infos;
-        }
-        
-        /* return a variabledot element for a given variableDot object */
-        function getLinkElementForVariableDot(variableDot){
-        	var element_id = "dot__rulebaseCall-RBC-__sysVar-SVI-SVK-__baseVar-BVI-BVK-"
-				console.log("getLinkElementForVariableDot");
-				console.log(variableDot);
-        		element_id = element_id.replace(/RBC/g, variableDot.idRuleBaseCall);
-				element_id = element_id.replace(/SVI/g, variableDot.idSysVar);
-				element_id = element_id.replace(/SVK/g, variableDot.kindSysVar);
-				element_id = element_id.replace(/BVI/g, variableDot.idBaseVar);
-				element_id = element_id.replace(/BVK/g, variableDot.kindBaseVar);
-				console.log("element_id");
-				console.log(element_id);
-				return $("#"+element_id);
-        }
-
        	
         /** adds the logic for the click of each link dot **/
         $("[id^='dot__']").each(function() {
@@ -97,46 +154,7 @@
             });
         });
         
-        function post_link(){
-        	//current_link;
-        	console.log(JSON.stringify(current_link));
-        	var new_link = current_link;
-        	$.post('@routes.RuleBaseCalls.ajaxAddLink(fuzzySystem.id)',
-       			{
-					'variableDots[0].idRuleBaseCall': current_link.variableDots[0].idRuleBaseCall,
-					'variableDots[0].idSysVar': current_link.variableDots[0].idSysVar,
-					'variableDots[0].kindSysVar': current_link.variableDots[0].kindSysVar,
-					'variableDots[0].idBaseVar': current_link.variableDots[0].idBaseVar,
-					'variableDots[0].kindBaseVar': current_link.variableDots[0].kindBaseVar,
-					
-					'variableDots[1].idRuleBaseCall': current_link.variableDots[1].idRuleBaseCall,
-					'variableDots[1].idSysVar': current_link.variableDots[1].idSysVar,
-					'variableDots[1].kindSysVar': current_link.variableDots[1].kindSysVar,
-					'variableDots[1].idBaseVar': current_link.variableDots[1].idBaseVar,
-					'variableDots[1].kindBaseVar': current_link.variableDots[1].kindBaseVar,
-       			},
-                function(data) {
-    				console.log(data);
-					var elem_dot0 = getLinkElementForVariableDot(new_link.variableDots[0]);
-					var elem_dot1 = getLinkElementForVariableDot(new_link.variableDots[1]);
-
-					var system_design = $("#system_design");
-                    console.log("elem_dot0");
-                    console.log(elem_dot0);
-                    console.log("elem_dot1");
-                    console.log(elem_dot1);
-                    console.log("system_design");
-                    console.log(system_design);
-					var arrow = paper.arrow_elem(system_design, elem_dot0, elem_dot1, 8);    
-           	});
-        	
-        	reset_current_link();
-        	
-        }
         
-        function reset_current_link(){
-        	$(".link_dot_marked").attr("class","link_dot");
-        }
         
         
 /**
@@ -156,7 +174,7 @@
 			// Create initial Raphael canvas
 			paper = new Raphael("system_design",770,390);
 
-			//var arrow = paper.arrow(28.5,138,290.5,135,8);    				
+//var arrow = paper.arrow(28.5,138,290.5,135,8);    				
 	});   
 
 </script>
