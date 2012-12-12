@@ -1,5 +1,9 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import models.*;
 
 import org.junit.*;
@@ -70,27 +74,115 @@ public class VariableLinksTests  extends WithApplicationAndIsoletedXfl {
     }
 
 
-    
+    /**
+     * This test will try to retrieve the next liks:
+     * vgi1 -> rbc0.vi2
+     * rbc0.vo1 -> rbc1.vi1
+     * rbc1.vo1 -> vgo1
+     * 
+     */
     @Test
-    public void blabla(){
-//        try{
-//
-//            xfuzzy.lang.Variable fvar_input1 = Variable.getFuzzy(this.testSystem,0,Variable.INPUT);
-//            assertEquals("t1 vgi1", fvar_input1.toXfl());
-//
-//            xfuzzy.lang.Variable fvar_output2 = Variable.getFuzzy(this.testSystem,1,Variable.OUTPUT);
-//            assertEquals("t1 vgo2", fvar_output2.toXfl());
-//        }
-//        catch(Exception e){
-//            fail(e.getMessage());
-//        }
-
+    public void retrieveLinksForSystem(){
         xfuzzy.lang.RulebaseCall rbc0 = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
         xfuzzy.lang.RulebaseCall rbc1 = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
         
+       
         
-    	System.out.println(rbc0.getInputVariables());
-        assertEquals("t1 vgo2", "t1 vgo2");
+        
+        ArrayList<models.LinkCallForm> links = models.LinkCallForm.getLinks(this.testSystem);
+        //check size first
+        assertEquals(3,links.size());
+        
+        //check each link
+        models.LinkCallForm check_link = null;
+        Map<String,Integer> original_data = null;
+
+        //vgi1 -> rbc0.vi2
+        check_link = links.get(0);
+        original_data = new HashMap<String,Integer>();
+        original_data.put("variableDots[0].idRuleBaseCall", null);  
+        original_data.put("variableDots[0].idSysVar", 0);  
+        original_data.put("variableDots[0].kindSysVar", 0);  
+        original_data.put("variableDots[0].idBaseVar", null);  
+        original_data.put("variableDots[0].kindBaseVar", null);  
+        
+        original_data.put("variableDots[1].idRuleBaseCall", 0);  
+        original_data.put("variableDots[1].idSysVar", null);  
+        original_data.put("variableDots[1].kindSysVar", null);  
+        original_data.put("variableDots[1].idBaseVar", 1);  
+        original_data.put("variableDots[1].kindBaseVar", 0);  
+        verify_link(check_link,original_data);
+
+        //rbc0.vo1 -> rbc1.vi1
+        check_link = links.get(1);
+        original_data = new HashMap<String,Integer>();
+        original_data.put("variableDots[0].idRuleBaseCall", 0);  
+        original_data.put("variableDots[0].idSysVar", null);  
+        original_data.put("variableDots[0].kindSysVar", null);  
+        original_data.put("variableDots[0].idBaseVar", 0);  
+        original_data.put("variableDots[0].kindBaseVar", 1);  
+        
+        original_data.put("variableDots[1].idRuleBaseCall", 1);  
+        original_data.put("variableDots[1].idSysVar", null);  
+        original_data.put("variableDots[1].kindSysVar", null);  
+        original_data.put("variableDots[1].idBaseVar", 0);  
+        original_data.put("variableDots[1].kindBaseVar", 0);  
+        verify_link(check_link,original_data);
+        
+        //rbc1.vo1 -> vgo1
+        check_link = links.get(2);
+        original_data = new HashMap<String,Integer>();
+        original_data.put("variableDots[0].idRuleBaseCall", 1);  
+        original_data.put("variableDots[0].idSysVar", null);  
+        original_data.put("variableDots[0].kindSysVar", null);  
+        original_data.put("variableDots[0].idBaseVar", 0);  
+        original_data.put("variableDots[0].kindBaseVar", 1);  
+        
+        original_data.put("variableDots[1].idRuleBaseCall", null);  
+        original_data.put("variableDots[1].idSysVar", 0);  
+        original_data.put("variableDots[1].kindSysVar", 1);  
+        original_data.put("variableDots[1].idBaseVar", null);  
+        original_data.put("variableDots[1].kindBaseVar", null);  
+        verify_link(check_link,original_data);
+        
+    }
+    
+    /**
+     * Helper function that verifies a single link against a map of datas
+     * 
+     * @param link
+     * @param original_data
+     */
+    public void verify_link(models.LinkCallForm link, Map<String,Integer> original_data){
+        //should have 2 variableDots
+        assertEquals(2, link.variableDots.size());
+
+    	//check things for the first and the second variableDot
+        for (int i = 0; i < 2; i++) {
+        	models.LinkCallForm.VariableDot variableDot = link.variableDots.get(i);
+        	String variableNum = "variableDots[" + i +"].";
+        	String field = variableNum;
+        	
+        	//idRuleBaseCall
+        	field = variableNum+"idRuleBaseCall";
+            assertEquals("error:" + field,original_data.get(field), variableDot.idRuleBaseCall);
+            
+            //idBaseVar
+        	field = variableNum+"idBaseVar";
+            assertEquals("error:" + field,original_data.get(field), variableDot.idBaseVar);
+            //kindBaseVar
+        	field = variableNum+"kindBaseVar";
+            assertEquals("error:" + field,original_data.get(field), variableDot.kindBaseVar);
+            
+            //idSysVar
+        	field = variableNum+"idSysVar";
+            assertEquals("error:" + field,original_data.get(field), variableDot.idSysVar);
+            //kindSysVar
+        	field = variableNum+"kindSysVar";
+            assertEquals("error:" + field,original_data.get(field), variableDot.kindSysVar);
+			
+		}
+        
     }
     
 }
