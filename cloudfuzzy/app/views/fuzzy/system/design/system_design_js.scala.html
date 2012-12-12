@@ -102,23 +102,41 @@
     	$(".link_dot_marked").attr("class","link_dot");
     }
     
-    
-    
-    
-    
+
     
     
     
     /* Add a link to the canvas */
-    function addLinkToCanvas(link){
-    	return;
+    function addLinkToCanvas(linkInfo){
+		var link = {}
+		link.variableDots = new Array();
+
+		link.variableDots.push({
+				"idRuleBaseCall" : linkInfo["variableDots[0].idRuleBaseCall"],
+				"idBaseVar" : linkInfo["variableDots[0].idBaseVar"],
+				"kindBaseVar" : linkInfo["variableDots[0].kindBaseVar"],
+				"idSysVar" : linkInfo["variableDots[0].idSysVar"],
+				"kindSysVar" : linkInfo["variableDots[0].kindSysVar"]
+				});
+		link.variableDots.push({
+			"idRuleBaseCall" : linkInfo["variableDots[1].idRuleBaseCall"],
+			"idBaseVar" : linkInfo["variableDots[1].idBaseVar"],
+			"kindBaseVar" : linkInfo["variableDots[1].kindBaseVar"],
+			"idSysVar" : linkInfo["variableDots[1].idSysVar"],
+			"kindSysVar" : linkInfo["variableDots[1].kindSysVar"]
+			});
+		
+		
+		return link;
+		//var arrow = paper.arrow_elem(system_design, elem_dot0, elem_dot1, 8);  
+    	//return arrow;
     }
     
     
     
 	$(document).ready(function() {
 
-		
+	    
         $( ".rulebasecall" ).draggable({ 
         				containment: "#system_design",
         				scroll: false ,
@@ -174,7 +192,27 @@
 			// Create initial Raphael canvas
 			paper = new Raphael("system_design",770,390);
 
-//var arrow = paper.arrow(28.5,138,290.5,135,8);    				
+
+
+			//adding each one of the links 
+	    	var linkInfo = {};
+		    @for( link <- models.LinkCallForm.getLinks(fuzzySystem)){
+		    	linkInfo = {};
+		    	linkInfo["variableDots[0].idRuleBaseCall"] = @String.valueOf(link.variableDots(0).idRuleBaseCall);
+		    	linkInfo["variableDots[0].idSysVar"] = @String.valueOf(link.variableDots(0).idSysVar);
+		    	linkInfo["variableDots[0].kindSysVar"] = @String.valueOf(link.variableDots(0).kindSysVar);
+		    	linkInfo["variableDots[0].idBaseVar"] = @String.valueOf(link.variableDots(0).idBaseVar);
+		    	linkInfo["variableDots[0].kindBaseVar"] = @String.valueOf(link.variableDots(0).kindBaseVar);
+		    	
+		    	linkInfo["variableDots[1].idRuleBaseCall"] = @String.valueOf(link.variableDots(1).idRuleBaseCall);
+		    	linkInfo["variableDots[1].idSysVar"] = @String.valueOf(link.variableDots(1).idSysVar);
+		    	linkInfo["variableDots[1].kindSysVar"] = @String.valueOf(link.variableDots(1).kindSysVar);
+		    	linkInfo["variableDots[1].idBaseVar"] = @String.valueOf(link.variableDots(1).idBaseVar);
+		    	linkInfo["variableDots[1].kindBaseVar"] = @String.valueOf(link.variableDots(1).kindBaseVar);
+		    	
+		    	console.log(addLinkToCanvas(linkInfo));
+		    }
+		    		
 	});   
 
 </script>
