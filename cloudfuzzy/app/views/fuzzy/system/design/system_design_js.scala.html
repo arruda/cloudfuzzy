@@ -44,20 +44,24 @@
     	return infos;
     }
     
-    /* return a variabledot element for a given variableDot object */
-    function getLinkElementForVariableDot(variableDot){
+    
+    function getVaraibleDotIDForVariableDot(variableDot){
     	var element_id = "dot__rulebaseCall-RBC-__sysVar-SVI-SVK-__baseVar-BVI-BVK-"
-			console.log("getLinkElementForVariableDot");
+			console.log("getVariableDotElementForVariableDot");
 			console.log(variableDot);
     		element_id = element_id.replace(/RBC/g, variableDot.idRuleBaseCall);
 			element_id = element_id.replace(/SVI/g, variableDot.idSysVar);
 			element_id = element_id.replace(/SVK/g, variableDot.kindSysVar);
 			element_id = element_id.replace(/BVI/g, variableDot.idBaseVar);
 			element_id = element_id.replace(/BVK/g, variableDot.kindBaseVar);
-			console.log("element_id");
-			console.log(element_id);
-			return $("#"+element_id);
+			return element_id;
     }
+    
+    /* return a variabledot element for a given variableDot object */
+    function getVariableDotElementForVariableDot(variableDot){
+			return $("#"+getVaraibleDotIDForVariableDot(variableDot));
+    }
+    
 
 
    	/* creates a link */
@@ -81,8 +85,8 @@
    			},
             function(data) {
 				console.log(data);
-				var elem_dot0 = getLinkElementForVariableDot(new_link.variableDots[0]);
-				var elem_dot1 = getLinkElementForVariableDot(new_link.variableDots[1]);
+				var elem_dot0 = getVariableDotElementForVariableDot(new_link.variableDots[0]);
+				var elem_dot1 = getVariableDotElementForVariableDot(new_link.variableDots[1]);
 
 				var system_design = $("#system_design");
                 console.log("elem_dot0");
@@ -91,7 +95,8 @@
                 console.log(elem_dot1);
                 console.log("system_design");
                 console.log(system_design);
-				var arrow = paper.arrow_elem(system_design, elem_dot0, elem_dot1, 8);    
+                createOrUpdateLink(paper,new_link,null);
+				//var arrow = paper.arrow_elem(system_design, elem_dot0, elem_dot1, 8,null);    
        	});
     	
     	reset_current_link();
@@ -103,11 +108,8 @@
     }
     
 
-    
-    
-    
-    /* Add a link to the canvas */
-    function addLinkToCanvas(linkInfo){
+    /* create a link(object) from a dict of informations */
+    function createLinkObjFromOptions(linkInfo){
 		var link = {}
 		link.variableDots = new Array();
 
@@ -128,11 +130,74 @@
 		
 		
 		return link;
-		//var arrow = paper.arrow_elem(system_design, elem_dot0, elem_dot1, 8);  
-    	//return arrow;
     }
     
+    /* add a given link object to the canvas */
+    function createOrUpdateLink(a_canvas, new_link_obj,id_link){
+
+    	var system_design = $("#system_design");
+    	
+		var elem_dot0 = getVariableDotElementForVariableDot(new_link_obj.variableDots[0]);
+		var elem_dot1 = getVariableDotElementForVariableDot(new_link_obj.variableDots[1]);
+    	
+		
+		var link = a_canvas.arrow_elem(system_design, elem_dot0, elem_dot1, 8,id_link);  
+
+		link.data("link",new_link_obj);
+		
+		console.log("adding rbc links");
+
+		console.log("new_link_obj.variableDots[0].idRuleBaseCall");
+		console.log(new_link_obj.variableDots[0].idRuleBaseCall);
+		console.log("new_link_obj.variableDots[1].idRuleBaseCall");
+		console.log(new_link_obj.variableDots[1].idRuleBaseCall);
+		//tryes to link with the origin and the destin 
+		if(new_link_obj.variableDots[0].idRuleBaseCall != ""){
+			addLinkToRulebaseCall(getRulebaseCallElem(new_link_obj.variableDots[0].idRuleBaseCall),link);
+		}
+		if(new_link_obj.variableDots[1].idRuleBaseCall != ""){
+			addLinkToRulebaseCall(getRulebaseCallElem(new_link_obj.variableDots[1].idRuleBaseCall),link);
+		}
+    	return link;			
+    }
     
+
+    /* return a given rulebasecall element passing the given id */
+    function getRulebaseCallElem(rulebasecall_id){
+    	return $("#rulebasecall_"+rulebasecall_id);
+    }
+    
+	
+	
+	/* add a link to a rulebasecall element */
+	function addLinkToRulebaseCall(rbc_elem, link){
+		var rule_links = rbc_elem.data("links");
+		//if it wasn't defined yet, then define it 
+		if(rule_links == undefined){
+			rule_links = new Array();
+		}
+		
+		//don't add the same again 
+		for(var k = 0; k < rule_links.length; k++){
+			if(rule_links[k] == link.id){
+				return;
+			}
+		}
+		
+		rule_links.push(link.id);
+		rbc_elem.data("links",rule_links);
+		
+	}
+	
+	/* return a links of links (raphaels) of this rulebasecall */
+	function getRulebaseCallLinks(rbc_elem){
+		var my_links = [];
+		var links_ids = rbc_elem.data("links");
+		for(var k = 0; k < links_ids.length; k++){
+			my_links.push(paper.getById(links_ids[k]));
+		}
+		return my_links;
+	}
     
 	$(document).ready(function() {
 
@@ -142,6 +207,13 @@
         				scroll: false ,
         				cursor: "move",
         				cursorAt: { top: 56, left: 56 },
+        				drag: function(event,ui) {
+        					var jqthis = $(this);
+        					var updated_links = getRulebaseCallLinks(jqthis);
+        					$.each(updated_links, function(index,link){        						
+        						createOrUpdateLink(paper,link.data("link"),link.id);	
+        					});
+    					},
         				//revert: true, 
 //        				snap: ".rulebasecall"
 					});
@@ -172,9 +244,18 @@
             });
         });
         
-        
-        
-        
+
+        /** adds some aditional information on each rulebasecall **/
+        /*
+        $(".rulebasecall").each(function() {
+            console.log("changed rulebasecall");
+            var jqThis = $(this);
+            
+            jqThis.data("links",new Array());
+            console.log("links:");
+            console.log(jqThis.data("links"));
+        });
+        */
 /**
 
 			$("#bottomMost").draggable({
@@ -193,25 +274,35 @@
 			paper = new Raphael("system_design",770,390);
 
 
+		
 
-			//adding each one of the links 
-	    	var linkInfo = {};
-		    @for( link <- models.LinkCallForm.getLinks(fuzzySystem)){
-		    	linkInfo = {};
-		    	linkInfo["variableDots[0].idRuleBaseCall"] = @String.valueOf(link.variableDots(0).idRuleBaseCall);
-		    	linkInfo["variableDots[0].idSysVar"] = @String.valueOf(link.variableDots(0).idSysVar);
-		    	linkInfo["variableDots[0].kindSysVar"] = @String.valueOf(link.variableDots(0).kindSysVar);
-		    	linkInfo["variableDots[0].idBaseVar"] = @String.valueOf(link.variableDots(0).idBaseVar);
-		    	linkInfo["variableDots[0].kindBaseVar"] = @String.valueOf(link.variableDots(0).kindBaseVar);
-		    	
-		    	linkInfo["variableDots[1].idRuleBaseCall"] = @String.valueOf(link.variableDots(1).idRuleBaseCall);
-		    	linkInfo["variableDots[1].idSysVar"] = @String.valueOf(link.variableDots(1).idSysVar);
-		    	linkInfo["variableDots[1].kindSysVar"] = @String.valueOf(link.variableDots(1).kindSysVar);
-		    	linkInfo["variableDots[1].idBaseVar"] = @String.valueOf(link.variableDots(1).idBaseVar);
-		    	linkInfo["variableDots[1].kindBaseVar"] = @String.valueOf(link.variableDots(1).kindBaseVar);
-		    	
-		    	console.log(addLinkToCanvas(linkInfo));
-		    }
+
+			function addLinksToRulebaseCalls(){
+
+		    	var linkInfo = {};
+		    	var link_obj;
+		    	var link;
+				//adding each one of the links 
+			    @for( link <- models.LinkCallForm.getLinks(fuzzySystem)){
+			    	linkInfo = {};
+			    	linkInfo["variableDots[0].idRuleBaseCall"] = "@link.variableDots(0).idRuleBaseCall";
+			    	linkInfo["variableDots[0].idSysVar"] = "@link.variableDots(0).idSysVar";
+			    	linkInfo["variableDots[0].kindSysVar"] = "@link.variableDots(0).kindSysVar";
+			    	linkInfo["variableDots[0].idBaseVar"] = "@link.variableDots(0).idBaseVar";
+			    	linkInfo["variableDots[0].kindBaseVar"] = "@link.variableDots(0).kindBaseVar";
+			    	
+			    	linkInfo["variableDots[1].idRuleBaseCall"] = "@link.variableDots(1).idRuleBaseCall";
+			    	linkInfo["variableDots[1].idSysVar"] = "@link.variableDots(1).idSysVar";
+			    	linkInfo["variableDots[1].kindSysVar"] = "@link.variableDots(1).kindSysVar";
+			    	linkInfo["variableDots[1].idBaseVar"] = "@link.variableDots(1).idBaseVar";
+			    	linkInfo["variableDots[1].kindBaseVar"] = "@link.variableDots(1).kindBaseVar";
+					link_obj= createLinkObjFromOptions(linkInfo);
+					link = createOrUpdateLink(paper,link_obj,null);		
+					
+			    }
+			}
+			
+			addLinksToRulebaseCalls();
 		    		
 	});   
 
