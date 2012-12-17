@@ -204,8 +204,31 @@
 	}
     
 	$(document).ready(function() {
+        $( ".rulebase_to_call" ).draggable({ 
 
-	    
+			            appendTo: "#system_design",
+			            helper: "clone",
+        				scroll: false ,
+        				cursor: "move",
+					});
+        
+        
+        $("#system_design").droppable({
+        	accept: ".rulebase_to_call",
+            drop: function( event, ui ) {
+            	var rulebase_id = ui.draggable.attr("id").split("rulebase_to_call_")[1];
+				var url = '@routes.RuleBaseCalls.ajaxAddCall(fuzzySystem.id,0)';
+				url = url.substr(0,url.lastIndexOf("/")+1) + rulebase_id;
+            	$.post(url,
+           			{},
+                    function(data) {
+        				console.log(data); 
+                        location.reload();
+               	});
+            }
+        })
+        
+	    /* make the rulebasecalls draggable */
         $( ".rulebasecall" ).draggable({ 
         				containment: "#system_design",
         				scroll: false ,
