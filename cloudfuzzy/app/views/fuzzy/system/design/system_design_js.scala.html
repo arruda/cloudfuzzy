@@ -68,7 +68,8 @@
     function post_link(){
     	//current_link;
     	console.log(JSON.stringify(current_link));
-    	var new_link = current_link;
+    	//should copy instead of just setting an "pointer" 
+    	var new_link = $.extend(true, {}, current_link);
     	$.post('@routes.RuleBaseCalls.ajaxAddLink(fuzzySystem.id)',
    			{
 				'variableDots[0].idRuleBaseCall': current_link.variableDots[0].idRuleBaseCall,
@@ -193,6 +194,9 @@
 	function getRulebaseCallLinks(rbc_elem){
 		var my_links = [];
 		var links_ids = rbc_elem.data("links");
+		console.log("links_ids");
+		console.log(links_ids);
+		
 		for(var k = 0; k < links_ids.length; k++){
 			my_links.push(paper.getById(links_ids[k]));
 		}
@@ -210,6 +214,8 @@
         				drag: function(event,ui) {
         					var jqthis = $(this);
         					var updated_links = getRulebaseCallLinks(jqthis);
+        					console.log("updated_links");
+        					console.log(updated_links);
         					$.each(updated_links, function(index,link){        						
         						createOrUpdateLink(paper,link.data("link"),link.id);	
         					});
@@ -245,8 +251,7 @@
         });
         
 
-        /** adds some aditional information on each rulebasecall **/
-        /*
+        /** adds some aditional information on each rulebasecall **/        
         $(".rulebasecall").each(function() {
             console.log("changed rulebasecall");
             var jqThis = $(this);
@@ -255,7 +260,7 @@
             console.log("links:");
             console.log(jqThis.data("links"));
         });
-        */
+        
 /**
 
 			$("#bottomMost").draggable({
