@@ -34,6 +34,8 @@ public class FuzzySystem extends Model {
   @ManyToOne
   public User user;
   
+  public ArrayList<Double> rulebaseCallsPos;
+  
   private Specification loadedSpecification = null;
 
 

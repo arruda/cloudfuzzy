@@ -29,3 +29,21 @@ systems:
 
         user:       !!models.User
                             email: test@test.com
+# RulebaseCalls
+rulebasecalls:
+
+    - !!models.RuleBaseCall
+        position:       1
+        xPos:   100
+        yPos:   100
+
+        system:       !!models.FuzzySystem
+                            id: 1
+                            
+    - !!models.RuleBaseCall
+        position:       0
+        xPos:   200
+        yPos:   200
+
+        system:       !!models.FuzzySystem
+                            id: 1

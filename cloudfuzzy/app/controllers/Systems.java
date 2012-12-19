@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.File;
 import models.FuzzySystem;
+import models.RuleBaseCall;
 import models.User;
 import models.Variable;
 import models.Type;
@@ -77,6 +78,13 @@ public class Systems extends Controller {
   */
   public static Result detail(Long id) {
       if(Secured.isOwnerOf(id)){
+    	  System.out.println("rbcs:");
+    	  for(RuleBaseCall rbc : RuleBaseCall.listRuleBaseCallsByFuzzySystemsId(id)){
+        	  System.out.println("rbc:"+ rbc);
+    	  }
+    	  System.out.println("rbc0:"+ RuleBaseCall.findByFuzzySystemIdAndPosition(id, 0));
+    	  
+    	  
         return ok(
                 detail.render(FuzzySystem.find.byId(id))
                 ); 
