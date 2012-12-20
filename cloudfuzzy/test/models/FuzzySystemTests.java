@@ -66,19 +66,6 @@ public class FuzzySystemTests  extends WithApplicationAndIsoletedXfl {
     }
 
 
-    @Test
-    public void testSaveArrayDoubleAndRetrieve() {
-    	this.testSystem.rulebaseCallsPos = new ArrayList<Double>();
-    	this.testSystem.rulebaseCallsPos.add(1.0);
-    	this.testSystem.save();
-    	Long id_sys = this.testSystem.id;
-    	this.testSystem = null;
-    	this.testSystem = FuzzySystem.find.byId(id_sys);
-    	System.out.println(this.testSystem.rulebaseCallsPos);
-    	assertFalse("No rulebaseCall pos", this.testSystem.rulebaseCallsPos == null);
-    	assertFalse("No rulebaseCall pos", this.testSystem == null);
-//    	assertEquals(1.0, this.testSystem);
-    }    
 
     
 }

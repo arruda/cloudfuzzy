@@ -80,6 +80,7 @@ POST     /ajax/ajax_add_rule_from_table/:id_sys/:id_rb      controllers.RuleBase
 POST     /ajax/ajax_add_variable/:id_sys         controllers.Systems.ajaxAddVariable(id_sys: Long)
 ##RuleBaseCall
 POST     /ajax/ajax_add_call/:id_sys/:id_rb         controllers.RuleBaseCalls.ajaxAddCall(id_sys: Long, id_rb : java.lang.Integer)
+POST     /ajax/ajax_move_call/:id_sys/:id_rb         controllers.RuleBaseCalls.ajaxMoveCall(id_sys: Long, id_rb : java.lang.Integer)
 POST     /ajax/ajax_add_link/:id_sys         controllers.RuleBaseCalls.ajaxAddLink(id_sys: Long)
 POST     /ajax/ajax_remove_link/:id_sys         controllers.RuleBaseCalls.ajaxRemoveLink(id_sys: Long)
 

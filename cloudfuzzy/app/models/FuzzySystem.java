@@ -34,8 +34,6 @@ public class FuzzySystem extends Model {
   @ManyToOne
   public User user;
   
-  public ArrayList<Double> rulebaseCallsPos;
-  
   private Specification loadedSpecification = null;
 
 
@@ -326,4 +324,28 @@ public class FuzzySystem extends Model {
 
       return availableTypes;
     }
+    
+    /**
+     * Tryies to retrieve a rulebasecall of a system from it's 
+     * position in the array of ruleasecalls
+     * 
+     * @return
+     */
+    public RuleBaseCall getRulebaseCallPos(Integer position){
+    	Specification spec = this.getSpecification();
+    	
+    	//see if there is indead that position
+    	if(spec.getSystemModule().getRulebaseCalls().length <= position){
+    		return null;
+    	}
+    	
+    	RuleBaseCall rbc = RuleBaseCall.findByFuzzySystemIdAndPosition(this.id, position);
+    	
+    	
+    	
+    	return rbc;
+    	
+    }
+    
+    
 }

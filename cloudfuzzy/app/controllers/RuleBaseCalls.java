@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.FuzzySystem;
+import models.RuleBaseCall;
 import models.User;
 import models.RuleBase;
 import models.Variable;
@@ -78,6 +79,67 @@ public class RuleBaseCalls extends Controller {
           );
 
         }
+
+        
+
+        return ok(
+                    Json.toJson("ok")
+                    );
+
+
+    }
+
+
+    /**
+     * Update the position of a rulebasecall with the given id_rb
+    * tries to create a rulebasecall with a given id_rbc(rulebasecall positon).
+    * 
+    * Get the post infos:
+    * xPos;
+    * yPos;
+    */
+    public static Result ajaxMoveCall(Long id_sys, Integer id_rb)
+    {
+
+        Form<models.RuleBaseCall> filledForm = form(models.RuleBaseCall.class).bindFromRequest();
+        
+        models.RuleBaseCall rbc_pos = models.RuleBaseCall.findByFuzzySystemIdAndPosition(id_sys, id_rb);
+
+        Double xPos = Double.valueOf(filledForm.field("xPos").valueOr("328.0"));
+        Double yPos = Double.valueOf(filledForm.field("yPos").valueOr("160.0"));
+        
+        if(rbc_pos!= null){
+            rbc_pos.xPos = xPos;
+            rbc_pos.yPos = yPos;
+            rbc_pos.save();
+        }
+        //has no rbc_pos to this id_rbc, then check if there is a fuzzy rulebasecall in that position
+        //if it has then create a new pos.
+        else{
+
+            FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+            try{
+                xfuzzy.lang.RulebaseCall rbc = sys.getSpecification().getSystemModule().getRulebaseCalls()[id_rb];
+                rbc_pos = new RuleBaseCall();
+                rbc_pos.position = id_rb;
+                rbc_pos.system = sys;
+                rbc_pos.xPos = xPos;
+                rbc_pos.yPos = yPos;
+                rbc_pos.save();
+            }
+            catch(IndexOutOfBoundsException e){
+            	//really doesn't have this rulebasecall, so raise error
+                return badRequest(
+
+                          Json.toJson("error:'"+e.getMessage()+"'")
+                );
+            }
+            
+        }
+        
+
+
 
         
 

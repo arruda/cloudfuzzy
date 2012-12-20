@@ -27,8 +27,14 @@
     
     @for( i <- 0 to spec.getSystemModule().getRulebaseCalls().length-1 ) {    
     	@defining(spec.getSystemModule().getRulebaseCalls()(i).getRulebase()){ rb =>  
+    	@defining(fuzzySystem.getRulebaseCallPos(i)){ rbcPos =>  
+    		
 	    	
-			<div id="rulebasecall_@i" class="rulebasecall">
+			<div id="rulebasecall_@i" class="rulebasecall" 
+			@if(rbcPos != null){
+				style="top:@{rbcPos.yPos}px; left:@{rbcPos.xPos}px"
+			}
+			>
 				<h3>@rb.getName()</h3>
 				<table style="width:90%;">
 					<tr>
@@ -64,6 +70,7 @@
 	         	
 		            	
 		    </div>
+    	}
     	}
     }
     

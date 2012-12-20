@@ -243,6 +243,26 @@
         						createOrUpdateLink(paper,link.data("link"),link.id);	
         					});
     					},
+    					stop: function(event,ui) {
+        					var jqthis = $(this);
+							var rulebasecall_id = jqthis.attr("id").split("rulebasecall_")[1];
+   							var url = '@routes.RuleBaseCalls.ajaxMoveCall(fuzzySystem.id,0)';
+ 							url = url.substr(0,url.lastIndexOf("/")+1) + rulebasecall_id;
+
+ 							console.log({
+								'xPos': ui.position.left,
+								'yPos': ui.position.top,
+				   			});
+ 							
+ 							$.post(url,
+    				   			{
+									'xPos': ui.position.left,
+									'yPos': ui.position.top,
+    				   			},
+    				            function(data) {
+    								console.log(data);  
+    				       	});
+    		            },
         				//revert: true, 
 //        				snap: ".rulebasecall"
 					});
