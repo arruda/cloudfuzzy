@@ -25,7 +25,7 @@ systems:
         name:       test
         description:   test
         fileName:   test.xfl
-        filePath:   /home/arruda/projetos/cloudfuzzy/extraFiles/xfls/test@test.com
+        filePath:   /vagrant/extraFiles/xfls/test@test.com
 
         user:       !!models.User
                             email: test@test.com
@@ -39,7 +39,7 @@ rulebasecalls:
 
         system:       !!models.FuzzySystem
                             id: 1
-                            
+
     - !!models.RuleBaseCall
         position:       0
         xPos:   200
