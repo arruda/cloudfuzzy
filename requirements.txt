@@ -1,0 +1,7 @@
+Django==1.6
+
+# My ANTLR3 for python github repo
+-e git+git://github.com/arruda/ANTLR3-python#egg=ANTLR3-python
+
+# My git clone of the pyfuzzy repo
+-e git+git://github.com/arruda/pyfuzzy#egg=pyfuzzy
