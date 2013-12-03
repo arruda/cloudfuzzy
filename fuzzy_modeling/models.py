@@ -76,7 +76,7 @@ class VariableModel(models.Model):
         return var
 
     def __unicode__(self):
-        return self.description
+        return self.name
 
 
 class InputVariableModel(VariableModel):
@@ -111,11 +111,13 @@ class InputVariableModel(VariableModel):
             max=self.max,
             unit=self.unit
         )
+        adjs = self.adjectivemodel_set.all()
+        for adj in adjs:
+            ivar.adjectives[adj.name] = adj.get_pyfuzzy()
+
         return ivar
 
 
-    def __unicode__(self):
-        return self.description
 
 class ParameterModel(models.Model):
     """A simple parameter in a funcion.
@@ -279,8 +281,6 @@ class OutputVariableModel(VariableModel):
         return ovar
 
 
-    def __unicode__(self):
-        return self.description
 
 class SetModel(models.Model):
     """
@@ -299,12 +299,8 @@ class SetModel(models.Model):
     parameters = generic.GenericRelation(ParameterModel)
 
     def __unicode__(self):
-        pre = ""
-        for choice in self.SET_CHOICES:
-            if self.set == choice[0]:
-                pre = choice[1]
 
-        return pre
+        return self.get_set_display()
 
     def get_pyfuzzy(self):
         """
@@ -314,8 +310,26 @@ class SetModel(models.Model):
 
         parameters_dict = {
         }
-        for p in self.parameters.all():
-            parameters_dict[p.name] = p.get_value()
+
+        if self.get_set_display() == 'Polygon':
+            import re
+            p = self.parameters.all()[0]
+            # change '(1,2),(3,4)' to ['', '1,2', ',', '3,4', '']
+            points =[]
+            tmp = re.split("\(|\)", p.value)
+            for element in tmp:
+                if element != '' and element != ',':
+                    x,y = element.split(',')
+                    x = Decimal(x)
+                    y = Decimal(y)
+                    points.append((x,y))
+
+            parameters_dict[p.name]= points
+        else:
+            for p in self.parameters.all():
+                parameters_dict[p.name] = p.get_value()
+
+
 
         set = SetClass(**parameters_dict)
         return set
@@ -326,6 +340,7 @@ class AdjectiveModel(models.Model):
     A Fuzzy Adjective base model
     """
 
+    name = models.CharField(_("Name"), blank=False, null=False, max_length=250)
 
     set =   models.ForeignKey( SetModel  )
     com =   models.ForeignKey( NormModel , null=True, blank=True)
@@ -351,9 +366,4 @@ class AdjectiveModel(models.Model):
 
 
     def __unicode__(self):
-        pre = ""
-        for choice in self.DEFUZZIFY_CHOICES:
-            if self.defuzzify == choice[0]:
-                pre = choice[1]
-
-        return pre
+        return self.name
