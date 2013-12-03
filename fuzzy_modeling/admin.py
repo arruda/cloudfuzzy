@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.contenttypes.generic import GenericStackedInline
 from fuzzy_modeling.models import SystemModel, VariableModel, InputVariableModel, ParameterModel, DefuzzifyModel, OutputVariableModel
 
-from fuzzy_modeling.models import NormModel
+from fuzzy_modeling.models import NormModel, AdjectiveModel, SetModel
 
 class ParameterModelInlineAdmin(GenericStackedInline):
     model = ParameterModel
@@ -27,8 +27,34 @@ class SystemModelAdmin(admin.ModelAdmin):
     inlines = [InputVariableModelInlineAdmin,OutputVariableModelInlineAdmin]
 
 
+class AdjectiveModelInlineForInputAdmin(admin.StackedInline):
+    model = AdjectiveModel
+    exclude = ['ovar',]
+    extra = 2
+
+
+class InputVariableModelAdmin(admin.ModelAdmin):
+    inlines = [AdjectiveModelInlineForInputAdmin]
+
+class AdjectiveModelInlineForOutputAdmin(admin.StackedInline):
+    model = AdjectiveModel
+    exclude = ['ivar',]
+    extra = 2
+
+class OutputVariableModelAdmin(admin.ModelAdmin):
+    inlines = [AdjectiveModelInlineForOutputAdmin]
+
+
+class SetModelAdmin(admin.ModelAdmin):
+    inlines = [ParameterModelInlineAdmin,]
+
+
+
 admin.site.register(SystemModel, SystemModelAdmin)
-admin.site.register(InputVariableModel, admin.ModelAdmin)
 admin.site.register(DefuzzifyModel, DefuzzifyModelAdmin)
-admin.site.register(OutputVariableModel, admin.ModelAdmin)
 admin.site.register(NormModel, NormModelAdmin)
+
+admin.site.register(AdjectiveModel, admin.ModelAdmin)
+admin.site.register(SetModel, SetModelAdmin)
+admin.site.register(InputVariableModel, InputVariableModelAdmin)
+admin.site.register(OutputVariableModel, OutputVariableModelAdmin)

@@ -14,6 +14,8 @@ from fuzzy.System import System
 from fuzzy.Variable import Variable
 from fuzzy.InputVariable import InputVariable
 from fuzzy.OutputVariable import OutputVariable
+from fuzzy.Adjective import Adjective
+
 
 from fuzzy_modeling.utils import get_class_by_python_path, get_choices_from_python_path_listing
 
@@ -279,3 +281,79 @@ class OutputVariableModel(VariableModel):
 
     def __unicode__(self):
         return self.description
+
+class SetModel(models.Model):
+    """
+    A Fuzzy set base model
+    """
+
+    SET_CHOICES = get_choices_from_python_path_listing('fuzzy.set',ignores=['operations',])
+
+    set = models.CharField(_("Set"),
+                choices=SET_CHOICES,
+                max_length=250,
+                blank=False, null=False,
+                default=SET_CHOICES[0][0]
+            )
+
+    parameters = generic.GenericRelation(ParameterModel)
+
+    def __unicode__(self):
+        pre = ""
+        for choice in self.SET_CHOICES:
+            if self.set == choice[0]:
+                pre = choice[1]
+
+        return pre
+
+    def get_pyfuzzy(self):
+        """
+        Return the Pyfuzzy class of this model
+        """
+        SetClass = get_class_by_python_path(self.set)
+
+        parameters_dict = {
+        }
+        for p in self.parameters.all():
+            parameters_dict[p.name] = p.get_value()
+
+        set = SetClass(**parameters_dict)
+        return set
+
+
+class AdjectiveModel(models.Model):
+    """
+    A Fuzzy Adjective base model
+    """
+
+
+    set =   models.ForeignKey( SetModel  )
+    com =   models.ForeignKey( NormModel , null=True, blank=True)
+
+    ivar =   models.ForeignKey( InputVariableModel , null=True, blank=True)
+    ovar =   models.ForeignKey( OutputVariableModel , null=True, blank=True)
+
+
+    def get_pyfuzzy(self):
+        """
+        Return the Pyfuzzy class of this model
+        """
+        set  = self.set.get_pyfuzzy()
+        com  = self.com.get_pyfuzzy() if self.com else None
+        kwargs = {
+            'set':set,
+        }
+        if com:
+            kwargs['com'] = com
+
+        adjective = Adjective(**kwargs)
+        return adjective
+
+
+    def __unicode__(self):
+        pre = ""
+        for choice in self.DEFUZZIFY_CHOICES:
+            if self.defuzzify == choice[0]:
+                pre = choice[1]
+
+        return pre
