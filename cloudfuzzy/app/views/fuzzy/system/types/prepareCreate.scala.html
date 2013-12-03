@@ -19,23 +19,24 @@
 
                     
                     
-                    @inputRadioGroup(
-                      newTypeForm("type"),
-                      options = options(
-                            "0"->"Equi-spaced Triangles",
-                            "1"->"Triangles with 'straps'",
-                            "2"->"Equi-spaced Bells",
-                            "3"->"Bells with 'straps'",
-                            "4"->"Equi-spaced Trapezoids",
-                            "5"->"Equi-spaced Singletons",
-                            "6"->"Centered Bells",
-                            "7"->"Centered Singletons",
-                            "8"->"Blank",
-                            "9"->"Extends"
-                            ),
-                      '_label -> "Member Functions Type",
-                      '_error -> newTypeForm("type").error.map(_.withMessage("select Type"))
-                    )
+                    @select(
+                        field = newTypeForm("type"),
+						options = options(
+						      "0"->"Equi-spaced Triangles",
+						      "1"->"Triangles with 'straps'",
+						      "2"->"Equi-spaced Bells",
+						      "3"->"Bells with 'straps'",
+						      "4"->"Equi-spaced Trapezoids",
+						      "5"->"Equi-spaced Singletons",
+						      "6"->"Centered Bells",
+						      "7"->"Centered Singletons",
+						      "8"->"Blank",
+						      "9"->"Extends"
+						      ),
+						'_label -> "Member Functions Type",
+						'_error -> newTypeForm("type").error.map(_.withMessage("select Type")),
+                        '_help -> "Select the function for this MF"
+                    )        
 
                 </fieldset>           
                 
