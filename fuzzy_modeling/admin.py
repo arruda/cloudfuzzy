@@ -15,9 +15,19 @@ class NormModelAdmin(admin.ModelAdmin):
     inlines = [ParameterModelInlineAdmin,]
 
 
+class OutputVariableModelInlineAdmin(admin.StackedInline):
+    model = OutputVariableModel
+    extra = 2
+
+class InputVariableModelInlineAdmin(admin.StackedInline):
+    model = InputVariableModel
+    extra = 2
+
+class SystemModelAdmin(admin.ModelAdmin):
+    inlines = [InputVariableModelInlineAdmin,OutputVariableModelInlineAdmin]
 
 
-admin.site.register(SystemModel, admin.ModelAdmin)
+admin.site.register(SystemModel, SystemModelAdmin)
 admin.site.register(InputVariableModel, admin.ModelAdmin)
 admin.site.register(DefuzzifyModel, DefuzzifyModelAdmin)
 admin.site.register(OutputVariableModel, admin.ModelAdmin)

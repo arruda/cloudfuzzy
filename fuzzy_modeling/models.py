@@ -187,6 +187,15 @@ class NormModel(models.Model):
         norm = NormClass(**parameters_dict)
         return norm
 
+
+    def __unicode__(self):
+        pre = ""
+        for choice in self.NORM_CHOICES:
+            if self.norm_type == choice[0]:
+                pre = choice[1]
+
+        return pre
+
 class DefuzzifyModel(models.Model):
     """
     A Fuzzy defuzzify base model
@@ -235,6 +244,14 @@ class DefuzzifyModel(models.Model):
         defuzzify = DefuzzifyClass(**parameters_dict)
         return defuzzify
 
+
+    def __unicode__(self):
+        pre = ""
+        for choice in self.DEFUZZIFY_CHOICES:
+            if self.defuzzify == choice[0]:
+                pre = choice[1]
+
+        return pre
 
 class OutputVariableModel(VariableModel):
     """
