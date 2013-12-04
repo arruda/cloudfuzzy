@@ -74,6 +74,20 @@ public class FuzzySystem extends Model {
     //         .eq("members.email", user)
     //         .findList();
     // }
+  
+  /**
+   * Return the xflPath for the given user, that is:
+   *  the xflPath in the sys
+   * and appent the user email to the end of it
+   * @param sys
+   * @return
+   */
+  public static String generateFilePath(FuzzySystem sys){
+		String xflPath = Play.application().configuration().getString("xflPath");
+	    //appends the useremail with the xfl path.
+	    xflPath += sys.user.email + File.separator;
+	    return xflPath;
+  }
 
   /**
    * Creates a Fuzzy System with a default content for the file, using the filename.
@@ -84,8 +98,7 @@ public class FuzzySystem extends Model {
 	//sets the filepath to be in the user email folder.
 	String xflPath = Play.application().configuration().getString("xflPath");
     //appends the useremail with the xfl path.
-    xflPath += sys.user.email + "/";
-    sys.filePath=xflPath;
+    sys.filePath=generateFilePath(sys);
 
     File file = new File(sys.filePath,sys.fileName);
     //create the parent dirs if they don't exist
@@ -164,7 +177,7 @@ public class FuzzySystem extends Model {
   *Returns this FuzzySystem full file path.
   */
   public String getFileFullPath(){
-	  return  this.filePath + "/"+ this.fileName; 
+	  return  this.filePath + File.separator + this.fileName; 
   }
     
   /**
