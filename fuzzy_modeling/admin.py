@@ -5,6 +5,9 @@ from fuzzy_modeling.models import SystemModel, VariableModel, InputVariableModel
 
 from fuzzy_modeling.models import NormModel, AdjectiveModel, SetModel
 
+from fuzzy_modeling.models import RuleModel, OperatorModel
+
+
 class ParameterModelInlineAdmin(GenericStackedInline):
     model = ParameterModel
 
@@ -49,6 +52,14 @@ class SetModelAdmin(admin.ModelAdmin):
     inlines = [ParameterModelInlineAdmin,]
 
 
+class OperatorModelInlineAdmin(admin.StackedInline):
+    model = OperatorModel
+    fk_name = "compound_inputs"
+    extra = 2
+
+
+class OperatorModeldmin(admin.ModelAdmin):
+    inlines = [OperatorModelInlineAdmin]
 
 admin.site.register(SystemModel, SystemModelAdmin)
 admin.site.register(DefuzzifyModel, DefuzzifyModelAdmin)
@@ -58,3 +69,6 @@ admin.site.register(AdjectiveModel, admin.ModelAdmin)
 admin.site.register(SetModel, SetModelAdmin)
 admin.site.register(InputVariableModel, InputVariableModelAdmin)
 admin.site.register(OutputVariableModel, OutputVariableModelAdmin)
+
+admin.site.register(RuleModel, admin.ModelAdmin)
+admin.site.register(OperatorModel, OperatorModeldmin)
