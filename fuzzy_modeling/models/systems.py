@@ -6,11 +6,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy.System import System
 
 
 
-class SystemModel(models.Model):
+class SystemModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy system model
     """
@@ -46,3 +47,27 @@ class SystemModel(models.Model):
 
         return system
 
+    @classmethod
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+        system_model = cls()
+        system_model.description = pyfuzzy.description
+        system_model.save()
+
+        # #variables
+        # for v_name, pyfuzzy_var in pyfuzzy.variables.items():
+
+        #     # is an output variable
+        #     if pyfuzzy_var.__class__.__name__ == 'OutputVariable':
+        #         OutputvarModel = system_model.outputvariablemodel_set.model
+        #         outputvar_model = OutputvarModel.from_pyfuzzy(pyfuzzy_var)
+        #         system_model.outputvariablemodel_set.add(outputvar_model)
+
+        #     # is an input variable
+        #     else:
+        #         InputvarModel = system_model.inputvariablemodel_set.model
+        #         inputvar_model = InputvarModel.from_pyfuzzy(pyfuzzy_var)
+        #         system_model.inputvariablemodel_set.add(inputvar_model)
+        return system_model
