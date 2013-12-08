@@ -20,9 +20,10 @@ from fuzzy.Adjective import Adjective
 from fuzzy_modeling.models.systems import SystemModel
 from fuzzy_modeling.models.defuzzifys import DefuzzifyModel
 
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy_modeling.utils import get_class_by_python_path, get_choices_from_python_path_listing
 
-class VariableModel(models.Model):
+class VariableModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy variable model
     """
@@ -51,7 +52,7 @@ class VariableModel(models.Model):
         return self.name
 
 
-class InputVariableModel(VariableModel):
+class InputVariableModel(VariableModel, PyFuzzyMixin):
     """
     A Fuzzy input variable model
     """
@@ -92,8 +93,32 @@ class InputVariableModel(VariableModel):
 
         return ivar
 
+    @classmethod
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+        ivar_model = cls(
+                name = pyfuzzy.name,
+                description = pyfuzzy.description,
+                min = pyfuzzy.min,
+                max = pyfuzzy.max,
+                unit = pyfuzzy.unit
+            )
+        ivar_model.save()
 
-class OutputVariableModel(VariableModel):
+        # setting the correct fuzzify choice value
+        for klass, name in cls.FUZZIFY_CHOICES:
+            if pyfuzzy.fuzzify.__class__.__name__ == name:
+                ivar_model.fuzzify = klass
+
+        # adjectives
+        #: TODO
+
+        ivar_model.save()
+        return ivar_model
+
+class OutputVariableModel(VariableModel, PyFuzzyMixin):
     """
     A Fuzzy output variable model
     """
@@ -118,3 +143,25 @@ class OutputVariableModel(VariableModel):
             unit=self.unit
         )
         return ovar
+
+    @classmethod
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+        ovar_model = cls(
+                name = pyfuzzy.name,
+                description = pyfuzzy.description,
+                min = pyfuzzy.min,
+                max = pyfuzzy.max,
+                unit = pyfuzzy.unit
+            )
+        ovar_model.save()
+
+
+
+        # adjectives
+        #: TODO
+
+        ovar_model.save()
+        return ivar_model

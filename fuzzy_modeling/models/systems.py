@@ -56,18 +56,22 @@ class SystemModel(models.Model, PyFuzzyMixin):
         system_model.description = pyfuzzy.description
         system_model.save()
 
-        # #variables
-        # for v_name, pyfuzzy_var in pyfuzzy.variables.items():
+        #variables
+        for v_name, pyfuzzy_var in pyfuzzy.variables.items():
+            # set the name of this var inside the pyfuzzy_var
+            pyfuzzy_var.name = v_name
 
-        #     # is an output variable
-        #     if pyfuzzy_var.__class__.__name__ == 'OutputVariable':
-        #         OutputvarModel = system_model.outputvariablemodel_set.model
-        #         outputvar_model = OutputvarModel.from_pyfuzzy(pyfuzzy_var)
-        #         system_model.outputvariablemodel_set.add(outputvar_model)
+            # is an output variable
+            if pyfuzzy_var.__class__.__name__ == 'OutputVariable':
+                OutputvarModel = system_model.outputvariablemodel_set.model
+                outputvar_model = OutputvarModel.from_pyfuzzy(pyfuzzy_var)
+                system_model.outputvariablemodel_set.add(outputvar_model)
 
-        #     # is an input variable
-        #     else:
-        #         InputvarModel = system_model.inputvariablemodel_set.model
-        #         inputvar_model = InputvarModel.from_pyfuzzy(pyfuzzy_var)
-        #         system_model.inputvariablemodel_set.add(inputvar_model)
+            # is an input variable
+            else:
+                InputvarModel = system_model.inputvariablemodel_set.model
+                inputvar_model = InputvarModel.from_pyfuzzy(pyfuzzy_var)
+                system_model.inputvariablemodel_set.add(inputvar_model)
+
+        system_model.save()
         return system_model
