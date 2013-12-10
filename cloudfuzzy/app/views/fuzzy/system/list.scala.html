@@ -7,7 +7,7 @@
     My Fuzzy Systems
 }  
 @main("My Fuzzy Systems")(navHeader)(menu_default()){   
-    <p>Here are presented the Fuzzy Systems created by you so far.</br>
+    <p id="system_list_step1">Here are presented the Fuzzy Systems created by you so far.</br>
     You can detail, modify and delete any of then, or create a new one.
     </p>
     @for(fuzzySystem <- fuzzySystems) {
@@ -31,4 +31,46 @@
         </div>
     }
     
+    <script type="text/javascript">
+		window["has_intro"] = true;
+		window["intro_storage_key"] = 'intro_sys_list';
+		window["intro_steps"] = [
+
+   	                          {
+   	                            element: document.querySelectorAll('#menu li')[0],
+   	                            intro: "Click here to list all your Fuzzy Systems.",
+   	                            position: 'bottom'
+   	                          },
+
+   	                          {
+   	                            element: document.querySelectorAll('#menu li')[1],
+   	                            intro: "Click here to create a new Fuzzy Systems.",
+   	                            position: 'bottom'
+   	                          },
+   	                          {
+   	                            element: '#system_list_step1',
+   	                            intro: "Here all your Fuzzy System will be listed."
+   	                          },
+   	                        ];
+    	//var has_intro = true;
+    	//var intro_storage_key = 'intro_sys_list';
+    	//var intro_steps = [
+
+    //	                          {
+    //	                            element: document.querySelectorAll('#menu li')[0],
+    //	                            intro: "Click here to list all your Fuzzy Systems.",
+    //	                            position: 'bottom'
+    //	                          },
+//
+ //   	                          {
+  //  	                            element: document.querySelectorAll('#menu li')[1],
+   // 	                            intro: "Click here to create a new Fuzzy Systems.",
+   // 	                            position: 'bottom'
+   // 	                          },
+   // 	                          {
+   // 	                            element: '#system_list_step1',
+   // 	                            intro: "Here all your Fuzzy System will be listed."
+   // 	                          },
+   // 	                        ];
+    </script>
 }

@@ -345,6 +345,21 @@ footer {
 
 }
 
+.help{
+
+    background: url(/assets/images/help.gif) no-repeat;
+    text-indent:16px;
+    display:inline-block;
+
+    height:16px;
+    line-height:16px;
+    text-decoration:none;
+    width:16px;
+	float: right;
+	margin-top: 6px;
+
+}
+
 
 /*****************************- FUZZY SYSTEM DESIGN -****************************/
 #system_design{

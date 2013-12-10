@@ -103,6 +103,48 @@
     });
 
 
+	if(typeof(window.intro_steps) === 'undefined' ){
+		window.intro_steps = [];
+	}
+	if(typeof(window.intro_storage_key) === 'undefined' ){
+		window.intro_storage_key = "intro";
+	}
+	if(typeof(window.has_intro) === 'undefined' ){
+		window.has_intro = false;
+	}
+	function run_intro(reset){
+	
+		if(window.has_intro){
+			if(reset){
+				$.Storage.deleteItem(window.intro_storage_key);
+			}
+		
+		    var intro = introJs();
+		    intro.setOptions({
+		    	steps: window.intro_steps
+		    });
+		        	
+			var intro_done = $.Storage.loadItem(window.intro_storage_key);
+			
+			if (!intro_done){
+				intro.start();
+			}
+			intro.oncomplete(function() {
+				$.Storage.saveItem(window.intro_storage_key,true);
+			});
+		}
+		
+		return false;
+	
+	}
+	
+    $('.help').click(function() {
+      run_intro(true);
+    });
+    
+	run_intro(false);
+	
+        	
 }
 
 @jquery_winload = {
@@ -118,7 +160,8 @@
 
     <div id='content_area'>
       <div id='content'>
-        <h2 class='content_header'>@navHeader</h2>
+        <h2 class='content_header'>@navHeader <a class="help" href="#" ></a></h2>
+        
         @content
       </div>  
     </div>
