@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import inspect
 
 from django.db import models
 
@@ -8,10 +9,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 from fuzzy_modeling.utils import get_class_by_python_path, get_choices_from_python_path_listing
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy_modeling.models.parameters import ParameterModel
 
 
-class NormModel(models.Model):
+class NormModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy Norm base model
     """
@@ -41,11 +43,34 @@ class NormModel(models.Model):
         norm = NormClass(**parameters_dict)
         return norm
 
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+
+        norm_model = cls()
+
+        norm_type = 'fuzzy.norm.%s.%s' % (
+                pyfuzzy.__class__.__name__ ,
+                pyfuzzy.__class__.__name__
+            )
+        norm_model.norm_type = norm_type
+        norm_model.save()
+
+        # parameters
+        for arg in inspect.getargspec(pyfuzzy.__init__).args:
+            if arg != 'self':
+                arg_value = getattr(pyfuzzy,arg)
+                arg_type = ParameterModel.get_type_from_python_type(arg_value)
+                norm_model.parameters.create(
+                            name = arg,
+                            value = arg_value,
+                            value_type = arg_type
+                    )
+
+
+
+        return norm_model
 
     def __unicode__(self):
-        pre = ""
-        for choice in self.NORM_CHOICES:
-            if self.norm_type == choice[0]:
-                pre = choice[1]
-
-        return pre
+        return self.get_norm_type_display
