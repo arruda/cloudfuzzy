@@ -11,10 +11,11 @@ from fuzzy.Adjective import Adjective
 from fuzzy_modeling.models.sets import SetModel
 from fuzzy_modeling.models.norms import NormModel
 from fuzzy_modeling.models.variables import InputVariableModel
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy_modeling.models.variables import OutputVariableModel
 
 
-class AdjectiveModel(models.Model):
+class AdjectiveModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy Adjective base model
     """
@@ -44,6 +45,27 @@ class AdjectiveModel(models.Model):
 
         adjective = Adjective(**kwargs)
         return adjective
+
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+
+        adj_model = cls(
+                name = pyfuzzy.name
+            )
+
+        # SET
+        set_model = cls.set.from_pyfuzzy(pyfuzzy.set)
+        adj_model.set = set_model
+
+        # COM
+        if pyfuzzy.COM:
+            com_model = cls.com.from_pyfuzzy(pyfuzzy.COM)
+            adj_model.com = com_model
+
+        adj_model.save()
+        return adj_model
 
 
     def __unicode__(self):
