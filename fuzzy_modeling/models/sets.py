@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import inspect
 
 from decimal import Decimal
 
@@ -10,10 +11,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 from fuzzy_modeling.models.parameters import ParameterModel
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy_modeling.utils import get_class_by_python_path, get_choices_from_python_path_listing
 
 
-class SetModel(models.Model):
+class SetModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy set base model
     """
@@ -67,3 +69,32 @@ class SetModel(models.Model):
 
         set = SetClass(**parameters_dict)
         return set
+
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+
+        set_model = cls()
+
+        set_type = 'fuzzy.set.%s.%s' % (
+                pyfuzzy.__class__.__name__ ,
+                pyfuzzy.__class__.__name__
+            )
+        set_model.set = set_type
+        set_model.save()
+
+        # parameters
+        for arg in inspect.getargspec(pyfuzzy.__init__).args:
+            if arg != 'self':
+                arg_value = getattr(pyfuzzy,arg)
+                arg_type = ParameterModel.get_type_from_python_type(arg_value)
+                set_model.parameters.create(
+                            name = arg,
+                            value = arg_value,
+                            value_type = arg_type
+                    )
+
+
+
+        return set_model
