@@ -56,3 +56,19 @@ class ParameterModel(models.Model):
 
         elif  self.value_type == self.TYPE_CHOICES[3][0]:
             return Decimal(self.value)
+
+    @classmethod
+    def get_type_from_python_type(cls, obj):
+
+        if 'bool' in type(obj).__name__:
+            return cls.TYPE_CHOICES[0]
+
+        if 'float' in type(obj).__name__ or 'decinal' in type(obj).__name__:
+            return cls.TYPE_CHOICES[2]
+
+        if 'int' in type(obj).__name__:
+            return cls.TYPE_CHOICES[3]
+
+        #if none of the above return string
+        return cls.TYPE_CHOICES[1]
+
