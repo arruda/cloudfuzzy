@@ -5,7 +5,6 @@ import org.junit.*;
 import play.mvc.*;
 import play.test.*;
 import play.libs.F.*;
-
 import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
 import static org.junit.Assert.*;
@@ -15,9 +14,9 @@ import java.util.HashMap;
 
 import com.google.common.collect.ImmutableMap;
 
+
 //use with application test
 import testhelper.WithApplicationAndIsoletedXfl;
-
 import models.Type;
 import models.FuzzySystem;
 import models.User;
@@ -25,6 +24,7 @@ import models.Variable;
 
 public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
 
+  String eol = System.getProperty("line.separator", "\n");
     protected User testUser;
 
     @Before
@@ -108,7 +108,8 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        String new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);" + eol;
+
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
 
 
@@ -159,7 +160,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(vgi1, NULL, NULL, NULL : NULL, NULL);\n";
+        String newLinkToRBCToXfl = "  aa(vgi1, NULL, NULL, NULL : NULL, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
@@ -195,7 +196,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
@@ -232,7 +233,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
@@ -269,7 +270,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : vgo1, NULL);\n";
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : vgo1, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
@@ -307,7 +308,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, vgo1);\n";
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, vgo1);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
@@ -344,7 +345,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
 
@@ -381,7 +382,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : vgo1, NULL);\n";
+        newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : vgo1, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
@@ -424,7 +425,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+        String new_rbc_to_xfl = "  bb(NULL : NULL);" + eol;
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
 
 
@@ -459,9 +460,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);\n";
+        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        String rbc2ToXfl = "  bb(i0 : NULL);" + eol;
         assertEquals(rbc1ToXfl, rbc1.toXfl());
         assertEquals(rbc2ToXfl, rbc2.toXfl());
 
@@ -506,7 +507,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+        String new_rbc_to_xfl = "  bb(NULL : NULL);" + eol;
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
 
         //======================== rbc0(aa).vo2 -> rbc1(bb).vi1 =====================//
@@ -542,9 +543,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);\n";
+        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        String rbc2ToXfl = "  bb(i0 : NULL);" + eol;
         assertEquals(rbc1ToXfl, rbc1.toXfl());
         assertEquals(rbc2ToXfl, rbc2.toXfl());
 
@@ -577,7 +578,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);" + eol;
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
         //======================== rbc1(bb).vo1 -> rbc2(aa).vi2 =====================//
 
@@ -611,9 +612,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        rbc2ToXfl = "  bb(i0 : i1);\n";
+        rbc2ToXfl = "  bb(i0 : i1);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc3ToXfl = "  aa(NULL, i1, NULL, NULL : NULL, NULL);\n";
+        String rbc3ToXfl = "  aa(NULL, i1, NULL, NULL : NULL, NULL);" + eol;
 
         assertEquals(rbc2ToXfl, rbc2.toXfl());
         assertEquals(rbc3ToXfl, rbc3.toXfl());
@@ -659,7 +660,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+        String new_rbc_to_xfl = "  bb(NULL : NULL);" + eol;
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
 
         //======================== rbc0(aa).vo2 -> rbc1(bb).vi1 =====================//
@@ -695,9 +696,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);\n";
+        String rbc1ToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, i0);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        String rbc2ToXfl = "  bb(i0 : NULL);" + eol;
         assertEquals(rbc1ToXfl, rbc1.toXfl());
         assertEquals(rbc2ToXfl, rbc2.toXfl());
 
@@ -730,7 +731,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);" + eol;
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
         //======================== rbc1(bb).vo1 -> rbc2(aa).vi2 =====================//
 
@@ -764,9 +765,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        rbc2ToXfl = "  bb(i0 : i1);\n";
+        rbc2ToXfl = "  bb(i0 : i1);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc3ToXfl = "  aa(NULL, i1, NULL, NULL : NULL, NULL);\n";
+        String rbc3ToXfl = "  aa(NULL, i1, NULL, NULL : NULL, NULL);" + eol;
 
         assertEquals(rbc2ToXfl, rbc2.toXfl());
         assertEquals(rbc3ToXfl, rbc3.toXfl());
@@ -813,7 +814,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        String new_rbc_to_xfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);" + eol;
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
 
         
@@ -847,7 +848,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
       rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
 
       //special atention to the space before the rulebase name, and the \n in the end
-      new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+      new_rbc_to_xfl = "  bb(NULL : NULL);" + eol;
       assertEquals(new_rbc_to_xfl, rbc.toXfl());
         
         
@@ -885,9 +886,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc0ToXfl = "  aa(NULL, NULL, NULL, NULL : i0, NULL);\n";
+        String rbc0ToXfl = "  aa(NULL, NULL, NULL, NULL : i0, NULL);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        String rbc2ToXfl = "  bb(i0 : NULL);" + eol;
         assertEquals(rbc0ToXfl, rbc0.toXfl());
         assertEquals(rbc2ToXfl, rbc2.toXfl());
 
@@ -924,9 +925,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[2];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc1ToXfl = "  bb(i0 : i1);\n";
+        String rbc1ToXfl = "  bb(i0 : i1);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        rbc2ToXfl = "  aa(i1, NULL, NULL, NULL : NULL, NULL);\n";
+        rbc2ToXfl = "  aa(i1, NULL, NULL, NULL : NULL, NULL);" + eol;
 
         assertEquals(rbc1ToXfl, rbc1.toXfl());
         assertEquals(rbc2ToXfl, rbc2.toXfl());
@@ -988,7 +989,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
 
@@ -1011,7 +1012,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         rbc = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);\n";
+        newLinkToRBCToXfl = "  aa(NULL, NULL, NULL, NULL : NULL, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
     }
@@ -1057,7 +1058,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
               this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[0];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
+        String newLinkToRBCToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);" + eol;
         assertEquals(newLinkToRBCToXfl, rbc.toXfl());
 
 
@@ -1095,7 +1096,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         rbc =this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String new_rbc_to_xfl = "  bb(NULL : NULL);\n";
+        String new_rbc_to_xfl = "  bb(NULL : NULL);" + eol;
         assertEquals(new_rbc_to_xfl, rbc.toXfl());
 
         //======================== rbc0(aa).vo2 -> rbc1(bb).vi1 =====================//
@@ -1131,9 +1132,9 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
              this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc1ToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, i0);\n";
+        String rbc1ToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, i0);" + eol;
         //special atention to the space before the rulebase name, and the \n in the end
-        String rbc2ToXfl = "  bb(i0 : NULL);\n";
+        String rbc2ToXfl = "  bb(i0 : NULL);" + eol;
         assertEquals(rbc1ToXfl, rbc1.toXfl());
         assertEquals(rbc2ToXfl, rbc2.toXfl());
 
@@ -1159,8 +1160,8 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
         rbc2 = this.testSystem.getSpecification().getSystemModule().getRulebaseCalls()[1];
 
         //special atention to the space before the rulebase name, and the \n in the end
-        rbc1ToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);\n";
-        rbc2ToXfl = "  bb(NULL : NULL);\n";
+        rbc1ToXfl = "  aa(NULL, NULL, vgi2, NULL : NULL, NULL);" + eol;
+        rbc2ToXfl = "  bb(NULL : NULL);" + eol;
         assertEquals(rbc1ToXfl, rbc1.toXfl());
         assertEquals(rbc2ToXfl, rbc2.toXfl());
 
