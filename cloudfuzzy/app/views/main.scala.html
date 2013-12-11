@@ -123,15 +123,19 @@
 		    intro.setOptions({
 		    	steps: window.intro_steps
 		    });
+			intro.oncomplete(function() {
+				$.Storage.saveItem(window.intro_storage_key,true);
+			});
+			intro.onexit(function() {
+				$.Storage.saveItem(window.intro_storage_key,true);
+			});
+			
 		        	
 			var intro_done = $.Storage.loadItem(window.intro_storage_key);
 			
 			if (!intro_done){
 				intro.start();
 			}
-			intro.oncomplete(function() {
-				$.Storage.saveItem(window.intro_storage_key,true);
-			});
 		}
 		
 		return false;
@@ -140,6 +144,7 @@
 	
     $('.help').click(function() {
       run_intro(true);
+      return false;
     });
     
 	run_intro(false);
@@ -160,7 +165,7 @@
 
     <div id='content_area'>
       <div id='content'>
-        <h2 class='content_header'>@navHeader <a class="help" href="#" ></a></h2>
+        <h2 class='content_header'>@navHeader <a class="help" href=""  ></a></h2>
         
         @content
       </div>  
