@@ -41,7 +41,7 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
             'set':set,
         }
         if com:
-            kwargs['com'] = com
+            kwargs['COM'] = com
 
         adjective = Adjective(**kwargs)
         return adjective
