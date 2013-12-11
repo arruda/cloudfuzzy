@@ -61,13 +61,13 @@ class ParameterModel(models.Model):
     def get_type_from_python_type(cls, obj):
 
         if 'bool' in type(obj).__name__:
-            return cls.TYPE_CHOICES[0]
+            return cls.TYPE_CHOICES[0][0]
 
         if 'float' in type(obj).__name__ or 'decinal' in type(obj).__name__:
-            return cls.TYPE_CHOICES[2]
+            return cls.TYPE_CHOICES[2][0]
 
         if 'int' in type(obj).__name__:
-            return cls.TYPE_CHOICES[3]
+            return cls.TYPE_CHOICES[3][0]
 
         #if none of the above return string
         return cls.TYPE_CHOICES[1]

@@ -50,6 +50,7 @@ class NormModel(models.Model, PyFuzzyMixin):
         """
 
         norm_model = cls()
+        import bpdb; bpdb.set_trace()
 
         norm_type = 'fuzzy.norm.%s.%s' % (
                 pyfuzzy.__class__.__name__ ,
@@ -71,7 +72,8 @@ class NormModel(models.Model, PyFuzzyMixin):
 
 
 
+        norm_model.save()
         return norm_model
 
     def __unicode__(self):
-        return self.get_norm_type_display
+        return self.get_norm_type_display()
