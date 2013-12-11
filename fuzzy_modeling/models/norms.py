@@ -43,6 +43,7 @@ class NormModel(models.Model, PyFuzzyMixin):
         norm = NormClass(**parameters_dict)
         return norm
 
+    @classmethod
     def from_pyfuzzy(cls, pyfuzzy):
         """
         Return the model representation of an instance of the pyfuzzy attr

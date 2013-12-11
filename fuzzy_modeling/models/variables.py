@@ -160,8 +160,6 @@ class OutputVariableModel(VariableModel, PyFuzzyMixin):
                 max = pyfuzzy.max,
                 unit = pyfuzzy.unit
             )
-        # ovar_model.save()
-        import bpdb; bpdb.set_trace()
 
         # defuzzify
         defuzz_model = cls.defuzzify.field.related.parent_model.from_pyfuzzy(pyfuzzy.defuzzify)

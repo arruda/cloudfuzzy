@@ -118,7 +118,7 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
         op_model = cls(operator_type='fuzzy.operator.Compound.Compound')
 
         # norm
-        norm_model = op_model.compound_norm.from_pyfuzzy(pyfuzzy.norm)
+        norm_model = cls.compound_norm.field.related.parent_model.from_pyfuzzy(pyfuzzy.norm)
         op_model.compound_norm = norm_model
         op_model.save()
 
@@ -142,10 +142,10 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
 
     @classmethod
     def _from_pyfuzzy_input(cls, pyfuzzy):
-        op_model = cls(operator_type='fuzzy.operator.Input.Input', const_value=pyfuzzy.value)
+        op_model = cls(operator_type='fuzzy.operator.Input.Input')
 
         # adj
-        adj_model = op_model.input_adjective.from_pyfuzzy(pyfuzzy.adjective)
+        adj_model = cls.input_adjective.field.related.parent_model.from_pyfuzzy(pyfuzzy.adjective)
         op_model.input_adjective = adj_model
         op_model.save()
 
@@ -153,10 +153,10 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
 
     @classmethod
     def _from_pyfuzzy_not(cls, pyfuzzy):
-        op_model = cls(operator_type='fuzzy.operator.Input.Input', const_value=pyfuzzy.value)
+        op_model = cls(operator_type='fuzzy.operator.Not.Not')
 
         # operator
-        op_not_model = op_model.not_input.from_pyfuzzy(pyfuzzy.input)
+        op_not_model = cls.not_input.field.related.parent_model.from_pyfuzzy(pyfuzzy.input)
         op_model.not_input = op_not_model
         op_model.save()
 

@@ -31,7 +31,7 @@ class RuleModel(models.Model, PyFuzzyMixin):
 
     certainty = models.DecimalField(_("Certainty"),max_digits=10, decimal_places=2,default=Decimal("1"))
 
-    system = models.ForeignKey(SystemModel, blank=False, null=False)
+    system = models.ForeignKey(SystemModel, blank=True, null=True) # set to true so that it can be made by parts
 
     def get_pyfuzzy(self):
         """
@@ -51,18 +51,18 @@ class RuleModel(models.Model, PyFuzzyMixin):
         Return the model representation of an instance of the pyfuzzy attr
         """
         rule_model = cls(name=pyfuzzy.name, certainty=pyfuzzy.certainty)
-        rule_model.save()
+        # rule_model.save()
 
         # adj
-        adj_model = rule_model.adjective.from_pyfuzzy(pyfuzzy.adjective)
+        adj_model = cls.adjective.field.related.parent_model.from_pyfuzzy(pyfuzzy.adjective)
         rule_model.adjective = adj_model
 
         # cer
-        cer_model = rule_model.cer.from_pyfuzzy(pyfuzzy.CER)
+        cer_model = cls.cer.field.related.parent_model.from_pyfuzzy(pyfuzzy.CER)
         rule_model.cer = cer_model
 
         # operator
-        op_model = rule_model.operator.from_pyfuzzy(pyfuzzy.operator)
+        op_model = cls.operator.field.related.parent_model.from_pyfuzzy(pyfuzzy.operator)
         rule_model.operator = op_model
 
         rule_model.save()

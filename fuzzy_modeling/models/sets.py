@@ -70,6 +70,7 @@ class SetModel(models.Model, PyFuzzyMixin):
         set = SetClass(**parameters_dict)
         return set
 
+    @classmethod
     def from_pyfuzzy(cls, pyfuzzy):
         """
         Return the model representation of an instance of the pyfuzzy attr

@@ -46,6 +46,7 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
         adjective = Adjective(**kwargs)
         return adjective
 
+    @classmethod
     def from_pyfuzzy(cls, pyfuzzy):
         """
         Return the model representation of an instance of the pyfuzzy attr
@@ -56,12 +57,12 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
             )
 
         # SET
-        set_model = cls.set.from_pyfuzzy(pyfuzzy.set)
+        set_model = cls.set.field.related.parent_model.from_pyfuzzy(pyfuzzy.set)
         adj_model.set = set_model
 
         # COM
         if pyfuzzy.COM:
-            com_model = cls.com.from_pyfuzzy(pyfuzzy.COM)
+            com_model = cls.com.field.related.parent_model.from_pyfuzzy(pyfuzzy.COM)
             adj_model.com = com_model
 
         adj_model.save()

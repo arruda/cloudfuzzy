@@ -63,7 +63,6 @@ class SystemModel(models.Model, PyFuzzyMixin):
 
             # is an output variable
             if pyfuzzy_var.__class__.__name__ == 'OutputVariable':
-                print "output variable: %s - %s" % (v_name, pyfuzzy_var)
                 OutputvarModel = system_model.outputvariablemodel_set.model
                 outputvar_model = OutputvarModel.from_pyfuzzy(pyfuzzy_var)
                 system_model.outputvariablemodel_set.add(outputvar_model)
