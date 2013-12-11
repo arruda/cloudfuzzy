@@ -36,4 +36,24 @@
  
     </div>
     
+    <script type="text/javascript">
+		window["has_intro"] = true;
+		window["intro_storage_key"] = 'intro_sys_new';
+		window["intro_steps"] = [
+   	                          {
+   	                            element: '#name_field',
+   	                            intro: "Enter here the name of the new Fuzzy System you want to create."
+   	                          },
+
+   	                          {
+   	                            element: '#description_field',
+   	                            intro: "Enter here a small description of the new Fuzzy System you want to create."
+   	                          },
+   	                          {
+   	                            element: document.querySelectorAll('.actions')[0],
+   	                            intro: "After you finished just click in 'Create' to create this new Fuzzy System, or in 'Cancel' to go back.",
+   	                            position: 'bottom'
+   	                          }
+   	                        ];
+    </script>
 }
