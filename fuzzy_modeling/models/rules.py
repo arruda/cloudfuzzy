@@ -13,8 +13,9 @@ from fuzzy_modeling.models.systems import SystemModel
 from fuzzy_modeling.models.operators import OperatorModel
 
 from fuzzy.Rule import Rule
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 
-class RuleModel(models.Model):
+class RuleModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy Rule model
     """
@@ -43,6 +44,30 @@ class RuleModel(models.Model):
         rule = Rule(adjective=adjective,operator=operator,certainty=self.certainty,CER=cer)
 
         return rule
+
+    @classmethod
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+        rule_model = cls(name=pyfuzzy.name, certainty=pyfuzzy.certainty)
+        rule_model.save()
+
+        # adj
+        adj_model = rule_model.adjective.from_pyfuzzy(pyfuzzy.adjective)
+        rule_model.adjective = adj_model
+
+        # cer
+        cer_model = rule_model.cer.from_pyfuzzy(pyfuzzy.CER)
+        rule_model.cer = cer_model
+
+        # operator
+        op_model = rule_model.operator.from_pyfuzzy(pyfuzzy.operator)
+        rule_model.operator = op_model
+
+        rule_model.save()
+
+        return rule_model
 
     def __unicode__(self):
         return self.name

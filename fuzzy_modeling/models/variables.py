@@ -39,7 +39,7 @@ class VariableModel(models.Model, PyFuzzyMixin):
     max = models.DecimalField(_("Max"),max_digits=10, decimal_places=2,default=Decimal("0"))
     unit = models.CharField(_("Unit"), max_length=250)
 
-    system = models.ForeignKey(SystemModel, blank=False, null=False)
+    system = models.ForeignKey(SystemModel, blank=True, null=True) #null = true so that it can be created by parts
 
     def get_pyfuzzy(self):
         """
@@ -113,7 +113,11 @@ class InputVariableModel(VariableModel, PyFuzzyMixin):
                 ivar_model.fuzzify = klass
 
         # adjectives
-        #: TODO
+        for name, adj in pyfuzzy.adjectives.items():
+            #sets the name to be used in the from_pyfuzzy of the adj_model
+            adj.name = name
+            adj_model = ivar_model.adjectivemodel_set.model.from_pyfuzzy(adj)
+            ivar_model.adjectivemodel_set.add(adj_model)
 
         ivar_model.save()
         return ivar_model
@@ -156,12 +160,20 @@ class OutputVariableModel(VariableModel, PyFuzzyMixin):
                 max = pyfuzzy.max,
                 unit = pyfuzzy.unit
             )
+        # ovar_model.save()
+        import bpdb; bpdb.set_trace()
+
+        # defuzzify
+        defuzz_model = cls.defuzzify.field.related.parent_model.from_pyfuzzy(pyfuzzy.defuzzify)
+        ovar_model.defuzzify = defuzz_model
         ovar_model.save()
-
-
 
         # adjectives
-        #: TODO
+        for name, adj in pyfuzzy.adjectives.items():
+            #sets the name to be used in the from_pyfuzzy of the adj_model
+            adj.name = name
+            adj_model = ovar_model.adjectivemodel_set.model.from_pyfuzzy(adj)
+            ovar_model.adjectivemodel_set.add(adj_model)
 
         ovar_model.save()
-        return ivar_model
+        return ovar_model

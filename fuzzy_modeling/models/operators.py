@@ -11,9 +11,10 @@ from fuzzy_modeling.models.norms import NormModel
 
 from fuzzy_modeling.utils import get_class_by_python_path
 from fuzzy_modeling.models.adjectives import AdjectiveModel
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 
 
-class OperatorModel(MPTTModel):
+class OperatorModel(MPTTModel, PyFuzzyMixin):
     """
     A Fuzzy Operator base model
     this one handles all operators types
@@ -108,6 +109,76 @@ class OperatorModel(MPTTModel):
             return self._get_pyfuzzy_not()
 
         return None
+
+
+
+
+    @classmethod
+    def _from_pyfuzzy_compound(cls, pyfuzzy):
+        op_model = cls(operator_type='fuzzy.operator.Compound.Compound')
+
+        # norm
+        norm_model = op_model.compound_norm.from_pyfuzzy(pyfuzzy.norm)
+        op_model.compound_norm = norm_model
+        op_model.save()
+
+        # inputs
+        for op_input in pyfuzzy.inputs:
+            op_i_model = cls.from_pyfuzzy(op_input)
+            op_model.compound_inputs_children.add(op_i_model)
+
+
+        op_model.save()
+        return op_model
+
+
+    @classmethod
+    def _from_pyfuzzy_const(cls, pyfuzzy):
+        op_model = cls(operator_type='fuzzy.operator.Const.Const', const_value=pyfuzzy.value)
+
+        op_model.save()
+        return op_model
+
+
+    @classmethod
+    def _from_pyfuzzy_input(cls, pyfuzzy):
+        op_model = cls(operator_type='fuzzy.operator.Input.Input', const_value=pyfuzzy.value)
+
+        # adj
+        adj_model = op_model.input_adjective.from_pyfuzzy(pyfuzzy.adjective)
+        op_model.input_adjective = adj_model
+        op_model.save()
+
+        return op_model
+
+    @classmethod
+    def _from_pyfuzzy_not(cls, pyfuzzy):
+        op_model = cls(operator_type='fuzzy.operator.Input.Input', const_value=pyfuzzy.value)
+
+        # operator
+        op_not_model = op_model.not_input.from_pyfuzzy(pyfuzzy.input)
+        op_model.not_input = op_not_model
+        op_model.save()
+
+        return op_model
+
+    @classmethod
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+
+        if pyfuzzy.__class__.__name__ == 'Compound':
+            return cls._from_pyfuzzy_compound(pyfuzzy)
+
+        if pyfuzzy.__class__.__name__ == 'Const':
+            return cls._from_pyfuzzy_const(pyfuzzy)
+
+        if pyfuzzy.__class__.__name__ == 'Input':
+            return cls._from_pyfuzzy_input(pyfuzzy)
+
+        if pyfuzzy.__class__.__name__ == 'Not':
+            return cls._from_pyfuzzy_not(pyfuzzy)
 
     def __unicode__(self):
         return "%s - %s" %  (self.get_operator_type_display(), self.id)

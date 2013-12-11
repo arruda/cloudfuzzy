@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import inspect
+
 from django.db import models
 
 from django.contrib.contenttypes import generic
@@ -9,10 +11,11 @@ from django.utils.translation import ugettext_lazy as _
 
 from fuzzy_modeling.utils import get_class_by_python_path, get_choices_from_python_path_listing
 from fuzzy_modeling.models.norms import NormModel
+from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy_modeling.models.parameters import ParameterModel
 
 
-class DefuzzifyModel(models.Model):
+class DefuzzifyModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy defuzzify base model
     """
@@ -63,10 +66,46 @@ class DefuzzifyModel(models.Model):
         return defuzzify
 
 
-    def __unicode__(self):
-        pre = ""
-        for choice in self.DEFUZZIFY_CHOICES:
-            if self.defuzzify == choice[0]:
-                pre = choice[1]
+    @classmethod
+    def from_pyfuzzy(cls, pyfuzzy):
+        """
+        Return the model representation of an instance of the pyfuzzy attr
+        """
+        defuzz_model = cls()
 
-        return pre
+        defuzzify = 'fuzzy.defuzzify.%s.%s' % (
+                pyfuzzy.__class__.__name__ ,
+                pyfuzzy.__class__.__name__
+            )
+        defuzz_model.defuzzify = defuzzify
+
+        # INF
+        inf_model = cls.inf.field.related.parent_model.from_pyfuzzy(pyfuzzy.INF)
+        defuzz_model.inf = inf_model
+
+        # ACC
+        acc_model = cls.acc.field.related.parent_model.from_pyfuzzy(pyfuzzy.ACC)
+        defuzz_model.acc = acc_model
+
+        defuzz_model.save()
+
+
+        # parameters
+        for arg in inspect.getargspec(pyfuzzy.__init__).args:
+            if arg != 'self':
+                arg_value = getattr(pyfuzzy,arg)
+                arg_type = ParameterModel.get_type_from_python_type(arg_value)
+                defuzz_model.parameters.create(
+                            name = arg,
+                            value = arg_value,
+                            value_type = arg_type
+                    )
+
+        defuzz_model.save()
+
+
+        return defuzz_model
+
+    def __unicode__(self):
+
+        return self.get_defuzzify_display()
