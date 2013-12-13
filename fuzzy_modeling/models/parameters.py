@@ -70,5 +70,5 @@ class ParameterModel(models.Model):
             return cls.TYPE_CHOICES[3][0]
 
         #if none of the above return string
-        return cls.TYPE_CHOICES[1]
+        return cls.TYPE_CHOICES[1][0]
 
