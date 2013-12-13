@@ -3,20 +3,30 @@ import mock
 
 from django.test import TestCase
 
+
+from fuzzy_modeling.tests.utils import ResetMock
+
 from fuzzy_modeling.models.systems import SystemModel
+
 from fuzzy.System import System
 
-class QuerySetMock(object):
-    pass
 
-class SystemModelTest(TestCase):
+class SystemModelTest(TestCase, ResetMock):
 
 
     def setUp(self):
         # self.aluno = mommy.make_one(Aluno)
         # from fuzzy_modeling.models.systems import SystemModel as SystemModelOriginal
         # import pdb; pdb.set_trace()
+        # reset_mock(SystemModel,'inputvariablemodel_set')
+        # reset_mock(SystemModel,'outputvariablemodel_set')
+        # reset_mock(SystemModel,'rulemodel_set')
         pass
+
+    def tearDown(self):
+        """And kill it when done"""
+
+        self.reset_all_pre_mocks(SystemModel)
 
     def _named_and_pyfuzzymixin_mock(self, name):
         """
@@ -51,18 +61,21 @@ class SystemModelTest(TestCase):
         # inputvariablemodel_set = lambda : None
         inputvariablemodel_set = mock.Mock()
         inputvariablemodel_set.all = lambda : self.input_variable_mock
+        self.set_pre_mock(SystemModel,'inputvariablemodel_set')
         SystemModel.inputvariablemodel_set = inputvariablemodel_set
 
 
         # mocking outputvariablemodel_set
         outputvariablemodel_set = mock.Mock()
         outputvariablemodel_set.all = lambda : self.output_variable_mock
+        self.set_pre_mock(SystemModel,'outputvariablemodel_set')
         SystemModel.outputvariablemodel_set = outputvariablemodel_set
 
 
         # mocking rulemodel_set
         rulemodel_set = mock.Mock()
         rulemodel_set.all = lambda : self.rules_mock
+        self.set_pre_mock(SystemModel,'rulemodel_set')
         SystemModel.rulemodel_set = rulemodel_set
 
         return self.system
@@ -91,8 +104,8 @@ class SystemModelTest(TestCase):
 
 
 
-    def test_system_from_pyfuzzy(self):
+
+    def test_zsystem_from_pyfuzzy(self):
         " shoud return the correct corresponding Model for the pyfuzzy object "
         py_fuzzy_system = System("System Description")
-
 
