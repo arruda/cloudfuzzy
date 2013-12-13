@@ -35,8 +35,8 @@ class VariableModel(models.Model, PyFuzzyMixin):
     name = models.CharField(_("Name"), blank=False, null=False, max_length=250)
 
     description = models.TextField(_("Description"))
-    min = models.DecimalField(_("Min"),max_digits=10, decimal_places=2,default=Decimal("0"))
-    max = models.DecimalField(_("Max"),max_digits=10, decimal_places=2,default=Decimal("0"))
+    min = models.DecimalField(_("Min"),max_digits=10, decimal_places=2,default=float("0"))
+    max = models.DecimalField(_("Max"),max_digits=10, decimal_places=2,default=float("0"))
     unit = models.CharField(_("Unit"), max_length=250)
 
     system = models.ForeignKey(SystemModel, blank=True, null=True) #null = true so that it can be created by parts

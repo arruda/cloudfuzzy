@@ -57,8 +57,8 @@ class SetModel(models.Model, PyFuzzyMixin):
             for element in tmp:
                 if element != '' and element != ', ' and element != ',':
                     x,y = element.split(',')
-                    x = Decimal(x)
-                    y = Decimal(y)
+                    x = float(x)
+                    y = float(y)
                     points.append((x,y))
 
             parameters_dict[p.name]= points

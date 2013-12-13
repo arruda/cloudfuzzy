@@ -44,7 +44,7 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
     compound_norm = models.ForeignKey(NormModel, null=True, blank=True)
     compound_inputs = TreeForeignKey('self',related_name="compound_inputs_children",null=True,blank=True, verbose_name=_('Input'))
 
-    const_value = models.DecimalField(_("Constant Value"),max_digits=10, decimal_places=2,default=Decimal("0"), blank=True, null=True)
+    const_value = models.DecimalField(_("Constant Value"),max_digits=10, decimal_places=2,default=float("0"), blank=True, null=True)
 
     input_adjective = models.ForeignKey(AdjectiveModel, blank=True, null=True)
 

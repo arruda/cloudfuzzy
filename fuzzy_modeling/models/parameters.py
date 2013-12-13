@@ -52,10 +52,10 @@ class ParameterModel(models.Model):
             return self.value
 
         elif  self.value_type == self.TYPE_CHOICES[2][0]:
-            return Decimal(self.value)
+            return float(self.value)
 
         elif  self.value_type == self.TYPE_CHOICES[3][0]:
-            return Decimal(self.value)
+            return float(self.value)
 
     @classmethod
     def get_type_from_python_type(cls, obj):

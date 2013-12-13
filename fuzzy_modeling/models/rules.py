@@ -29,7 +29,7 @@ class RuleModel(models.Model, PyFuzzyMixin):
     cer = models.ForeignKey(NormModel)
     operator = models.ForeignKey(OperatorModel)
 
-    certainty = models.DecimalField(_("Certainty"),max_digits=10, decimal_places=2,default=Decimal("1"))
+    certainty = models.DecimalField(_("Certainty"),max_digits=10, decimal_places=2,default=float("1"))
 
     system = models.ForeignKey(SystemModel, blank=True, null=True) # set to true so that it can be made by parts
 
