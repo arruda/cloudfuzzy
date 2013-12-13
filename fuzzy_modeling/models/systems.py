@@ -21,9 +21,6 @@ class SystemModel(models.Model, PyFuzzyMixin):
 
     description = models.TextField(_("Description"))
 
-    # class Meta:
-    #     verbose_name_plural = "Colaboradores"
-
     def __unicode__(self):
         return self.description
 
