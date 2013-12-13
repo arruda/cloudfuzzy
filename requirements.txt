@@ -6,3 +6,7 @@ django-mptt==0.6.0
 
 # My git clone of the pyfuzzy repo
 -e git+git://github.com/arruda/pyfuzzy#egg=pyfuzzy
+
+#testing
+mock==1.0.1
+
