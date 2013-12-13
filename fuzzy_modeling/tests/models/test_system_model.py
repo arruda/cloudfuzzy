@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
+import mock
 
 from django.test import TestCase
 
 from fuzzy_modeling.models.systems import SystemModel
-
 from fuzzy.System import System
-# from model_mommy import mommy
 
 class QuerySetMock(object):
     pass
@@ -15,18 +14,20 @@ class SystemModelTest(TestCase):
 
     def setUp(self):
         # self.aluno = mommy.make_one(Aluno)
+        # from fuzzy_modeling.models.systems import SystemModel as SystemModelOriginal
+        # import pdb; pdb.set_trace()
         pass
 
     def _named_and_pyfuzzymixin_mock(self, name):
         """
         mock a variable or  to be an object that has attr name and a get_pyfuzzy that returns this name
         """
-        var = lambda : None
+        var = mock.Mock()
         var.name = name
         var.get_pyfuzzy = lambda : name
         return var
 
-    def _mock_system(self):
+    def _mock_systemModel(self):
         self.system_description = "System description"
         self.system = SystemModel(description=self.system_description)
 
@@ -47,18 +48,20 @@ class SystemModelTest(TestCase):
 
 
         # mocking inputvariablemodel_set
-        inputvariablemodel_set = lambda : None
+        # inputvariablemodel_set = lambda : None
+        inputvariablemodel_set = mock.Mock()
         inputvariablemodel_set.all = lambda : self.input_variable_mock
         SystemModel.inputvariablemodel_set = inputvariablemodel_set
 
+
         # mocking outputvariablemodel_set
-        outputvariablemodel_set = lambda : None
+        outputvariablemodel_set = mock.Mock()
         outputvariablemodel_set.all = lambda : self.output_variable_mock
         SystemModel.outputvariablemodel_set = outputvariablemodel_set
 
 
         # mocking rulemodel_set
-        rulemodel_set = lambda : None
+        rulemodel_set = mock.Mock()
         rulemodel_set.all = lambda : self.rules_mock
         SystemModel.rulemodel_set = rulemodel_set
 
@@ -68,7 +71,7 @@ class SystemModelTest(TestCase):
     def test_system_get_pyfuzzy(self):
         " shoud return the correct corresponding pyfuzzy object "
 
-        new_system = self._mock_system()
+        new_system = self._mock_systemModel()
 
         new_pyfuzzy_system = new_system.get_pyfuzzy()
 
@@ -86,5 +89,10 @@ class SystemModelTest(TestCase):
         self.assertDictEqual(pyfuzzy_system_expected.rules, new_pyfuzzy_system.rules)
 
 
+
+
+    def test_system_from_pyfuzzy(self):
+        " shoud return the correct corresponding Model for the pyfuzzy object "
+        py_fuzzy_system = System("System Description")
 
 
