@@ -776,7 +776,7 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
 
 
     /**
-    *This is one of the cases, for the tests of adding a link: A9
+    *This is one of the cases, for the tests of adding a link: A10
     * +rbc1(aa)
     * +rbc2(bb)
     * rbc0(aa).v01 -> rbc2(bb).vi1
