@@ -105,7 +105,20 @@ class SystemModelTest(TestCase, ResetMock):
 
 
 
-    def test_zsystem_from_pyfuzzy(self):
+    def test_system_from_pyfuzzy(self):
         " shoud return the correct corresponding Model for the pyfuzzy object "
         py_fuzzy_system = System("System Description")
 
+        import math
+        input_dict = {}
+        input_dict["X"]       =  0.0  #: position [m]
+        input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
+        input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
+        input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+        i_dict1 = input_dict.copy()
+        i_dict2 = input_dict.copy()
+
+        output_dict = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
