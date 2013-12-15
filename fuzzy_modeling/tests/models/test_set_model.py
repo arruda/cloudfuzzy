@@ -321,3 +321,188 @@ class SetModelTest(TestCase, ResetMock):
         # have the same args
         self.assertEquals(pyfuzzy_set_expected.a, new_pyfuzzy_set.a)
         self.assertEquals(pyfuzzy_set_expected.delta, new_pyfuzzy_set.delta)
+
+    def test_set_from_pyfuzzy_for_set_type(self):
+        " shoud return the correct corresponding SetModel for the Set pyfuzzy object "
+
+        pyfuzzy_set = Set()
+
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+    def test_set_from_pyfuzzy_for_polygon_type(self):
+        " shoud return the correct corresponding SetModel for the Polygon pyfuzzy object "
+
+        points = [(0.,0.),(30.,1.),(60.,0.)]
+        pyfuzzy_set = Polygon(points=points)
+
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+        # have the same args
+        self.assertEquals(1,new_set.parameters.all().count())
+        points_param = new_set.parameters.all()[0]
+        self.assertEquals("points",points_param.name)
+        self.assertEquals(str(points),points_param.get_value())
+
+    def test_set_from_pyfuzzy_for_triangle_type(self):
+        " shoud return the correct corresponding SetModel for the Triangle pyfuzzy object "
+
+        m = 1.2
+        alpha = 2.3
+        beta = 3.4
+        y_max = 4.5
+        y_min = 5.4
+        pyfuzzy_set = Triangle(m = m, alpha = alpha, beta = beta, y_max = y_max, y_min = y_min)
+
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+        # have the same args
+        self.assertEquals(5,new_set.parameters.all().count())
+
+        m_param = new_set.parameters.get(name="m")
+        alpha_param = new_set.parameters.get(name="alpha")
+        beta_param = new_set.parameters.get(name="beta")
+        y_max_param = new_set.parameters.get(name="y_max")
+        y_min_param = new_set.parameters.get(name="y_min")
+
+        self.assertEquals(pyfuzzy_set.m, m_param.get_value())
+        self.assertEquals(pyfuzzy_set.alpha, alpha_param.get_value())
+        self.assertEquals(pyfuzzy_set.beta, beta_param.get_value())
+        self.assertEquals(pyfuzzy_set.y_max, y_max_param.get_value())
+        self.assertEquals(pyfuzzy_set.y_min, y_min_param.get_value())
+
+    def test_set_from_pyfuzzy_for_trapez_type(self):
+        " shoud return the correct corresponding SetModel for the Trapez pyfuzzy object "
+
+        m1= 1.2
+        m2= 1.3
+        alpha = 2.3
+        beta = 3.4
+        y_max = 4.5
+        y_min = 5.4
+        pyfuzzy_set = Trapez(m1 = m1, m2 = m2, alpha = alpha, beta = beta, y_max = y_max, y_min = y_min)
+
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+        # have the same args
+        self.assertEquals(6,new_set.parameters.all().count())
+
+        m1_param = new_set.parameters.get(name="m1")
+        m2_param = new_set.parameters.get(name="m2")
+        alpha_param = new_set.parameters.get(name="alpha")
+        beta_param = new_set.parameters.get(name="beta")
+        y_max_param = new_set.parameters.get(name="y_max")
+        y_min_param = new_set.parameters.get(name="y_min")
+
+        self.assertEquals(pyfuzzy_set.m1, m1_param.get_value())
+        self.assertEquals(pyfuzzy_set.m2, m2_param.get_value())
+        self.assertEquals(pyfuzzy_set.alpha, alpha_param.get_value())
+        self.assertEquals(pyfuzzy_set.beta, beta_param.get_value())
+        self.assertEquals(pyfuzzy_set.y_max, y_max_param.get_value())
+        self.assertEquals(pyfuzzy_set.y_min, y_min_param.get_value())
+
+    def test_set_from_pyfuzzy_for_function_type(self):
+        " shoud return the correct corresponding SetModel for the Function pyfuzzy object "
+
+        pyfuzzy_set = Function()
+
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+
+    def test_set_from_pyfuzzy_for_sfunction_type(self):
+        " shoud return the correct corresponding SetModel for the SFunction pyfuzzy object "
+
+        a = 1.2
+        delta = 2.3
+        pyfuzzy_set = SFunction(a = a, delta = delta)
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+        # have the same args
+        self.assertEquals(2,new_set.parameters.all().count())
+
+        a_param = new_set.parameters.get(name="a")
+        delta_param = new_set.parameters.get(name="delta")
+
+        self.assertEquals(pyfuzzy_set.a, a_param.get_value())
+        self.assertEquals(pyfuzzy_set.delta, delta_param.get_value())
+
+    def test_set_from_pyfuzzy_for_zfunction_type(self):
+        " shoud return the correct corresponding SetModel for the ZFunction pyfuzzy object "
+
+        a = 1.2
+        delta = 2.3
+        pyfuzzy_set = ZFunction(a = a, delta = delta)
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+        # have the same args
+        self.assertEquals(2,new_set.parameters.all().count())
+
+        a_param = new_set.parameters.get(name="a")
+        delta_param = new_set.parameters.get(name="delta")
+
+        self.assertEquals(pyfuzzy_set.a, a_param.get_value())
+        self.assertEquals(pyfuzzy_set.delta, delta_param.get_value())
+
+    def test_set_from_pyfuzzy_for_pifunction_type(self):
+        " shoud return the correct corresponding SetModel for the PiFunction pyfuzzy object "
+
+        a = 1.2
+        delta = 2.3
+        pyfuzzy_set = PiFunction(a = a, delta = delta)
+
+        new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+        # have the same args
+        self.assertEquals(2,new_set.parameters.all().count())
+
+        a_param = new_set.parameters.get(name="a")
+        delta_param = new_set.parameters.get(name="delta")
+
+        self.assertEquals(pyfuzzy_set.a, a_param.get_value())
+        self.assertEquals(pyfuzzy_set.delta, delta_param.get_value())
