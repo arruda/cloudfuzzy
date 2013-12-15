@@ -52,7 +52,7 @@ class SetModel(models.Model, PyFuzzyMixin):
             p = self.parameters.all()[0]
             # change '(1,2),(3,4)' to ['', '1,2', ',', '3,4', '']
             points =[]
-            tmp = re.split("\[|\]", p.value)[1]
+            tmp = re.split("\[|\]", p.get_value())[1]
             tmp = re.split("\(|\)", tmp)
             for element in tmp:
                 if element != '' and element != ', ' and element != ',':

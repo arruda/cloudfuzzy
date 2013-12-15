@@ -16,7 +16,7 @@ class ResetMock(object):
         fields = dir(obj)
         for attr_name in fields:
             if attr_name.startswith('_pre_mock_'):
-                cls.reset_mock(obj, attr_name.strip('_pre_mock_'))
+                cls.reset_mock(obj, attr_name.replace('_pre_mock_',''))
 
     @classmethod
     def set_pre_mock(cls, obj,attr_name):
