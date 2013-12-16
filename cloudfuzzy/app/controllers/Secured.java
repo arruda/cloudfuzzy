@@ -3,7 +3,6 @@ package controllers;
 import play.*;
 import play.mvc.*;
 import play.mvc.Http.*;
-
 import models.*;
 
 public class Secured extends Security.Authenticator {
@@ -28,12 +27,20 @@ public class Secured extends Security.Authenticator {
     	return true;
     }
     
-    public static boolean isOwnerOf(Long system) {
+    public static boolean isOwnerOf(Long system, String username) {
        return FuzzySystem.isOwner(
            system,
-           Context.current().request().username()
+           username
        );
     	// return true;
-    }
-    
+    }  
+  /*
+    public static boolean isOwnerOf(Long system, Context ctx) {
+    	return FuzzySystem.isOwner(
+            system,
+            ctx.current().request().username()
+        );
+     	// return true;
+     }   
+    */
 }

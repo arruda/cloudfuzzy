@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.File;
+
 import models.FuzzySystem;
 import models.RuleBaseCall;
 import models.User;
@@ -11,11 +12,11 @@ import models.Type;
 
 import play.*;
 import play.mvc.*;
+import play.mvc.Security.Authenticated;
 import play.data.*;
 import play.libs.Json;
-
+import play.mvc.Security.AuthenticatedAction;
 import views.html.fuzzy.system.*;
-
 import xfuzzy.*;
 import xfuzzy.lang.AggregateMemFunc;
 import xfuzzy.lang.MemFunc;
@@ -76,8 +77,9 @@ public class Systems extends Controller {
   /**
   * Detail a system, and present the other options that the user may want to use, like adding new type and stuf.
   */
+  @With(EnsureUserIsOwnerOf.class)
   public static Result detail(Long id) {
-      if(Secured.isOwnerOf(id)){
+  //    if(Secured.isOwnerOf(id)){
     	  System.out.println("rbcs:");
     	  for(RuleBaseCall rbc : RuleBaseCall.listRuleBaseCallsByFuzzySystemsId(id)){
         	  System.out.println("rbc:"+ rbc);
@@ -89,34 +91,36 @@ public class Systems extends Controller {
                 detail.render(FuzzySystem.find.byId(id))
                 ); 
 
-      }else{        
-            return forbidden();
-      }
+//      }else{        
+//            return forbidden();
+//      }
   }
-
 
   /**
   * Deletes a fuzzy system
   */
+  @With(EnsureUserIsOwnerOf.class)
   public static Result delete(Long id) {
-      if(Secured.isOwnerOf(id)){
+//      if(Secured.isOwnerOf(id)){
         FuzzySystem.delete(id);
 
         return redirect(
                 routes.Systems.list()
                 ); 
 
-      }else{        
+ /*     }else{        
             return forbidden();
       }
-
+*/
   }
 
   /**
   * Deletes a given FussySystem variable, 
   *passing the system id, the variable id, and the kind(Variable.INPUT, OUTPUT, or other)
   */
+  @With(EnsureUserIsOwnerOf.class)
   public static Result deleteVariable(Long id_sys, Integer id_variable, Integer kind) {
+ //if(Secured.isOwnerOf(id)){
     FuzzySystem sys = FuzzySystem.find.byId(id_sys);
 
     xfuzzy.lang.Specification spec = sys.getSpecification();
@@ -160,18 +164,19 @@ public class Systems extends Controller {
   * for now will only print the text in a text area,
   * but the idea is to make a file download with the text content.
   */
+  @With(EnsureUserIsOwnerOf.class)
   public static Result print(Long id){
-      if(Secured.isOwnerOf(id)){
+//      if(Secured.isOwnerOf(id)){
 
         return ok(
                 print.render(FuzzySystem.find.byId(id))
                 ); 
 
 
-      }else{        
+ /*     }else{        
             return forbidden();
       }
-
+*/
   }
   
    //=================== AJAX ===================//
@@ -186,6 +191,7 @@ public class Systems extends Controller {
     * If new var is ok, then add it to the system
     * if not then return the list of errors.
     */
+  	@With(EnsureUserIsOwnerOf.class)
     public static Result ajaxAddVariable(Long id_sys)
     {
         Form<Variable> filledForm = form(Variable.class).bindFromRequest();
