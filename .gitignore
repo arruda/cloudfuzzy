@@ -6,6 +6,7 @@ extraFiles/xfls/*@*
 extraFiles/*.db
 cloudfuzzy/.target
 cloudfuzzy/target
+cloudfuzzy/project/target
 cloudfuzzy/logs
 .vagrant/*
 cloudfuzzy/project/project/target/config-classes/*
