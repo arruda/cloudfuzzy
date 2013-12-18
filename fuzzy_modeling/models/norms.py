@@ -21,7 +21,7 @@ class NormModel(models.Model, PyFuzzyMixin):
     class Meta:
         app_label = 'fuzzy_modeling'
 
-    NORM_CHOICES = get_choices_from_python_path_listing('fuzzy.norm',ignores=['Norm',])
+    NORM_CHOICES = get_choices_from_python_path_listing('fuzzy.norm',ignores=['Norm','ParametricNorm',])
 
     norm_type = models.CharField(_("Norm Type"),
                 choices=NORM_CHOICES,
@@ -77,3 +77,19 @@ class NormModel(models.Model, PyFuzzyMixin):
 
     def __unicode__(self):
         return self.get_norm_type_display()
+
+    # @classmethod
+    # def print_all_init_args(cls):
+
+    #     for norm_type_tuple in NormModel.NORM_CHOICES:
+    #         norm_type = norm_type_tuple[0]
+
+    #         PyfuzzyNormClass = get_class_by_python_path(norm_type)
+
+    #         try:
+    #             inspect_init = inspect.getargspec(PyfuzzyNormClass.__init__)
+    #         except TypeError:
+    #             pass
+    #         else:
+    #             print "Class: %s" % norm_type
+    #             print ">>args", inspect_init.args
