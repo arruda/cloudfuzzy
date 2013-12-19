@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
+LOCAL = lambda x: os.path.join(BASE_DIR, x)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -61,7 +61,7 @@ WSGI_APPLICATION = 'cloudfuzzy.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': LOCAL('db.sqlite3'),
     }
 }
 
@@ -79,7 +79,18 @@ USE_L10N = True
 USE_TZ = True
 
 
+
+# addind here custom settings
+MEDIA_ROOT = LOCAL('media')
+MEDIA_URL = '/media/'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+STATIC_ROOT = LOCAL('static_root')
 STATIC_URL = '/static/'
+
+
+TEMPLATE_DIRS = (
+    LOCAL('templates'),
+)
