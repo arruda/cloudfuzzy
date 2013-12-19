@@ -7,7 +7,9 @@ extraFiles/*.db
 cloudfuzzy/.target/*
 cloudfuzzy/target/*
 cloudfuzzy/project/target/*
-cloudfuzzy/logs
+cloudfuzzy/project/project/*
+cloudfuzzy/tmp/*
+cloudfuzzy/logs/*
 .vagrant/*
 cloudfuzzy/project/project/target/config-classes/*
 .metadata/*
