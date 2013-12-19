@@ -147,7 +147,6 @@ class DefuzzifyModelTest(TestCase, ResetMock):
         # have the same args
         self.assertEquals(pyfuzzy_defuzzify_expected.failsafe, new_pyfuzzy_defuzzify.failsafe)
 
-
     def test_defuzzify_get_pyfuzzy_for_maxleft_type(self):
         " shoud return the correct corresponding pyfuzzy object for the MaxLeft type "
 
@@ -208,4 +207,143 @@ class DefuzzifyModelTest(TestCase, ResetMock):
         # have the same args
         self.assertEquals(pyfuzzy_defuzzify_expected.failsafe, new_pyfuzzy_defuzzify.failsafe)
 
+    def test_defuzzify_from_pyfuzzy_for_cog_type(self):
+        " shoud return the correct corresponding DefuzzifyModel for the COG pyfuzzy object "
 
+        init_kwargs = {
+            'failsafe' : 1,
+            'segment_size' : 2
+        }
+
+        pyfuzzy_defuzzify = COG(**init_kwargs)
+
+        new_defuzzify = DefuzzifyModel.from_pyfuzzy(pyfuzzy_defuzzify)
+
+        pyfuzzy_defuzzify_full_namespace = pyfuzzy_defuzzify.__module__ + "." + pyfuzzy_defuzzify.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_defuzzify_full_namespace, new_defuzzify.defuzzify)
+
+        # have the same args
+        self.assertEquals(2, new_defuzzify.parameters.all().count())
+        failsafe_param = new_defuzzify.parameters.get(name='failsafe')
+        self.assertEquals(1.0,failsafe_param.get_value())
+        segment_size_param = new_defuzzify.parameters.get(name='segment_size')
+        self.assertEquals(2.0,segment_size_param.get_value())
+
+    def test_defuzzify_from_pyfuzzy_for_cogs_type(self):
+        " shoud return the correct corresponding DefuzzifyModel for the COGS pyfuzzy object "
+
+        init_kwargs = {
+            'failsafe' : 1,
+        }
+
+        pyfuzzy_defuzzify = COGS(**init_kwargs)
+
+        new_defuzzify = DefuzzifyModel.from_pyfuzzy(pyfuzzy_defuzzify)
+
+        pyfuzzy_defuzzify_full_namespace = pyfuzzy_defuzzify.__module__ + "." + pyfuzzy_defuzzify.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_defuzzify_full_namespace, new_defuzzify.defuzzify)
+
+        # have the same args
+        self.assertEquals(1, new_defuzzify.parameters.all().count())
+        failsafe_param = new_defuzzify.parameters.get(name='failsafe')
+        self.assertEquals(1.0,failsafe_param.get_value())
+
+    def test_defuzzify_from_pyfuzzy_for_dict_type(self):
+        " shoud return the correct corresponding DefuzzifyModel for the Dict pyfuzzy object "
+
+        pyfuzzy_defuzzify = Dict()
+
+        new_defuzzify = DefuzzifyModel.from_pyfuzzy(pyfuzzy_defuzzify)
+
+        pyfuzzy_defuzzify_full_namespace = pyfuzzy_defuzzify.__module__ + "." + pyfuzzy_defuzzify.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_defuzzify_full_namespace, new_defuzzify.defuzzify)
+
+    def test_defuzzify_from_pyfuzzy_for_lm_type(self):
+        " shoud return the correct corresponding DefuzzifyModel for the LM pyfuzzy object "
+
+        init_kwargs = {
+            'failsafe' : 1,
+        }
+
+        pyfuzzy_defuzzify = LM(**init_kwargs)
+
+        new_defuzzify = DefuzzifyModel.from_pyfuzzy(pyfuzzy_defuzzify)
+
+        pyfuzzy_defuzzify_full_namespace = pyfuzzy_defuzzify.__module__ + "." + pyfuzzy_defuzzify.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_defuzzify_full_namespace, new_defuzzify.defuzzify)
+
+        # have the same args
+        self.assertEquals(1, new_defuzzify.parameters.all().count())
+        failsafe_param = new_defuzzify.parameters.get(name='failsafe')
+        self.assertEquals(1.0,failsafe_param.get_value())
+
+    def test_defuzzify_from_pyfuzzy_for_maxleft_type(self):
+        " shoud return the correct corresponding DefuzzifyModel for the MaxLeft pyfuzzy object "
+
+        init_kwargs = {
+            'failsafe' : 1,
+        }
+
+        pyfuzzy_defuzzify = MaxLeft(**init_kwargs)
+
+        new_defuzzify = DefuzzifyModel.from_pyfuzzy(pyfuzzy_defuzzify)
+
+        pyfuzzy_defuzzify_full_namespace = pyfuzzy_defuzzify.__module__ + "." + pyfuzzy_defuzzify.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_defuzzify_full_namespace, new_defuzzify.defuzzify)
+
+        # have the same args
+        self.assertEquals(1, new_defuzzify.parameters.all().count())
+        failsafe_param = new_defuzzify.parameters.get(name='failsafe')
+        self.assertEquals(1.0,failsafe_param.get_value())
+
+    def test_defuzzify_from_pyfuzzy_for_maxright_type(self):
+        " shoud return the correct corresponding DefuzzifyModel for the MaxRight pyfuzzy object "
+
+        init_kwargs = {
+            'failsafe' : 1,
+        }
+
+        pyfuzzy_defuzzify = MaxRight(**init_kwargs)
+
+        new_defuzzify = DefuzzifyModel.from_pyfuzzy(pyfuzzy_defuzzify)
+
+        pyfuzzy_defuzzify_full_namespace = pyfuzzy_defuzzify.__module__ + "." + pyfuzzy_defuzzify.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_defuzzify_full_namespace, new_defuzzify.defuzzify)
+
+        # have the same args
+        self.assertEquals(1, new_defuzzify.parameters.all().count())
+        failsafe_param = new_defuzzify.parameters.get(name='failsafe')
+        self.assertEquals(1.0,failsafe_param.get_value())
+
+    def test_defuzzify_from_pyfuzzy_for_rm_type(self):
+        " shoud return the correct corresponding DefuzzifyModel for the RM pyfuzzy object "
+
+        init_kwargs = {
+            'failsafe' : 1,
+        }
+
+        pyfuzzy_defuzzify = RM(**init_kwargs)
+
+        new_defuzzify = DefuzzifyModel.from_pyfuzzy(pyfuzzy_defuzzify)
+
+        pyfuzzy_defuzzify_full_namespace = pyfuzzy_defuzzify.__module__ + "." + pyfuzzy_defuzzify.__class__.__name__
+
+        # are from the same class
+        self.assertEquals(pyfuzzy_defuzzify_full_namespace, new_defuzzify.defuzzify)
+
+        # have the same args
+        self.assertEquals(1, new_defuzzify.parameters.all().count())
+        failsafe_param = new_defuzzify.parameters.get(name='failsafe')
+        self.assertEquals(1.0,failsafe_param.get_value())

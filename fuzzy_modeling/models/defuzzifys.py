@@ -81,11 +81,11 @@ class DefuzzifyModel(models.Model, PyFuzzyMixin):
         defuzz_model.defuzzify = defuzzify
 
         # INF
-        inf_model = cls.inf.field.related.parent_model.from_pyfuzzy(pyfuzzy.INF)
+        inf_model = cls.inf.field.related.parent_model.from_pyfuzzy(pyfuzzy.INF) if pyfuzzy.INF else None
         defuzz_model.inf = inf_model
 
         # ACC
-        acc_model = cls.acc.field.related.parent_model.from_pyfuzzy(pyfuzzy.ACC)
+        acc_model = cls.acc.field.related.parent_model.from_pyfuzzy(pyfuzzy.ACC) if pyfuzzy.ACC else None
         defuzz_model.acc = acc_model
 
         defuzz_model.save()
@@ -95,12 +95,13 @@ class DefuzzifyModel(models.Model, PyFuzzyMixin):
         for arg in inspect.getargspec(pyfuzzy.__init__).args:
             if arg != 'self':
                 arg_value = getattr(pyfuzzy,arg)
-                arg_type = ParameterModel.get_type_from_python_type(arg_value)
-                defuzz_model.parameters.create(
-                            name = arg,
-                            value = arg_value,
-                            value_type = arg_type
-                    )
+                if arg_value != None:
+                    arg_type = ParameterModel.get_type_from_python_type(arg_value)
+                    defuzz_model.parameters.create(
+                                name = arg,
+                                value = arg_value,
+                                value_type = arg_type
+                        )
 
         defuzz_model.save()
 
