@@ -89,7 +89,7 @@ class NormModelTest(TestCase, ResetMock):
         return pyfuzzy_set_expected
 
 
-    def _test_a_especific_norm_type(self,norm_type):
+    def _test_a_especific_norm_type_get_pyfuzzy(self,norm_type):
         PyfuzzyNormClass = get_class_by_python_path(norm_type)
 
         init_kwargs = self._get_init_args_dict_for_class(PyfuzzyNormClass)
@@ -116,4 +116,48 @@ class NormModelTest(TestCase, ResetMock):
         " shoud return the correct corresponding pyfuzzy object for the all norm types "
 
         for norm_type in NormModel.NORM_CHOICES:
-            self._test_a_especific_norm_type(norm_type[0])
+            self._test_a_especific_norm_type_get_pyfuzzy(norm_type[0])
+
+    def _test_a_especific_norm_type_from_pyfuzzy(self,norm_type):
+        PyfuzzyNormClass = get_class_by_python_path(norm_type)
+
+        init_kwargs = self._get_init_args_dict_for_class(PyfuzzyNormClass)
+
+        pyfuzzy_norm = self._mock_norm_pyfuzzy(PyfuzzyNormClass, init_kwargs = init_kwargs)
+
+        new_norm = NormModel.from_pyfuzzy(pyfuzzy_norm)
+
+
+
+        pyfuzzy_norm_full_namespace = pyfuzzy_norm.__module__ + "." + pyfuzzy_norm.__class__.__name__
+        # are from the same class
+        self.assertEquals(pyfuzzy_norm_full_namespace, new_norm.norm_type)
+
+        # assert all args
+        for arg_name, arg_value in init_kwargs.items():
+            param = new_norm.parameters.get(name=arg_name)
+            self.assertEquals(arg_value, param.get_value())
+
+
+    def test_norm_from_pyfuzzy_for_all_possible_norm_types(self):
+        " shoud return the correct corresponding NormModel for all the Norm types as pyfuzzy object "
+
+        for norm_type in NormModel.NORM_CHOICES:
+            self._test_a_especific_norm_type_from_pyfuzzy(norm_type[0])
+
+        # points = [(0.,0.),(30.,1.),(60.,0.)]
+        # pyfuzzy_set = Polygon(points=points)
+
+
+        # new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
+
+        # pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
+
+        # # are from the same class
+        # self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
+
+        # # have the same args
+        # self.assertEquals(1,new_set.parameters.all().count())
+        # points_param = new_set.parameters.all()[0]
+        # self.assertEquals("points",points_param.name)
+        # self.assertEquals(str(points),points_param.get_value())
