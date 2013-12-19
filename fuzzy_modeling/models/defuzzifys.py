@@ -41,8 +41,8 @@ class DefuzzifyModel(models.Model, PyFuzzyMixin):
                 default=DEFUZZIFY_CHOICES[0][0]
             )
 
-    inf =   models.ForeignKey( NormModel , related_name="defuzzify_inf_set" )
-    acc =   models.ForeignKey( NormModel, related_name="defuzzify_acc_set")
+    inf =   models.ForeignKey( NormModel , related_name="defuzzify_inf_set", blank=True, null=True)
+    acc =   models.ForeignKey( NormModel, related_name="defuzzify_acc_set", blank=True, null=True)
 
     parameters = generic.GenericRelation(ParameterModel)
 
@@ -51,8 +51,9 @@ class DefuzzifyModel(models.Model, PyFuzzyMixin):
         Return the Pyfuzzy class of this model
         """
         DefuzzifyClass = get_class_by_python_path(self.defuzzify)
-        inf  = self.inf.get_pyfuzzy()
-        acc  = self.acc.get_pyfuzzy()
+
+        inf  = self.inf.get_pyfuzzy() if self.inf else None
+        acc  = self.acc.get_pyfuzzy() if self.acc else None
 
         # parameters =
         parameters_dict = {

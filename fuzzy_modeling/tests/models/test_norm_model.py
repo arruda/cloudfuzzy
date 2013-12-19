@@ -10,16 +10,6 @@ from fuzzy_modeling.models.norms import NormModel
 
 from fuzzy_modeling.utils import get_class_by_python_path
 
-from fuzzy.set.Set import Set
-from fuzzy.set.Polygon import Polygon
-from fuzzy.set.Triangle import Triangle
-from fuzzy.set.Singleton import Singleton
-from fuzzy.set.Trapez import Trapez
-from fuzzy.set.Function import Function
-from fuzzy.set.SFunction import SFunction
-from fuzzy.set.ZFunction import ZFunction
-from fuzzy.set.PiFunction import PiFunction
-
 
 
 class NormModelTest(TestCase, ResetMock):
@@ -144,20 +134,3 @@ class NormModelTest(TestCase, ResetMock):
 
         for norm_type in NormModel.NORM_CHOICES:
             self._test_a_especific_norm_type_from_pyfuzzy(norm_type[0])
-
-        # points = [(0.,0.),(30.,1.),(60.,0.)]
-        # pyfuzzy_set = Polygon(points=points)
-
-
-        # new_set = SetModel.from_pyfuzzy(pyfuzzy_set)
-
-        # pyfuzzy_set_full_namespace = pyfuzzy_set.__module__ + "." + pyfuzzy_set.__class__.__name__
-
-        # # are from the same class
-        # self.assertEquals(pyfuzzy_set_full_namespace, new_set.set)
-
-        # # have the same args
-        # self.assertEquals(1,new_set.parameters.all().count())
-        # points_param = new_set.parameters.all()[0]
-        # self.assertEquals("points",points_param.name)
-        # self.assertEquals(str(points),points_param.get_value())
