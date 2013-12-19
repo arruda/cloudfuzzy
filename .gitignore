@@ -4,8 +4,12 @@
 extraFiles/xfls/*@*
 *.sublime-*
 extraFiles/*.db
-cloudfuzzy/.target
-cloudfuzzy/target
-cloudfuzzy/logs
+cloudfuzzy/.target/*
+cloudfuzzy/target/*
+cloudfuzzy/project/target/*
+cloudfuzzy/project/project/*
+cloudfuzzy/tmp/*
+cloudfuzzy/logs/*
 .vagrant/*
 cloudfuzzy/project/project/target/config-classes/*
+.metadata/*

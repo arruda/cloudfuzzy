@@ -7,7 +7,7 @@
     My Fuzzy Systems
 }  
 @main("My Fuzzy Systems")(navHeader)(menu_default()){   
-    <p id="system_list_step1">Here are presented the Fuzzy Systems created by you so far.</br>
+    <p >Here are presented the Fuzzy Systems created by you so far.</br>
     You can detail, modify and delete any of then, or create a new one.
     </p>
     @for(fuzzySystem <- fuzzySystems) {
@@ -48,7 +48,7 @@
    	                            position: 'bottom'
    	                          },
    	                          {
-   	                            element: '#system_list_step1',
+   	                            element: '#content',
    	                            intro: "Here all your Fuzzy System will be listed."
    	                          },
    	                        ];
