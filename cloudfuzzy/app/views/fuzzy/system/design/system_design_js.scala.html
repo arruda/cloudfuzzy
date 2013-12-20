@@ -2,6 +2,35 @@
 
 <script type="text/javascript">
 
+	//creates a delete button html
+	function delete_button_html(){
+		var html ="<a href='#' class='delete' title='Delete' alt='Delete'></a>";
+		return html;
+		
+	}
+	
+	function create_a_delete_for_object(obj){
+		var margin_left = '15px';
+		var obj_dot_id = parseIDforDot(obj);
+		if(obj_dot_id.kindSysVar == "0" || obj_dot_id.kindBaseVar == "0"){
+			margin_left = '-21px';
+		}
+
+		console.log('obj_dot_id');
+		console.log(obj_dot_id);
+		console.log(obj);
+		
+		obj.append("<a href class='delete' style='margin-left:" + margin_left +"'></a>");
+		obj.find("a.delete").hide();
+		obj.find("a.delete").click( function (){
+        	alert("should delete this...");
+        	return false;
+    	});
+        
+		return;
+	}
+	
+	
 	//instantiate the global link
 	var current_link = {};
     current_link.variableDots = new Array();   
@@ -61,7 +90,6 @@
     function getVariableDotElementForVariableDot(variableDot){
 			return $("#"+getVaraibleDotIDForVariableDot(variableDot));
     }
-    
 
 
    	/* creates a link */
@@ -145,6 +173,8 @@
 		var link = a_canvas.arrow_elem(system_design, elem_dot0, elem_dot1, 8,id_link);  
 
 		link.data("link",new_link_obj);
+		console.log("adding link to link");
+		console.log(link);
 		
 		console.log("adding rbc links");
 
@@ -276,8 +306,10 @@
             jqThis.data("dot_info",parseIDforDot(jqThis));
             console.log("dot_info:");
             console.log(jqThis.data("dot_info"));
+            create_a_delete_for_object(jqThis);
             jqThis.click(function(evt){
             	jqThis.attr("class","link_dot_marked");
+                jqThis.find(".delete").show().delay(1300).fadeOut();
 
             	if(current_link.variableDots.length  == 2){
                 	current_link.variableDots = new Array();
@@ -299,9 +331,27 @@
             console.log("changed rulebasecall");
             var jqThis = $(this);
             
+            
+            jqThis.click(function(){
+                jqThis.find("a.delete.rulebase_del").show().delay(1300).fadeOut();
+            });
+            
+            
             jqThis.data("links",new Array());
             console.log("links:");
             console.log(jqThis.data("links"));
+        });
+        
+        /** adds rulebasecalls delete buttons's action **/        
+        $(".rulebasecall a.delete.rulebase_del").each(function() {
+            console.log("changed rulebasecall deletes");
+            var jqThis = $(this);
+            jqThis.hide();
+            
+            jqThis.click( function (){
+                	alert("should delete this...");
+                	return false;
+            });
         });
         
 /**
