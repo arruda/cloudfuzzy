@@ -1,26 +1,77 @@
 
 /* ===================
-    ALL: Orange Theme
+    HEADER
    =================== */
 
-.header-container {
-    border-bottom: 20px solid #e44d26;
+.logo {
+    background: url(/static/img/cf_fill_32.png) no-repeat;
+    background-size: 32px 32px;
+
+    width: 32px;
+    height: 32px;
+    float: left;
+
+    line-height: 35px;
+    margin: 0px;
+    padding: 0 50px;
+    color: #FFD;
+    text-shadow: black 0px 1px 7px;
+    font-size: 20pt;
+    font-weight:bold;
 }
+
+
+#container_login{
+    height:26px;
+    margin: 4px;
+    float: right;
+    border-radius: 7px;
+    border: 1px solid #222;
+    background: #363636;
+    background: -moz-linear-gradient(#363636,#2A2A2A);
+    background: -webkit-linear-gradient(#363636,#2A2A2A);
+    padding: 0 10px;
+}
+#container_login a:hover{
+    color: #fff;
+}
+
+#container_login .user {
+    text-decoration: none;
+    font-weight: bold;
+
+    line-height: 26px;
+    font-size: 14pt;
+    color: #abf;
+}
+#container_login .login {
+    text-decoration: none;
+    font-weight: bold;
+
+    padding:10px;
+    line-height: 26px;
+    color: #555;
+}
+
+.header-container,
+.main aside {
+    -webkit-box-shadow: 0 5px 10px #000;
+       -moz-box-shadow: 0 5px 10px #000;
+            box-shadow: 0 5px 10px #000;
+}
+
+.header-container{
+    background: #555;
+    background: -moz-linear-gradient(#555,#444);
+    background: -webkit-linear-gradient(#555,#444);
+}
+
 
 .footer-container,
 .main aside {
     border-top: 20px solid #e44d26;
 }
 
-.header-container,
-.footer-container,
-.main aside {
-    background: #f16529;
-}
-
-.title {
-    color: white;
-}
 
 nav a {
     display: block;
