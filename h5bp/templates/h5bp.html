@@ -39,6 +39,7 @@
 
         <div class="header-container">
             <header class="wrapper clearfix">
+            {% block header %}
                 <h1 class="title">h1.title</h1>
                 <nav>
                     <ul>
@@ -47,11 +48,14 @@
                         <li><a href="#">nav ul li a</a></li>
                     </ul>
                 </nav>
+            {% endblock %}
             </header>
         </div>
 
         <div class="main-container">
             <div class="main wrapper clearfix">
+
+                {% block content %}
 
                 <article>
                     <header>
@@ -76,13 +80,15 @@
                     <h3>aside</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
                 </aside>
-
+                {% endblock %}
             </div> <!-- #main -->
         </div> <!-- #main-container -->
 
         <div class="footer-container">
             <footer class="wrapper">
+                {% block footer %}
                 <h3>footer</h3>
+                {% endblock %}
             </footer>
         </div>
 
