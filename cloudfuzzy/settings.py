@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'mptt',
-    'dj_h5bp',
+    'django_h5bp',
     'cloudfuzzy',
     'fuzzy_modeling',
 )
