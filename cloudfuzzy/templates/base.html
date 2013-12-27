@@ -1,0 +1,130 @@
+{% extends "h5bp.html" %}
+
+{% block page-title %}CloudFuzzy{% endblock %}
+{% block meta-description %}{% endblock %}
+{% block meta-keywords %}{% endblock %}
+{% block meta-author %}{% endblock %}
+{% block meta-generator %}{% endblock %}
+{% block meta-extras %}{% endblock %}
+
+
+{% block css-extras %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+{% endblock %}
+
+{% block js-imports %}{% endblock %}
+
+{% block header %}
+    <a href="/"><span class="logo">CloudFuzzy</span></a>
+    <div id="container_login">
+        <a class="user" href="/">test@test.com</a>
+        <a class="login" href="/logout">Logout</a>
+    </div>
+{% endblock %}
+
+
+{% block main-container %}
+    <nav id="menu">
+        <ul>
+            <li><a class="left_menu" href="/system/list">Back</a></li>
+            <li><a href="#">Verification</a></li>
+            <li><a href="#">Synthesis</a></li>
+            <li><a class="right_menu" href="/system/2/print">XFL</a></li>
+        </ul>
+    </nav>
+    <div id="content_area">
+        <header class="content-header">
+            bla
+        </header>
+
+        <section class="sub-full">
+            <section class="sub-left">
+                <section class="sub-content">
+                    <h3 class="sub-content-header">Types for Linguistic Variables</h3>
+
+
+                            <p>There are no Types yet.<br>
+                            Create a <a href="/system/2/type/new">new one!</a></p>
+
+                    <div class="actions">
+
+                        <form action="/system/2/type/new" method="GET">
+
+                            <input type="submit" value="Add Type">
+
+                        </form>
+                    </div>
+                </section>
+
+                <section class="sub-content">
+                    <h3 class="sub-content-header">Types for Linguistic Variables2</h3>
+
+
+                            <p>There are no Types yet.<br>
+                            Create a <a href="/system/2/type/new">new one!</a></p>
+
+                    <div class="actions">
+
+                        <form action="/system/2/type/new" method="GET">
+
+                            <input type="submit" value="Add Type">
+
+                        </form>
+                    </div>
+                </section>
+            </section>
+
+            <section class="sub-right">
+                <section class="sub-content">
+                    <h3 class="sub-content-header">Types for Linguistic Variables3</h3>
+
+
+                            <p>There are no Types yet.<br>
+                            Create a <a href="/system/2/type/new">new one!</a></p>
+
+                    <div class="actions">
+
+                        <form action="/system/2/type/new" method="GET">
+
+                            <input type="submit" value="Add Type">
+
+                        </form>
+                    </div>
+                </section>
+            </section>
+        </section>
+
+        <section class="sub-full">
+            <section class="sub-content">
+                <h3 class="sub-content-header">Types for Linguistic Variables4</h3>
+
+
+                        <p>There are no Types yet.<br>
+                        Create a <a href="/system/2/type/new">new one!</a></p>
+
+                <div class="actions">
+
+                    <form action="/system/2/type/new" method="GET">
+
+                        <input type="submit" value="Add Type">
+
+                    </form>
+                </div>
+            </section>
+        </section>
+
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <h3>footer</h3>
+{% endblock %}
+
+{% block analytics %}
+{% endblock %}
+
+{% block jquery-docready %}{% endblock %}
+
+{% block jquery-winload %}{% endblock %}
+
+{% block js-onpage %}{% endblock %}
