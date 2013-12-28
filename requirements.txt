@@ -1,6 +1,12 @@
 Django==1.6
 django-mptt==0.6.0
 
+# REST API
+django-tastypie==0.11.0
+python-mimeparse==0.1.4
+python-dateutil==2.2
+
+
 # My ANTLR3 for python github repo
 -e git+git://github.com/arruda/ANTLR3-python#egg=ANTLR3-python
 
