@@ -1,7 +1,7 @@
 {% extends "h5bp.html" %}
 
 {% block page-title %}CloudFuzzy{% endblock %}
-{% block meta-description %}{% endblock %}
+{% block meta-description %}CloudFuzzy - The Online Fuzzy Toolbox Solution.{% endblock %}
 {% block meta-keywords %}{% endblock %}
 {% block meta-author %}{% endblock %}
 {% block meta-generator %}{% endblock %}
@@ -12,7 +12,13 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
 {% endblock %}
 
-{% block js-imports %}{% endblock %}
+{% block js-imports %}
+<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<script>window.jQuery.template || document.write('<script src="{{ STATIC_URL }}js/jquery.tmpl.min.js"><\/script>')</script>
+
+
+{% include '_sub-content-jqtmpl.html' %}
+{% endblock %}
 
 {% block header %}
     <a href="/"><span class="logo">CloudFuzzy</span></a>
@@ -99,7 +105,7 @@
                 <h3 class="sub-content-header">Types for Linguistic Variables4</h3>
 
 
-                        <p>There are no Types yet.<br>
+                        <p id="test">There are no Types yet.<br>
                         Create a <a href="/system/2/type/new">new one!</a></p>
 
                 <div class="actions">
@@ -117,7 +123,7 @@
 {% endblock %}
 
 {% block footer %}
-    <h3>footer</h3>
+    <p>CloudFuzzy - The Online Fuzzy Toolbox Solution.</p>
 {% endblock %}
 
 {% block analytics %}
