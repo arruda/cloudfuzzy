@@ -1,8 +1,10 @@
+var app = app || {};
+
 // load the following using JQuery's document ready function
 $(function(){
 
     // System model
-    var System = Backbone.Model.extend({
+    app.System = Backbone.Model.extend({
         base_url: function() {
           var temp_url = Backbone.Model.prototype.url.call(this);
           return (temp_url.charAt(temp_url.length - 1) == '/' ? temp_url : temp_url+'/');
@@ -19,7 +21,7 @@ $(function(){
     });
 
     // set up the view for a system
-    var SystemView = Backbone.View.extend({
+    app.SystemSmallDetailView = Backbone.View.extend({
         render: function () {
             // template with ICanHaz.js (ich)
             //console.log(this.model.toJSON());
@@ -29,8 +31,8 @@ $(function(){
     });
 
     // define the collection of passwords
-    var SystemCollection = Backbone.Collection.extend({
-        model: System,
+    app.SystemCollection = Backbone.Collection.extend({
+        model: app.System,
         // A catcher for the meta object TastyPie will return.
         meta: {},
 
@@ -42,14 +44,12 @@ $(function(){
         }
     });
 
-    // main app
-    var AppView = Backbone.View.extend({
-        // tagName: 'div',
-        // id: 'content_area',
-
+    // SystemList view
+    app.SystemListView = Backbone.View.extend({
+        el: "#content_area",
         initialize: function() {
             // instantiate a system collection
-            this.systems = new SystemCollection();
+            this.systems = new app.SystemCollection();
             this.systems.bind('all', this.render, this);
             this.systems.fetch();
             console.log("initialize");
@@ -60,10 +60,10 @@ $(function(){
             console.log("render");
             console.log(this.systems);
             // template with ICanHaz.js (ich)
-            $(this.el).html("")
+            $(this.el).html("");
             this.systems.each(function (system) {
                 console.log(system);
-                $(this.el).append(new SystemView({model: system}).render().el);
+                $(this.el).append(new app.SystemSmallDetailView({model: system}).render().el);
             }, this);
 
             return this;
@@ -71,5 +71,5 @@ $(function(){
     });
 
     var app = new AppView();
-    $('#content_area').append(app.render().el);
+    // $('#content_area').append(app.render().el);
 });
