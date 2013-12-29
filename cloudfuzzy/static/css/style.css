@@ -177,6 +177,7 @@
 
     margin: 40px 0px 40px 0px;
     padding: 0px 10px 2px;
+    min-height: 390px;
 }
 
 .content-header {

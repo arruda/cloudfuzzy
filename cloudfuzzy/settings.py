@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django_h5bp',
     'cloudfuzzy',
     'fuzzy_modeling',
+    'api_rest',
 )
 
 MIDDLEWARE_CLASSES = (
