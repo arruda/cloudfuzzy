@@ -19,6 +19,7 @@ class SystemModel(models.Model, PyFuzzyMixin):
     class Meta:
         app_label = 'fuzzy_modeling'
 
+    name = models.CharField(_("Name"), blank=True, null=True, max_length=250)
     description = models.TextField(_("Description"))
 
     def __unicode__(self):

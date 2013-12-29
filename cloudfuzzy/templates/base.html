@@ -13,11 +13,24 @@
 {% endblock %}
 
 {% block js-imports %}
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/ICanHaz.js/0.10.3/ICanHaz.min.js"></script>
+<script>window.ich || document.write('<script src="{{ STATIC_URL }}js/backbone/ICanHaz.min.js"><\/script>')</script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script>window._ || document.write('<script src="{{ STATIC_URL }}js/backbone/underscore-min.js"><\/script>')</script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+<script>window.Backbone || document.write('<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"><\/script>')</script>
+
+
+{% comment %}
 <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 <script>window.jQuery.template || document.write('<script src="{{ STATIC_URL }}js/jquery.tmpl.min.js"><\/script>')</script>
 
-
 {% include '_sub-content-jqtmpl.html' %}
+{% endcomment %}
+
 {% endblock %}
 
 {% block header %}
@@ -31,42 +44,87 @@
 
 {% block main-container %}
     <nav id="menu">
+        {% block menu %}
         <ul>
             <li><a class="left_menu" href="/system/list">Back</a></li>
             <li><a href="#">Verification</a></li>
             <li><a href="#">Synthesis</a></li>
             <li><a class="right_menu" href="/system/2/print">XFL</a></li>
         </ul>
+        {% endblock %}
     </nav>
     <div id="content_area">
+
         <header class="content-header">
-            bla
+            {% block content-header %}
+                bla
+            {% endblock %}
         </header>
+        {% block content-area %}
 
-        <section class="sub-full">
-            <section class="sub-left">
-                <section class="sub-content">
-                    <h3 class="sub-content-header">Types for Linguistic Variables</h3>
+            <section class="sub-full">
+                <section class="sub-left">
+                    <section class="sub-content">
+                        <h3 class="sub-content-header">Types for Linguistic Variables</h3>
 
 
-                            <p>There are no Types yet.<br>
-                            Create a <a href="/system/2/type/new">new one!</a></p>
+                                <p>There are no Types yet.<br>
+                                Create a <a href="/system/2/type/new">new one!</a></p>
 
-                    <div class="actions">
+                        <div class="actions">
 
-                        <form action="/system/2/type/new" method="GET">
+                            <form action="/system/2/type/new" method="GET">
 
-                            <input type="submit" value="Add Type">
+                                <input type="submit" value="Add Type">
 
-                        </form>
-                    </div>
+                            </form>
+                        </div>
+                    </section>
+
+                    <section class="sub-content">
+                        <h3 class="sub-content-header">Types for Linguistic Variables2</h3>
+
+
+                                <p>There are no Types yet.<br>
+                                Create a <a href="/system/2/type/new">new one!</a></p>
+
+                        <div class="actions">
+
+                            <form action="/system/2/type/new" method="GET">
+
+                                <input type="submit" value="Add Type">
+
+                            </form>
+                        </div>
+                    </section>
                 </section>
 
+                <section class="sub-right">
+                    <section class="sub-content">
+                        <h3 class="sub-content-header">Types for Linguistic Variables3</h3>
+
+
+                                <p>There are no Types yet.<br>
+                                Create a <a href="/system/2/type/new">new one!</a></p>
+
+                        <div class="actions">
+
+                            <form action="/system/2/type/new" method="GET">
+
+                                <input type="submit" value="Add Type">
+
+                            </form>
+                        </div>
+                    </section>
+                </section>
+            </section>
+
+            <section class="sub-full">
                 <section class="sub-content">
-                    <h3 class="sub-content-header">Types for Linguistic Variables2</h3>
+                    <h3 class="sub-content-header">Types for Linguistic Variables4</h3>
 
 
-                            <p>There are no Types yet.<br>
+                            <p id="test">There are no Types yet.<br>
                             Create a <a href="/system/2/type/new">new one!</a></p>
 
                     <div class="actions">
@@ -79,45 +137,7 @@
                     </div>
                 </section>
             </section>
-
-            <section class="sub-right">
-                <section class="sub-content">
-                    <h3 class="sub-content-header">Types for Linguistic Variables3</h3>
-
-
-                            <p>There are no Types yet.<br>
-                            Create a <a href="/system/2/type/new">new one!</a></p>
-
-                    <div class="actions">
-
-                        <form action="/system/2/type/new" method="GET">
-
-                            <input type="submit" value="Add Type">
-
-                        </form>
-                    </div>
-                </section>
-            </section>
-        </section>
-
-        <section class="sub-full">
-            <section class="sub-content">
-                <h3 class="sub-content-header">Types for Linguistic Variables4</h3>
-
-
-                        <p id="test">There are no Types yet.<br>
-                        Create a <a href="/system/2/type/new">new one!</a></p>
-
-                <div class="actions">
-
-                    <form action="/system/2/type/new" method="GET">
-
-                        <input type="submit" value="Add Type">
-
-                    </form>
-                </div>
-            </section>
-        </section>
+        {% endblock %}
 
     </div>
 {% endblock %}
@@ -129,8 +149,49 @@
 {% block analytics %}
 {% endblock %}
 
-{% block jquery-docready %}{% endblock %}
+{% block jquery-docready %}
+{% endblock %}
 
 {% block jquery-winload %}{% endblock %}
 
-{% block js-onpage %}{% endblock %}
+{% block js-onpage %}
+function post_system(){
+    $.ajax({
+      type: "POST",
+      contentType: "application/json; charset=utf-8",
+      url: 'http://localhost:8000/api/system/',
+      data: JSON.stringify({'description':'descricao do sistema'}),
+      dataType: 'json'
+    });
+};
+
+function put_system(){
+    $.ajax({
+      type: "PUT",
+      contentType: "application/json; charset=utf-8",
+      url: 'http://localhost:8000/api/system/2',
+      data: JSON.stringify({'description':'descricao do sistema2'}),
+      dataType: 'json'
+    });
+};
+
+function patch_system(){
+    $.ajax({
+      type: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      url: 'http://localhost:8000/api/system/2',
+      data: JSON.stringify({'description':'descricao do sistema3'}),
+      dataType: 'json'
+    });
+};
+
+function delete_system(){
+    $.ajax({
+      type: "DELETE",
+      contentType: "application/json; charset=utf-8",
+      url: 'http://localhost:8000/api/system/2',
+      data: JSON.stringify({'description':'descricao do sistema2'}),
+      dataType: 'json'
+    });
+};
+{% endblock %}
