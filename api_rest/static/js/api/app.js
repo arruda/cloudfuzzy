@@ -16,6 +16,7 @@ $(function() {
 
             // Get our todos from the API!
             // app.Todos.fetch();
+            new app.SystemListView();
         },
     });
 

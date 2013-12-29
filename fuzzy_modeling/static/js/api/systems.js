@@ -70,6 +70,6 @@ $(function(){
         }
     });
 
-    var app = new AppView();
+    // var app = new AppView();
     // $('#content_area').append(app.render().el);
 });
