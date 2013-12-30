@@ -9,3 +9,5 @@ class SystemResource(ModelResource):
         queryset = SystemModel.objects.all()
         resource_name = 'system'
         authorization= Authorization()
+        allowed_methods = ['get', 'post', 'delete', 'put']
+        always_return_data = True

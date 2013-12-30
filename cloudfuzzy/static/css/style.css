@@ -159,7 +159,7 @@
 }
 
 /* Content */
-#content_area {
+#content_wrapper {
     box-shadow: 0px 3px 20px #000;
     border-radius: 10px;
     position: relative;

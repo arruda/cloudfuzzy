@@ -3,15 +3,21 @@
 {% block js-imports %}
 {{ block.super }}
 
-{% include 'ich_tmpl/_system_subcontent.tmpl.html' %}
+{% include 'ich_tmpl/_subcontent_full.tpml.html' %}
+
+{% include 'ich_tmpl/system/_system_small_detail.tmpl.html' %}
+{% include 'ich_tmpl/system/_system_list_menu.tmpl.html' %}
 
 <script src="{{ STATIC_URL }}js/api/systems.js"></script>
 <script src="{{ STATIC_URL }}js/api/app.js"></script>
 
 {% endblock %}
 
+
+{% block menu %}
+{% endblock %}
+
 {% block content-header %}
-Qualquer coisa
 {% endblock %}
 
 {% block content-area %}
