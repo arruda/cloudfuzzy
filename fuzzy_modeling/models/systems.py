@@ -5,6 +5,7 @@ from django.db import models
 
 from django.utils.translation import ugettext_lazy as _
 
+from django.contrib.auth.models import User
 
 from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy.System import System
@@ -21,6 +22,8 @@ class SystemModel(models.Model, PyFuzzyMixin):
 
     name = models.CharField(_("Name"), blank=True, null=True, max_length=250)
     description = models.TextField(_("Description"))
+
+    user = models.ForeignKey(User, blank=True, null=True)
 
     def __unicode__(self):
         return self.description
