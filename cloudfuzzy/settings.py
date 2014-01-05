@@ -98,3 +98,9 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (
     LOCAL('templates'),
 )
+
+
+# Login/Logout URL
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+LOGIN_REDIRECT_URL = '/'

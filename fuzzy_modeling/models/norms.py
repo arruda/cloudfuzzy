@@ -59,17 +59,21 @@ class NormModel(models.Model, PyFuzzyMixin):
         norm_model.save()
 
         # parameters
-        for arg in inspect.getargspec(pyfuzzy.__init__).args:
-            if arg != 'self':
-                arg_value = getattr(pyfuzzy,arg)
-                arg_type = ParameterModel.get_type_from_python_type(arg_value)
-                norm_model.parameters.create(
-                            name = arg,
-                            value = arg_value,
-                            value_type = arg_type
-                    )
+        try:
+            for arg in inspect.getargspec(pyfuzzy.__init__).args:
+                if arg != 'self':
+                    arg_value = getattr(pyfuzzy,arg)
+                    arg_type = ParameterModel.get_type_from_python_type(arg_value)
+                    norm_model.parameters.create(
+                                name = arg,
+                                value = arg_value,
+                                value_type = arg_type
+                        )
 
-
+        # will raise this exception when the given type don't implement a __init__ function
+        # (never overrided the object.__init__)
+        except TypeError:
+            pass
 
         norm_model.save()
         return norm_model

@@ -28,6 +28,7 @@ class InputVariableModelInlineAdmin(admin.StackedInline):
 
 class SystemModelAdmin(admin.ModelAdmin):
     inlines = [InputVariableModelInlineAdmin,OutputVariableModelInlineAdmin]
+    list_display = ('name','description',)
 
 
 class AdjectiveModelInlineForInputAdmin(admin.StackedInline):

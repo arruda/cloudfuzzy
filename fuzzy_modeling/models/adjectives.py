@@ -22,7 +22,7 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
     class Meta:
         app_label = 'fuzzy_modeling'
 
-    name = models.CharField(_("Name"), blank=False, null=False, max_length=250)
+    name = models.CharField(_("Name"), blank=True, null=True, max_length=250)
 
     set =   models.ForeignKey( SetModel  )
     com =   models.ForeignKey( NormModel , null=True, blank=True)
@@ -51,9 +51,13 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
         """
         Return the model representation of an instance of the pyfuzzy attr
         """
+        try:
+            name = pyfuzzy.name
+        except AttributeError:
+            name = None
 
         adj_model = cls(
-                name = pyfuzzy.name
+                name = name
             )
 
         # SET

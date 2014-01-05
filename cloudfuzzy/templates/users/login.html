@@ -1,0 +1,43 @@
+{% extends "base.html"%}
+
+{% block js-imports %}
+{{ block.super }}
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block content-header %}Login{% endblock %}
+
+{% block content-area %}
+    <section class="sub-full">
+        <section class="sub-content">
+            <h3 class="sub-content-header">Enter your credentials</h3>
+
+                <form action="{% url 'login' %}" method="post" id="login-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    {% if form.errors %}
+                        <p class="form-error">User or password incorrect. Try Again.</p>
+                    {% endif %}
+                    <p>
+                        <label for="id_username" class="required">Username:</label>
+                        <input class="radius" id="id_username"  name="username" maxlength="30" />
+                    </p>
+                    <p>
+                        <label for="id_password" class="required">Password:</label>
+                        <input class="radius" type="password" name="password" id="id_password" />
+                        <input type="hidden" name="this_is_the_login_form" value="1" />
+                    </p>
+                    <div class="actions">
+                        <input type="submit" value="Login" />
+                    </div>
+                </form>
+
+
+        </section>
+    </section>
+
+
+{% endblock %}
+
