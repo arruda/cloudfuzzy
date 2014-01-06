@@ -5,18 +5,26 @@ from tastypie.exceptions import Unauthorized
 class SystemOwnerAuthorization(Authorization):
 
     def __init__(self, user_path='user'):
+
         super(SystemOwnerAuthorization, self).__init__()
         self.user_path = user_path
         self.user_filter_key = user_path.replace('.','__')
 
     def _get_obj_user(self, obj):
-        return getattr(self.user_path, obj)
+        last_attr = obj
+        for attr_name in self.user_path.split('.'):
+            last_attr = getattr(last_attr, attr_name)
+        return last_attr
 
     def read_list(self, object_list, bundle):
         # This assumes a ``QuerySet`` from ``ModelResource``.
-        return object_list.filter(user=bundle.request.user)
+        return object_list.filter(**{ self.user_filter_key : bundle.request.user})
 
     def read_detail(self, object_list, bundle):
+        # used in schema
+        if object_list:
+            return True
+
         # Is the requested object owned by the user?
         return self._get_obj_user(bundle.obj) == bundle.request.user
 
@@ -25,6 +33,8 @@ class SystemOwnerAuthorization(Authorization):
         return object_list
 
     def create_detail(self, object_list, bundle):
+        import pdb; pdb.set_trace()
+
         return self._get_obj_user(bundle.obj) == bundle.request.user
 
     def update_list(self, object_list, bundle):

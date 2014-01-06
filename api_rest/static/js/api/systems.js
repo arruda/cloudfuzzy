@@ -16,7 +16,7 @@ $(function(){
 
         url: function() {
             var id = this.id || '';
-            return "/api/system/"+id;
+            return "/api/v1/system/"+id;
         },
     });
 
@@ -26,7 +26,7 @@ $(function(){
         // A catcher for the meta object TastyPie will return.
         meta: {},
 
-        url: '/api/system',
+        url: '/api/v1/system',
         // Our API will return an object with meta, then objects list.
         parse: function(response) {
             this.meta = response.meta || {};
