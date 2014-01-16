@@ -10,7 +10,7 @@
 
         <div class="sub_lefted">
 
-            <div class="sub_content sub_limited">
+            <div id="system_detail_step1" class="sub_content sub_limited">
                 <h3 class='sub_content_header'>Types for Linguistic Variables</h3>
 
                      @if(spec.getTypes().length <= 0){
@@ -36,7 +36,7 @@
             </div>
 
 
-            <div class="sub_content sub_limited">
+            <div id="system_detail_step2" class="sub_content sub_limited">
                 <h3 class='sub_content_header'>Input Variables</h3>         
                 <div id="input_vars">       
                     @if(spec.getSystemModule().getInputs() != null){
@@ -52,7 +52,7 @@
                 <input id="new_ivar" type="button" class="btn secondary" value="Add New Variable" />
 
             </div>
-            <div class="sub_content sub_limited">
+            <div id="system_detail_step3" class="sub_content sub_limited">
                 <h3 class='sub_content_header'>Output Variables</h3>
                 <div id="output_vars">
                     @if(spec.getSystemModule().getOutputs() != null){
@@ -99,7 +99,7 @@
         <div class="sub_righted">
 
 
-            <div class="sub_content sub_limited">
+            <div id="system_detail_step4" class="sub_content sub_limited">
                 <h3 class='sub_content_header'>Operators Set</h3>
 
                      @if(spec.getOperatorsets().length <= 0){
@@ -125,7 +125,7 @@
             </div>
 
 
-            <div class="sub_content sub_limited">
+            <div id="system_detail_step5" class="sub_content sub_limited">
                 <h3 class='sub_content_header'>Rule Bases</h3>
 
                      @if(spec.getRulebases().length <= 0){
@@ -152,7 +152,7 @@
 
         </div>
     </div>
-    <div class="sub_full">
+    <div id="system_detail_step6" class="sub_full">
         <div class="sub_content">
             <h3 class='sub_content_header'>System Design</h3>
         	@design.system_design(fuzzySystem,spec)
@@ -162,11 +162,63 @@
 
 
 
+        <script type="text/javascript">
+
+	window["has_intro"] = true;
+	window["intro_storage_key"] = 'intro_sys_detail';
+	window["intro_steps"] = [
+	                          {
+	                            element: document.querySelectorAll('#menu li')[1],
+	                            intro: "Click here to test the behavior of the Fuzzy System through 2D and 3D simulations.",
+	                            position: 'bottom'
+	                          },
+	                          {
+	                            element: document.querySelectorAll('#menu li')[2],
+	                            intro: "Click here to access tools for generate high level code for software/hardware implementations.",
+	                            position: 'bottom'
+	                          },
+	                          {
+	                        	element: document.querySelectorAll('#menu li')[3],
+	                        	intro: "Click here to see the Fuzzy System in a simple text way.",
+	                        	position: 'bottom'
+	                          },
+	                          {
+	                        	element: '#system_detail_step1',
+	                        	intro: "First Step. <br /> Create the types of linguistics variables the Fuzzy System will have.",
+	                        	position: 'top'
+	                          },
+	                          {
+		                        element: '#system_detail_step2',
+		                        intro: "Second Step. <br /> Create the input variables. You'll need define a name and a type for a new variable.",
+		                        position: 'top'
+		                      },
+		                      {
+			                  	element: '#system_detail_step3',
+			                    intro: "Third Step. <br /> Create the output variables. You'll need define a name and a type for a new variable.",
+			                    position: 'top'
+			                  },
+			                  {
+				                element: '#system_detail_step4',
+				                intro: "Fourth Step. <br /> Create here the Operator Set definiting functions for the fuzzy operators.",
+				                position: 'top'
+				              },
+				              {
+					            element: '#system_detail_step5',
+					            intro: "Fifth Step. <br /> Create here the rule bases definiting a name and the operator set.",
+					            position: 'top'
+					          },
+					          {
+						       	element: '#system_detail_step6',
+						       	intro: "Sixth Step. <br /> Here you can define the relationship of the variables with the rule base.",
+						       	position: 'top'
+						      },
+	                        ];
+	</script>
 
 
 
-    <script type="text/javascript">
-
+	<script type="text/javascript">
+    
         $(document).ready(function() {
 
             var num_ivars = 0;
@@ -289,7 +341,7 @@
 
 		
     </script>
-    
+
        	@design.system_design_js(fuzzySystem,spec)
     }   
 }
