@@ -13,3 +13,4 @@ cloudfuzzy/logs/*
 .vagrant/*
 cloudfuzzy/project/project/target/config-classes/*
 .metadata/*
+cloudfuzzy/.gitignore
