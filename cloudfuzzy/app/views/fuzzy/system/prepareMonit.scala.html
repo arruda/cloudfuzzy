@@ -1,0 +1,48 @@
+@(fuzzySystem : FuzzySystem,  monitorizationForm: Form[Systems.Monitorization])
+
+@import helper._
+
+@navHeader = {
+    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>>
+    Monitorization
+}  
+
+@main("Monitorization for " + fuzzySystem.name +  " System" )(navHeader)(fuzzy.system.menu(fuzzySystem)){   
+
+    @defining(fuzzySystem.getSpecification()){ spec =>  
+
+    <div class="sub_full">
+
+        <div class="sub_lefted">   
+		    <div class="sub_content sub_limited">
+		        <h3 class='sub_content_header'>Input Variables Values</h3> 
+            	@helper.form(action = routes.Systems.showMonitorization(fuzzySystem.id)) {
+            	
+    
+			    
+			    @inputText(
+			        monitorizationForm("input"), 
+			        '_label -> "Input", 
+			        '_help -> "Input here."
+			    )
+			    
+    
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Save">
+                </div>
+                }
+ 
+    		</div>
+        </div>
+        
+    </div>
+
+
+    <script type="text/javascript">
+
+	</script>
+
+
+
+    }   
+}

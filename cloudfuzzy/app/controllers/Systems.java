@@ -80,11 +80,11 @@ public class Systems extends Controller {
   @With(EnsureUserIsOwnerOf.class)
   public static Result detail(Long id) {
   //    if(Secured.isOwnerOf(id)){
-    	  System.out.println("rbcs:");
-    	  for(RuleBaseCall rbc : RuleBaseCall.listRuleBaseCallsByFuzzySystemsId(id)){
-        	  System.out.println("rbc:"+ rbc);
-    	  }
-    	  System.out.println("rbc0:"+ RuleBaseCall.findByFuzzySystemIdAndPosition(id, 0));
+//    	  System.out.println("rbcs:");
+//    	  for(RuleBaseCall rbc : RuleBaseCall.listRuleBaseCallsByFuzzySystemsId(id)){
+//        	  System.out.println("rbc:"+ rbc);
+//    	  }
+//    	  System.out.println("rbc0:"+ RuleBaseCall.findByFuzzySystemIdAndPosition(id, 0));
     	  
     	  
         return ok(
@@ -178,6 +178,55 @@ public class Systems extends Controller {
       }
 */
   }
+
+
+  // -- Authentication
+  
+  public static class Monitorization {
+      
+      public Integer input;
+      
+      public String validate() {
+//          if(User.authenticate(email, password) == null) {
+//              return "Invalid user or password";
+//          }
+          return null;
+      }
+      
+  }
+
+  static Form<Monitorization> monitorizationForm = form(Monitorization.class);
+  
+  /**
+  * Prepares the monitorization view
+  */  
+  @With(EnsureUserIsOwnerOf.class)
+  public static Result prepareMonitorization(Long id_sys) {
+
+	  Monitorization monit = new Monitorization();
+	  monitorizationForm = form(Monitorization.class).fill(
+			  monit
+      );
+	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      return ok(
+               prepareMonit.render(sys,monitorizationForm)
+              );
+  }
+
+  /**
+  * runs and show the monitorization for a given post data
+  */  
+  @With(EnsureUserIsOwnerOf.class)
+  public static Result showMonitorization(Long id_sys) {
+
+      Form<Monitorization> filledForm = monitorizationForm.bindFromRequest();
+      
+	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+      return ok(
+               prepareMonit.render(sys,monitorizationForm)
+              );
+  }
+  
   
    //=================== AJAX ===================//
 

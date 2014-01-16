@@ -33,6 +33,8 @@ POST    /system/:id_sys/del         controllers.Systems.delete(id_sys: Long)
 GET    /system/:id_sys/var/:kind/:id_variable/del        controllers.Systems.deleteVariable(id_sys: Long, id_variable: java.lang.Integer, kind :java.lang.Integer)
 
 GET     /system/:id_sys/print             controllers.Systems.print(id_sys: Long)
+GET     /system/:id_sys/monit             controllers.Systems.prepareMonitorization(id_sys: Long)
+POST     /system/:id_sys/monit             controllers.Systems.showMonitorization(id_sys: Long)
 
 ##OperatorSet
 GET     /system/:id_sys/opset/new                 controllers.OperatorSets.prepareCreate(id_sys: Long)
