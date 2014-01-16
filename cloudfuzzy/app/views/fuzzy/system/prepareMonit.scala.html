@@ -1,4 +1,4 @@
-@(fuzzySystem : FuzzySystem,  monitorizationForm: Form[Systems.Monitorization])
+@(fuzzySystem : FuzzySystem,  monitorizationForm: Form[models.Monitorization])
 
 @import helper._
 
@@ -18,17 +18,25 @@
 		        <h3 class='sub_content_header'>Input Variables Values</h3> 
             	@helper.form(action = routes.Systems.showMonitorization(fuzzySystem.id)) {
             	
+                <fieldset> 
+                
     
+				    
+    
+                @repeat(monitorizationForm("inputvars")) { ivar =>
+                    
+				    @inputText(
+				        ivar("value"), 
+				        '_label -> ivar("name").value 
+				    )
+
+                    
+                }   
 			    
-			    @inputText(
-			        monitorizationForm("input"), 
-			        '_label -> "Input", 
-			        '_help -> "Input here."
-			    )
-			    
+                </fieldset>          
     
                 <div class="actions">
-                    <input type="submit" class="btn primary" value="Save">
+                    <input type="submit" class="btn primary" value="Execute">
                 </div>
                 }
  

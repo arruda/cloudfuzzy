@@ -25,6 +25,8 @@ public class Variable{
     @Constraints.Required
     public String idType;
 
+	/* the actual value for this variable */
+	public Double value;
 
     /* this is what xFuzzy calls access, determines if this variable is input, output or inner */
     public int kind;
@@ -44,6 +46,7 @@ public class Variable{
         Variable var = new Variable();
         var.id = id_var;
         var.name = fVar.getName();
+        var.value = fVar.point(0.5);
 
 
         //add the input/output vars    

@@ -1,6 +1,9 @@
 package controllers;
 
 import java.io.File;
+import java.util.List;
+
+import javax.validation.Valid;
 
 import models.FuzzySystem;
 import models.RuleBaseCall;
@@ -10,6 +13,8 @@ import models.Type;
 // import models.MF;
 // import models.Type;
 
+import models.OperatorSet.Operator;
+import models.Monitorization;
 import play.*;
 import play.mvc.*;
 import play.mvc.Security.Authenticated;
@@ -182,18 +187,6 @@ public class Systems extends Controller {
 
   // -- Authentication
   
-  public static class Monitorization {
-      
-      public Integer input;
-      
-      public String validate() {
-//          if(User.authenticate(email, password) == null) {
-//              return "Invalid user or password";
-//          }
-          return null;
-      }
-      
-  }
 
   static Form<Monitorization> monitorizationForm = form(Monitorization.class);
   
@@ -203,11 +196,11 @@ public class Systems extends Controller {
   @With(EnsureUserIsOwnerOf.class)
   public static Result prepareMonitorization(Long id_sys) {
 
-	  Monitorization monit = new Monitorization();
+	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+	  Monitorization monit = Monitorization.get(sys);
 	  monitorizationForm = form(Monitorization.class).fill(
 			  monit
       );
-	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
       return ok(
                prepareMonit.render(sys,monitorizationForm)
               );
