@@ -1,4 +1,4 @@
-@(fuzzySystem : FuzzySystem,  monitorizationForm: Form[models.Monitorization])
+@(fuzzySystem : FuzzySystem,  monitorizationForm: Form[models.Monitorization], monitorization: models.Monitorization)
 
 @import helper._
 
@@ -18,6 +18,11 @@
 		        <h3 class='sub_content_header'>Input Variables Values</h3> 
             	@helper.form(action = routes.Systems.showMonitorization(fuzzySystem.id)) {
             	
+                @if(monitorizationForm.hasGlobalErrors) { 
+                    <p class="error">
+                        @monitorizationForm.globalError.message
+                    </p>
+                }
                 <fieldset> 
                 
     
@@ -39,6 +44,17 @@
                     <input type="submit" class="btn primary" value="Execute">
                 </div>
                 }
+ 
+    		</div>
+        </div>
+        <div class="sub_righted">   
+		    <div class="sub_content sub_limited">
+		        <h3 class='sub_content_header'>Output Variables Values</h3> 
+                
+    
+                @for( ovar <- monitorization.outputvars ) {
+                    <p>@ovar.name @ovar.value</p>
+                 }
  
     		</div>
         </div>

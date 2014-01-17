@@ -33,18 +33,18 @@ import xfuzzy.lang.XflParser;
 
 @Security.Authenticated(Secured.class)
 public class Systems extends Controller {
-  
+
   static Form<FuzzySystem> fuzzySystemForm = form(FuzzySystem.class);
   // static Form<Type> newTypeForm = form(Type.class);
   // static Form<Type> editTypeForm = form(Type.class);
   // static Form<MF> editMFForm = form(MF.class);
-  
+
 
 
   //=================== CRUD ===================//
   /**
   * List all the fuzzy Systems of a user.
-  */  
+  */
   public static Result list() {
       return ok(
                list.render(FuzzySystem.listFuzzySystemsByUser(request().username()))
@@ -53,13 +53,13 @@ public class Systems extends Controller {
 
   /**
   * Prepares to create a new Fuzzy System form.
-  */  
+  */
   public static Result prepareCreate() {
       return ok(
                prepareCreate.render(fuzzySystemForm)
               );
   }
-  
+
   /**
   * Creates the given fuzzy system
   */
@@ -75,7 +75,7 @@ public class Systems extends Controller {
          newSys.user = User.findByEmail(request().username());
          FuzzySystem.create(newSys);
 
-            return redirect(routes.Systems.list()); 
+            return redirect(routes.Systems.list());
       }
   }
 
@@ -90,13 +90,13 @@ public class Systems extends Controller {
 //        	  System.out.println("rbc:"+ rbc);
 //    	  }
 //    	  System.out.println("rbc0:"+ RuleBaseCall.findByFuzzySystemIdAndPosition(id, 0));
-    	  
-    	  
+
+
         return ok(
                 detail.render(FuzzySystem.find.byId(id))
-                ); 
+                );
 
-//      }else{        
+//      }else{
 //            return forbidden();
 //      }
   }
@@ -111,16 +111,16 @@ public class Systems extends Controller {
 
         return redirect(
                 routes.Systems.list()
-                ); 
+                );
 
- /*     }else{        
+ /*     }else{
             return forbidden();
       }
 */
   }
 
   /**
-  * Deletes a given FussySystem variable, 
+  * Deletes a given FussySystem variable,
   *passing the system id, the variable id, and the kind(Variable.INPUT, OUTPUT, or other)
   */
   @With(EnsureUserIsOwnerOf.class)
@@ -143,26 +143,26 @@ public class Systems extends Controller {
     catch(Exception e){
         System.out.println(e.getMessage());
 
-          return badRequest();        
+          return badRequest();
     }
 
 
     if(var.isLinked()) {
         String msg = "Cannot remove variable \""+var.getName()+"\".";
         msg+="\nThere are rules using this variable.";
-        System.out.println(msg); 
-        return badRequest();  
+        System.out.println(msg);
+        return badRequest();
     }
 
     spec.getSystemModule().removeVariable(var);
 
     spec.setModified(true);
-    spec.save();      
+    spec.save();
 
 
-    return redirect(routes.Systems.detail(id_sys)); 
+    return redirect(routes.Systems.detail(id_sys));
   }
-  
+
   //=================== OTHERS ===================//
   /**
   * Prints the xfl file of the given fuzzy system.
@@ -175,10 +175,10 @@ public class Systems extends Controller {
 
         return ok(
                 print.render(FuzzySystem.find.byId(id))
-                ); 
+                );
 
 
- /*     }else{        
+ /*     }else{
             return forbidden();
       }
 */
@@ -186,13 +186,13 @@ public class Systems extends Controller {
 
 
   // -- Authentication
-  
+
 
   static Form<Monitorization> monitorizationForm = form(Monitorization.class);
-  
+
   /**
   * Prepares the monitorization view
-  */  
+  */
   @With(EnsureUserIsOwnerOf.class)
   public static Result prepareMonitorization(Long id_sys) {
 
@@ -202,25 +202,43 @@ public class Systems extends Controller {
 			  monit
       );
       return ok(
-               prepareMonit.render(sys,monitorizationForm)
+               prepareMonit.render(sys,monitorizationForm, monit)
               );
   }
 
   /**
-  * runs and show the monitorization for a given post data
-  */  
+  * Runs and show the monitorization for a given post data
+  */
   @With(EnsureUserIsOwnerOf.class)
   public static Result showMonitorization(Long id_sys) {
 
-      Form<Monitorization> filledForm = monitorizationForm.bindFromRequest();
-      
 	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
-      return ok(
-               prepareMonit.render(sys,monitorizationForm)
-              );
+	  Monitorization monit = Monitorization.get(sys);
+      Form<Monitorization> filledForm = monitorizationForm.bindFromRequest();
+      System.out.println("aqui.");
+
+      if(filledForm.hasErrors()) {
+          System.out.println("has errors.");
+        return badRequest(
+        		prepareMonit.render(sys,filledForm, monit)
+        );
+      } else {
+    	  monit = filledForm.get();
+    	  try {
+			monit.run(sys);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+          System.out.println("no errors.");
+          return ok(
+                  prepareMonit.render(sys,filledForm, monit)
+                 );
+      }
+      
   }
-  
-  
+
+
    //=================== AJAX ===================//
 
     /**
@@ -229,7 +247,7 @@ public class Systems extends Controller {
     * 'name' -> the name of the new variable
     * 'kind' -> if is input, output or inner.
     * 'idType' -> the type's id for this new variable
-    * 
+    *
     * If new var is ok, then add it to the system
     * if not then return the list of errors.
     */
@@ -244,10 +262,10 @@ public class Systems extends Controller {
 
         //checks if the rulebase exists with this name
         if(spec.getSystemModule().searchVariable(filledForm.field("name").valueOr("")) != null){
-            filledForm.reject("name", "Already exist a Variable with this name in this System");  
+            filledForm.reject("name", "Already exist a Variable with this name in this System");
         }
         if(!FuzzySystem.isIdentifier(filledForm.field("name").valueOr(""))) {
-          filledForm.reject("name", "Invalid name");  
+          filledForm.reject("name", "Invalid name");
         }
 
         if(filledForm.hasErrors()) {
@@ -268,7 +286,7 @@ public class Systems extends Controller {
 
           }
           catch(Exception e){
-            filledForm.reject("Invalid");  
+            filledForm.reject("Invalid");
 
             return badRequest(
               filledForm.errorsAsJson()
@@ -276,7 +294,7 @@ public class Systems extends Controller {
 
           }
 
-          
+
 
           System.out.println("newVar"+ newVar.name);
 
@@ -288,5 +306,5 @@ public class Systems extends Controller {
 
     }
 
-  
+
 }

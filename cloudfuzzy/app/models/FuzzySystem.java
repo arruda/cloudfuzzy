@@ -7,11 +7,11 @@ import play.Play;
 import play.db.ebean.Model;
 import play.data.validation.Constraints.*;
 import xfuzzy.Xfuzzy;
+import xfuzzy.lang.AggregateMemFunc;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.XflParser;
 import xfuzzy.lang.PkgParser;
 import xfuzzy.lang.XflPackage;
-
 
 import javax.persistence.*;
 
@@ -347,5 +347,52 @@ public class FuzzySystem extends Model {
     	
     }
     
-    
+    /**
+     * Execute the fuzzy inference for a given input value
+     * @param inputValue
+     * @return
+     * @throws Exception
+     */
+    public double[] executeInference(double [] inputValue) throws Exception{
+    	for (int i = 0; i < inputValue.length; i++) {
+			double d = inputValue[i];
+	    	System.out.println("inputvalue["+i+"]:"+d);
+			
+		}
+		// executa o motor de inferência e retorna o resultado num vetor
+		// result[]da classe MemFunc
+		xfuzzy.lang.MemFunc result[] = null;
+		try {
+			result = this.getSpecification().getSystemModule().fuzzyInference(inputValue);
+		} catch (NullPointerException npe) {
+			throw npe;
+		}
+		// cria um vetor de double com o número de variáveis correspondentes ao
+		// length do vetor result
+		double[] saida = new double[result.length];
+		// percorre o vetor de saida fazendo typecast de double para
+		// AggregateMemFunc
+		for (int i = 0; i < saida.length; i++) {
+			double val = 0;
+			// obtem o valor defuzzificado que representa essa função de
+			// pertinencia
+			// no caso de ser singleton devolve a propria abcissa como sendo o
+			// valor defuzzificado
+			if (result[i] instanceof pkg.xfl_mf_singleton) {
+				val = ((pkg.xfl_mf_singleton) result[i]).get()[0];
+
+			} else {// Obtem a funcao de pertinencia resultante da agregacao de
+					// todas as regras
+				// usa o metodo defuzzify para obter o valor defuzzificado desse
+				// conjunto resultante
+				// faz typecast de result para o tipo AggregateMemFunc
+				xfuzzy.lang.AggregateMemFunc amf = (xfuzzy.lang.AggregateMemFunc) result[i];
+				val = amf.defuzzify();
+			}
+
+			saida[i] = val;
+		}
+		
+		return saida;
+    }
 }
