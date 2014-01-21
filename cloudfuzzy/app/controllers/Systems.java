@@ -215,10 +215,8 @@ public class Systems extends Controller {
 	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
 	  Monitorization monit = Monitorization.get(sys);
       Form<Monitorization> filledForm = monitorizationForm.bindFromRequest();
-      System.out.println("aqui.");
 
       if(filledForm.hasErrors()) {
-          System.out.println("has errors.");
         return badRequest(
         		prepareMonit.render(sys,filledForm, monit)
         );
@@ -228,7 +226,12 @@ public class Systems extends Controller {
 			monit.run(sys);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            filledForm.reject("Your system's modeling can't run as it is. Try changing it.");  
+
+            return badRequest(
+            		prepareMonit.render(sys,filledForm,monit)
+            );
 		}
           System.out.println("no errors.");
           return ok(
@@ -237,6 +240,7 @@ public class Systems extends Controller {
       }
       
   }
+
 
 
    //=================== AJAX ===================//

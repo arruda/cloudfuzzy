@@ -52,9 +52,11 @@
 		        <h3 class='sub_content_header'>Output Variables Values</h3> 
                 
     
-                @for( ovar <- monitorization.outputvars ) {
-                    <p>@ovar.name @ovar.value</p>
-                 }
+                @if(monitorization.outputvars != null){
+	                @for( ovar <- monitorization.outputvars ) {
+	                    <p>@ovar.name @ovar.value</p>
+	                 }
+	            }
  
     		</div>
         </div>
