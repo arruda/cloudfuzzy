@@ -88,6 +88,54 @@ public class RuleBaseCalls extends Controller {
 
 
     }
+    
+    /**
+    * tries to remove a rulebasecall with a given id_rb(rulebase id).
+    */
+    public static Result ajaxRemoveCall(Long id_sys, Integer id_rb)
+    {
+
+        FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+
+
+        SystemModule systemModule = sys.getSpecification().getSystemModule();
+        models.RuleBaseCall rbc_pos = models.RuleBaseCall.findByFuzzySystemIdAndPosition(id_sys, id_rb);
+        xfuzzy.lang.RulebaseCall rbc = null;
+        try{
+          rbc = sys.getSpecification().getSystemModule().getRulebaseCalls()[id_rb];
+        }
+        catch(Exception e){
+          e.printStackTrace();
+          return badRequest();
+        }
+
+
+        try{
+
+
+          systemModule.removeCall(rbc);
+
+          sys.getSpecification().setModified(true);
+          sys.getSpecification().save();
+          rbc_pos.delete();
+        }
+        catch(Exception e){
+
+          return badRequest(
+
+                    Json.toJson("error:'"+e.getMessage()+"'")
+          );
+
+        }
+
+        
+
+        return ok(
+                    Json.toJson("ok")
+                    );
+
+
+    }
 
 
     /**

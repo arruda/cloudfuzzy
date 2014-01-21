@@ -349,7 +349,16 @@
             jqThis.hide();
             
             jqThis.click( function (){
-                	alert("should delete this...");
+					var rulebasecall_id = jqThis.attr("id").split("rm_rulebasecall_")[1];
+					var url = '@routes.RuleBaseCalls.ajaxRemoveCall(fuzzySystem.id,0)';
+					url = url.substr(0,url.lastIndexOf("/")+1) + rulebasecall_id;
+
+					$.post(url,
+		   			{},
+		            function(data) {
+						console.log(data);  
+                        location.reload();
+		       		});
                 	return false;
             });
         });
