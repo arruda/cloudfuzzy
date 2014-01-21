@@ -1,0 +1,8 @@
+@(fuzzySystem : FuzzySystem)
+@***
+Represents the menu for a detailed fuzzy system view.
+***@
+<li ><a class='left_menu' href="@routes.Systems.prepareMonitorization(fuzzySystem.id)">Back</a></li>
+<li><a href="#">Verification</a></li>
+<li><a href="#">Synthesis</a></li>
+<li ><a class='right_menu' href="@routes.Systems.print(fuzzySystem.id)">XFL</a></li>

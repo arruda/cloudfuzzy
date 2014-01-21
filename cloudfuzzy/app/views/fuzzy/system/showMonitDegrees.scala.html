@@ -1,0 +1,39 @@
+@(fuzzySystem : FuzzySystem, monitorization: models.Monitorization, rb : models.RuleBase)
+
+@import helper._
+
+@navHeader = {
+    <a href="@routes.Systems.detail(fuzzySystem.id)">@fuzzySystem.name</a>>
+    <a href="@routes.Systems.prepareMonitorization(fuzzySystem.id)">Monitorization</a>>
+    Degrees for @rb.name
+}  
+
+@main("Monitorization for " + fuzzySystem.name +  " System" )(navHeader)(fuzzy.system.menu_monitor(fuzzySystem)){   
+
+    @defining(fuzzySystem.getSpecification()){ spec =>  
+
+    <div class="sub_full">
+
+        <div class="sub_righted">   
+		    <div class="sub_content sub_limited">
+		        <h3 class='sub_content_header'>Output Variables Values</h3> 
+                
+    
+                @for( ovar <- monitorization.outputvars ) {
+                    <p>@ovar.name @ovar.value</p>
+                 }
+ 
+    		</div>
+        </div>
+        
+    </div>
+
+
+    <script type="text/javascript">
+
+	</script>
+
+
+
+    }   
+}
