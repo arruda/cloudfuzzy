@@ -118,6 +118,39 @@ public class RuleBaseCallTest  extends WithApplicationAndIsoletedXfl {
     }
 
     /**
+    *Test if the call is removed.
+    */
+    @Test
+    public void ajaxRemoveCall() {
+
+        Integer id_rb = 0;
+        xfuzzy.lang.Rulebase rb = null;
+        try{
+            rb = models.RuleBase.getFuzzy(this.testSystem,id_rb);
+        } 
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+        Result result = callAction(
+            controllers.routes.ref.RuleBaseCalls.ajaxRemoveCall(this.testSystem.id,id_rb),
+            fakeRequest().withSession("email", this.testUser.email)
+        );
+        assertThat(contentAsString(result)).contains("ok");
+        try{
+
+            this.testSystem.loadSpecification();
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+
+
+        assertEquals(this.testSystem.getSpecification().getSystemModule().getRulebaseCalls().length, 0);
+
+    }
+
+    /**
     *Helper to be used in the cases for the ajaxAddLink,
     *this here only do the call and return the result
     */

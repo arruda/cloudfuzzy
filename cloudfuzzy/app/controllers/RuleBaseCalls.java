@@ -110,6 +110,7 @@ public class RuleBaseCalls extends Controller {
         }
 
 
+        
         try{
 
 
@@ -117,7 +118,9 @@ public class RuleBaseCalls extends Controller {
 
           sys.getSpecification().setModified(true);
           sys.getSpecification().save();
-          rbc_pos.delete();
+          if(rbc_pos != null){
+              rbc_pos.delete();        	  
+          }
         }
         catch(Exception e){
 
