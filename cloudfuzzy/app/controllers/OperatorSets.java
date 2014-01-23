@@ -6,16 +6,15 @@ import java.util.Map;
 import java.io.File;
 
 import models.FuzzySystem;
+import models.OperatorSet.Operator;
 import models.User;
 import models.OperatorSet;
 import models.Parameter;
-
 import play.*;
 import play.mvc.*;
 import play.data.*;
 import play.libs.Json;
 import views.html.fuzzy.system.operatorsets.*;
-
 import xfuzzy.lang.XflParser;
 import xfuzzy.lang.Specification;
 
@@ -23,6 +22,7 @@ import xfuzzy.lang.Specification;
 public class OperatorSets extends Controller {
   
   static Form<OperatorSet> newOPSetForm = form(OperatorSet.class);
+  static Form<OperatorSet> editOPSetForm = form(OperatorSet.class);
   // static Form<Type> editTypeForm = form(Type.class);
   
 
@@ -156,6 +156,104 @@ public class OperatorSets extends Controller {
     return redirect(routes.Systems.detail(id_sys)); 
   }
 
+  /**
+   * 
+   * Prepare the view for edition of the operator set populating
+   * the form with data correctly.
+   * 
+   * @param id_sys - Id of operatorSet's system.
+   * @param id_opset - Id of operatorSet.
+   * @return If haven't errors load the edition view with a form populated.
+   * 
+   * @author bruno.oliveira
+   * 
+   */
+  public static Result prepareEdit(Long id_sys, Integer id_opset){
+	  
+	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+	  
+	  OperatorSet opset = null;
+	  try {
+		  opset = OperatorSet.get(sys, id_opset);
+	  } catch (Exception e) {
+		return badRequest();
+	  }
+	  editOPSetForm = form(OperatorSet.class).fill(
+			  opset
+	  );
+	  
+	  return ok(
+			  edit.render(sys, opset, editOPSetForm)
+			  );
+	  
+  }
+  
+  /**
+   * 
+   * Responsable for receive the new datas of operatorSet and save it.
+   * 
+   * @param id_sys - Id of operatorSet's system.
+   * @param id_opset - Id of operatorSet.
+   * @return If haven't errors will call the model for persist the datas in the bank.
+   * 
+   * @author bruno.oliveira
+   * 
+   */
+  public static Result edit(Long id_sys, Integer id_opset){
+	  Form<OperatorSet> filledForm = editOPSetForm.bindFromRequest();
+	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+	  Specification spec = null;
+	  
+	  try{
+		  spec = sys.getSpecification();
+	  }
+	  catch(Exception e){
+		  e.printStackTrace();
+	  }
+	  
+	  OperatorSet opset = null;
+	  xfuzzy.lang.Operatorset fuzzyOperator = null;
+	  
+	  try{
+		  opset = OperatorSet.get(sys, id_opset);
+		  fuzzyOperator = OperatorSet.getFuzzy(sys, id_opset);
+	  }
+	  catch(Exception e){
+		  return badRequest();
+	  }
+	  
+	  // Checks if the OperatorSet exists with this name
+	  //considering that need to ignore the original operator edited.
+	  xfuzzy.lang.Operatorset search_opset = spec.searchOperatorset(filledForm.field("name").valueOr(""));
+	 // if(spec.searchOperatorset(filledForm.field("name").valueOr("")) != null){
+	  if(search_opset != null && search_opset != fuzzyOperator){
+		  filledForm.reject("name", "Already exist a OperatorSet whit this name");
+	  }
+	  
+	  if(!FuzzySystem.isIdentifier(filledForm.field("name").valueOr(""))){
+		  filledForm.reject("name", "Invalid name");
+	  }
+	  
+	  if(filledForm.hasErrors()){
+		  System.out.println("errors: " + filledForm.errors());
+		  return badRequest(
+				  edit.render(sys, opset, filledForm)	
+				  );
+	  }else{
+          OperatorSet editedOPSet = filledForm.get();
+          try{
+        	  OperatorSet.edit(editedOPSet, fuzzyOperator, spec);
+          }catch(Exception e){
+        	  filledForm.reject("params", "Invalid parameters");
+        	  
+        	  return badRequest( 
+        			  edit.render(sys, opset, filledForm)
+        	  );
+          }
+          return redirect( routes.OperatorSets.detail(id_sys,id_opset) ); 
+	  }
+  }
+  
    //=================== AJAX ===================//
 
     /**

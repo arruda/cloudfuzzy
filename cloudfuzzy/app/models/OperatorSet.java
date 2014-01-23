@@ -9,10 +9,12 @@ import java.util.Vector;
 import models.FuzzySystem;
 
 import javax.validation.*;
+
 import play.data.validation.Constraints;
+import views.html.fuzzy.system.operatorsets.operatorset_template;
+import xfuzzy.lang.Operatorset;
 import xfuzzy.lang.Specification;
 import xfuzzy.lang.XflPackage;
-
 import xfuzzy.lang.Definition;
 import xfuzzy.lang.FuzzyOperator;
 
@@ -246,6 +248,38 @@ public class OperatorSet{
 
         };
 
+    /**
+     * 
+     * Edit a operatorSet in the bank.
+     * 
+     * @param editedOperatorSet -The operatorSet edited in the view.
+     * @param fuzzyOperator - XFuzzy Operator
+     * @param spec - specification
+     * @throws Exception
+     * 
+     * @author bruno.oliveira
+     * 
+     */
+    public static void edit(OperatorSet editedOperatorSet, xfuzzy.lang.Operatorset fuzzyOperator, Specification spec)
+    	throws Exception{
+    	
+    	fuzzyOperator.setName(editedOperatorSet.name);
+    	
+    	for(Integer id_op = 0; id_op < 9; id_op++){
+    		Integer id_option = Integer.parseInt(editedOperatorSet.operators.get(id_op).selectedOption);
+    		FuzzyOperator operator = Operator.createFuzzyOperatorByOpType(id_op, id_option);
+    		fuzzyOperator.set(operator, id_op+1);
+    	}
+    	
+    	for(Integer x = 0; x < spec.getOperatorsets().length; x++){
+    		if(spec.getOperatorsets()[x].getName().equals(fuzzyOperator.getName())){
+    			spec.getOperatorsets()[x] = (xfuzzy.lang.Operatorset) fuzzyOperator.clone();
+    		}
+    	}
+
+		  spec.setModified(true);
+		  spec.save();    
+    }
 
     /**
     *Get the available Operator for a given Operator Type

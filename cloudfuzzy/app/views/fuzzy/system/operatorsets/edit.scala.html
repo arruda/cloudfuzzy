@@ -1,0 +1,69 @@
+@(fuzzySystem : FuzzySystem, opset : models.OperatorSet, editOPSetForm : Form[models.OperatorSet])
+
+@import helper._
+
+@hiddenField(field: Field, className: String = "") = {
+    @input(field, '_label -> null , '_class -> null ) { (id, name, value, _) =>
+        <input type="hidden" name="@name" value="@value" class="@className"> 
+    }
+}
+
+@operatorField(field: Field) = {
+
+
+    @hiddenField(field("name"))
+
+    @select(
+        field("selectedOption"),
+        options =  options(
+                        models.OperatorSet.getAvailableOptionsMapForOperatorsByOperatorLabel(
+                            field("name").value.getOrElse("")
+                        )
+                    ),
+        '_label -> field("name").value,
+        '_class -> "option_field"
+    )          
+
+    
+
+}
+
+@fuzzy.system.operatorsets.operatorset_template(fuzzySystem, opset){
+	<div class="sub_content sub_limited">
+		<h3 class="sub_content_header">Edit Fuzzy Operator Set</h3>
+			@helper.form(action = routes.OperatorSets.edit(fuzzySystem.id, opset.id), 'id -> "editOPSetForm"){
+			
+				@if(editOPSetForm.hasGlobalErrors){
+					<p class="error">
+						@editOPSetForm.globalError.message
+					</p>
+				}
+				
+				<fieldset>
+					<legend>General information for the edit Operator Sets</legend>
+					
+					@inputText(
+						editOPSetForm("name"),
+						'_label -> "Name", 
+						'_help -> "The name of this operator set."
+					)
+					
+				</fieldset>
+				
+				<fieldset>
+					<legend>Select Operators</legend>
+					
+					@repeat(editOPSetForm("operators")){ operator =>
+					
+						@operatorField(operator)
+						
+					}
+
+				</fieldset>
+				
+				<div class="actions">
+					<input type="submit" class="btn primary" value="Save" />
+				</div>
+			}
+	</div>
+}

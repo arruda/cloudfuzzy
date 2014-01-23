@@ -98,7 +98,6 @@
         </div>
         <div class="sub_righted">
 
-
             <div id="system_detail_step4" class="sub_content sub_limited">
                 <h3 class='sub_content_header'>Operators Set</h3>
 
@@ -110,7 +109,7 @@
                         @for( i <- 0 to spec.getOperatorsets().length-1 ) {
                             <li><a href="@routes.OperatorSets.detail(fuzzySystem.id, i)">
                                     @spec.getOperatorsets()(i).getName()
-                            </a>  @forms_util.actions_icons("#", routes.OperatorSets.delete(fuzzySystem.id, i).toString())</li>
+                            </a>  @forms_util.actions_icons(routes.OperatorSets.prepareEdit(fuzzySystem.id, i).toString(), routes.OperatorSets.delete(fuzzySystem.id, i).toString())</li>
                          }
                         </ul>
                     }

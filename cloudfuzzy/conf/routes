@@ -41,6 +41,8 @@ GET     /system/:id_sys/opset/new                 controllers.OperatorSets.prepa
 POST     /system/:id_sys/opset/new                 controllers.OperatorSets.create(id_sys: Long)
 GET     /system/:id_sys/opset/:id_opset             controllers.OperatorSets.detail(id_sys: Long, id_opset: java.lang.Integer)
 GET     /system/:id_sys/opset/:id_opset/del             controllers.OperatorSets.delete(id_sys: Long, id_opset: java.lang.Integer)
+GET		/system/:id_sys/opset/:id_opset/edit				 controllers.OperatorSets.prepareEdit(id_sys: Long, id_opset: java.lang.Integer)
+POST	/system/:id_sys/opset/:id_opset/edit				  controllers.OperatorSets.edit(id_sys: Long, id_opset: java.lang.Integer)
 
 ##Type
 GET     /system/:id_sys/type/new                 controllers.Types.prepareCreate(id_sys: Long)
