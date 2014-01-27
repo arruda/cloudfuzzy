@@ -135,7 +135,7 @@
                         @for( i <- 0 to spec.getRulebases().length-1 ) {
                             <li><a id="rulebase_to_call_@i"class="rulebase_to_call" href="@routes.RuleBases.detail(fuzzySystem.id, i)">
                                     @spec.getRulebases()(i).getName()
-                            </a> @forms_util.actions_icons("#", "#")</li>
+                            </a> @forms_util.actions_icons("#", routes.RuleBases.delete(fuzzySystem.id, i).toString())</li>
                          }
                         </ul>
                     }

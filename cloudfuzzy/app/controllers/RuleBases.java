@@ -86,6 +86,7 @@ public class RuleBases extends Controller {
         return redirect(routes.Systems.detail(sys.id)); 
       }
   }
+  
 
   public static Result detail(Long id_sys, Integer id_rb){
       FuzzySystem sys = FuzzySystem.find.byId(id_sys);
@@ -107,6 +108,38 @@ public class RuleBases extends Controller {
 
   }
 
+  /**
+   * 
+   * Deletes a Rulebesa
+   * 
+   * @param id_sys Identifier of system
+   * @param id_rb Identifier of Rulebase
+   * @return Refresh the detail system views
+   * 
+   * @author bruno.oliveira
+   * 
+   */
+  public static Result delete(Long id_sys, Integer id_rb){
+	  FuzzySystem sys = FuzzySystem.find.byId(id_sys);
+	  xfuzzy.lang.Specification spec = sys.getSpecification();
+	  xfuzzy.lang.Rulebase rb = null;
+	  try{
+		  rb = RuleBase.getFuzzy(sys, id_rb);
+	  }
+	  catch(Exception e){
+		  return badRequest();
+	  }
+	  if(rb.isLinked()){
+		  String msg = "Cannot remove rulebase \"" + rb.getName() + "\".";
+		  System.out.println(msg);
+		  return badRequest();
+	  }
+	  spec.removeRulebase(rb);
+	  spec.setModified(true);
+	  spec.save();
+	  
+	  return redirect(routes.Systems.detail(id_sys));
+  }
 
   /**
   * Deletes a given rulebase variable, 
