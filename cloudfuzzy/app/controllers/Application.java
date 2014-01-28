@@ -16,5 +16,11 @@ public class Application extends Controller {
                 index.render()
         );
     }
+
+    public static Result about() {
+        return ok(
+                about.render()
+        );
+    }
     
 }
