@@ -2,7 +2,7 @@
 <div id='top_menu' class="clearfix" >
         <a href="@routes.Application.index"><h1 class="logo">CloudFuzzy</h1></a>
         <nav>
-            <a href="#">About</a>            
+            <a href="@routes.Application.about">About</a>            
             <a href="#">FAQs</a>
             <div id="container_login">
                 @if(session.get("email") != null){
