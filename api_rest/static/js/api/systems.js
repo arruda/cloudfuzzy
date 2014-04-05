@@ -1,4 +1,5 @@
 var app = app || {};
+window.syscol = {};
 
 // load the following using JQuery's document ready function
 $(function(){
@@ -36,11 +37,11 @@ $(function(){
 
     // set up the view for a system
     app.SystemSmallDetailView = Backbone.View.extend({
-        tagName: 'section',
-        className: 'sub-content',
+        // tagName: 'section',
+        // className: 'sub-content',
         template: ich.systemSmallDetailTmpl,
         events: {
-         'click' : 'showAlert'
+         'click .sub-content' : 'showAlert'
 
         },
 
@@ -68,8 +69,11 @@ $(function(){
         },
 
         render: function () {
+            console.log("SystemSmallDetailView.render");
             // template with ICanHaz.js (ich)
             this.el = ich.systemSmallDetailTmpl(this.model.toJSON());
+            // console.log(this.el);
+            window.syscol = this.el;
             return this;
         }
     });
