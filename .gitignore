@@ -1,3 +1,4 @@
 *.pyc
 db.sqlite*
 .ropeproject/*
+node_modules

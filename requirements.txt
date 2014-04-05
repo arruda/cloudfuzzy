@@ -5,9 +5,7 @@ django-mptt==0.6.0
 django-h5bp==0.3
 
 # REST API
-django-tastypie==0.11.0
-python-mimeparse==0.1.4
-python-dateutil==2.2
+djangorestframework
 
 
 # My ANTLR3 for python github repo
