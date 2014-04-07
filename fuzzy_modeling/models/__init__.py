@@ -7,5 +7,3 @@ from fuzzy_modeling.models.defuzzifys import *
 from fuzzy_modeling.models.adjectives import *
 from fuzzy_modeling.models.operators import *
 from fuzzy_modeling.models.rules import *
-
-

@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'tastypie',
+    'rest_framework',
     'mptt',
     'django_h5bp',
     'cloudfuzzy',

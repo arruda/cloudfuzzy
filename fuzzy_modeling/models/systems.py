@@ -11,7 +11,6 @@ from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy.System import System
 
 
-
 class SystemModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy system model
@@ -23,7 +22,11 @@ class SystemModel(models.Model, PyFuzzyMixin):
     name = models.CharField(_("Name"), blank=True, null=True, max_length=250)
     description = models.TextField(_("Description"))
 
-    user = models.ForeignKey(User, blank=True, null=True)
+    user = models.ForeignKey(User,
+                            blank=True,
+                            null=True,
+                            related_name='systems'
+                            )
 
     def __unicode__(self):
         return self.description
@@ -44,7 +47,6 @@ class SystemModel(models.Model, PyFuzzyMixin):
         for rule in self.rulemodel_set.all():
             fuzzy_rule = rule.get_pyfuzzy()
             system.rules[rule.name] = fuzzy_rule
-
 
         return system
 
@@ -74,7 +76,6 @@ class SystemModel(models.Model, PyFuzzyMixin):
                 inputvar_model = InputvarModel.from_pyfuzzy(pyfuzzy_var)
                 system_model.inputvariablemodel_set.add(inputvar_model)
 
-
         # rules
         for r_name, rule in pyfuzzy.rules.items():
             # set the name of this var to be used latter
@@ -82,7 +83,5 @@ class SystemModel(models.Model, PyFuzzyMixin):
             rule_model = system_model.rulemodel_set.model.from_pyfuzzy(rule)
             system_model.rulemodel_set.add(rule_model)
 
-
         system_model.save()
         return system_model
-

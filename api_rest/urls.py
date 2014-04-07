@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+
 from django.conf.urls import patterns, include, url
 
-from api_rest.api import SystemResource, InputVariableResource
+from .api import SystemList, SystemDetail
 
-from tastypie.api import Api
-
-v1_api = Api(api_name='v1')
-v1_api.register(SystemResource())
-v1_api.register(InputVariableResource())
-
+system_urls = patterns('',
+    url(r'^$', SystemList.as_view(), name='system-list'),
+    url(r'^/(?P<pk>\d+)$', SystemDetail.as_view(), name='system-detail'),
+)
 
 urlpatterns = patterns('',
-    (r'^', include(v1_api.urls)),
+    url(r'^systems', include(system_urls)),
 )
