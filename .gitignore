@@ -2,3 +2,5 @@
 db.sqlite*
 .ropeproject/*
 node_modules
+
+*.sublime-*
