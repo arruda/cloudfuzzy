@@ -4,15 +4,19 @@
 <head>
 <link rel="stylesheet" type="text/css" href="{% static "bootstrap/dist/css/bootstrap.css" %}">
 </head>
-<body ng-app="{% block ng_app %}cloudfuzzy.app.static{% endblock %}">
+<body ng-app="{% block ng_app %}cloudfuzzy.app.users{% endblock %}">
 <div class="content" ng-controller="{% block ng_controller %}AppController{% endblock %}">{% block content %}
 {% verbatim %}
-    <div class="panel" ng-repeat="system in systems">
+    <div class="panel" ng-repeat="user in users">
         <div class="panel-heading clearfix">
-            <h3 class="panel-title">{{ system.name }}</h3>
-            <author class="pull-right">{{ system.user.username }}</author>
+            <h3 class="panel-title">{{ user.username }}</h3>
         </div>
-        <p class="well">{{ system.description }}</p>
+
+        <p class="well">
+        <span class="system" ng-repeat="system in systems[user.username]">
+            {{ system.description }}
+        </span>
+        </p>
     </div>
 {% endverbatim %}
 {% endblock %}</div>
