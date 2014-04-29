@@ -1,8 +1,5 @@
-app = angular.module 'cloudfuzzy.app.static', []
+app = angular.module 'cloudfuzzy.app.static', ['cloudfuzzy.api']
 
-app.controller 'AppController', ['$scope', '$http', ($scope, $http) ->
-    $scope.systems = []
-    $http.get('/api/systems').then (result) ->
-        angular.forEach result.data, (item) ->
-            $scope.systems.push item
+app.controller 'AppController', ['$scope', 'System', ($scope, System) ->
+    $scope.systems = System.query()
 ]

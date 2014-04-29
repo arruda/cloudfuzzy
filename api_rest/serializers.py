@@ -11,6 +11,7 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    systems = serializers.HyperlinkedIdentityField('systems', view_name='usersystem-list', lookup_field='username')
 
     class Meta:
         model = User
