@@ -1,24 +1,24 @@
-{% extends "base.html" %}
+{% load staticfiles %}
 
-{% block js-imports %}
-{{ block.super }}
-
-{% include 'ich_tmpl/_subcontent_full.tpml.html' %}
-
-{% include 'ich_tmpl/system/_system_small_detail.tmpl.html' %}
-{% include 'ich_tmpl/system/_system_list_menu.tmpl.html' %}
-
-<script src="{{ STATIC_URL }}js/api/systems.js"></script>
-<script src="{{ STATIC_URL }}js/api/app.js"></script>
-
-{% endblock %}
-
-
-{% block menu %}
-{% endblock %}
-
-{% block content-header %}
-{% endblock %}
-
-{% block content-area %}
-{% endblock %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static "bootstrap/dist/css/bootstrap.css" %}">
+</head>
+<body ng-app="{% block ng_app %}cloudfuzzy.app.static{% endblock %}">
+<div class="content" ng-controller="{% block ng_controller %}AppController{% endblock %}">{% block content %}
+{% verbatim %}
+    <div class="panel" ng-repeat="system in systems">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title">{{ system.name }}</h3>
+            <author class="pull-right">{{ system.user.username }}</author>
+        </div>
+        <p class="well">{{ system.description }}</p>
+    </div>
+{% endverbatim %}
+{% endblock %}</div>
+<script src="{% static "underscore/underscore.js" %}"></script>
+<script src="{% static "angular/angular.js" %}"></script>
+<script src="{% static "angular-resource/angular-resource.js" %}"></script>
+<script src="{% static "js/script.js" %}"></script>
+</body>
+</html>
