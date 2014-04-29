@@ -2,10 +2,8 @@
 Cloudfuzzy
 ===================================
 
-About this:
------------------------------------
+CloudFuzzy is a online Toolbox for Fuzzy Modeling.
 
-Some information
 
 
 LICENSE
