@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from rest_framework import generics, permissions
 
 from fuzzy_modeling.models import SystemModel
 
 from .serializers import SystemModelSerializer, UserSerializer
+
+
+User = get_user_model()
 
 
 class SystemMixin(object):

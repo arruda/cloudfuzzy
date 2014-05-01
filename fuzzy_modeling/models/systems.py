@@ -5,10 +5,13 @@ from django.db import models
 
 from django.utils.translation import ugettext_lazy as _
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy.System import System
+
+
+User = get_user_model()
 
 
 class SystemModel(models.Model, PyFuzzyMixin):
