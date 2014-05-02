@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
-
 from django.db import models
 
 from django.contrib.contenttypes.models import ContentType
@@ -48,13 +46,13 @@ class ParameterModel(models.Model):
         if self.value_type == self.TYPE_CHOICES[0][0]:
             return self.value == "True"
 
-        elif  self.value_type == self.TYPE_CHOICES[1][0]:
+        elif self.value_type == self.TYPE_CHOICES[1][0]:
             return self.value
 
-        elif  self.value_type == self.TYPE_CHOICES[2][0]:
+        elif self.value_type == self.TYPE_CHOICES[2][0]:
             return float(self.value)
 
-        elif  self.value_type == self.TYPE_CHOICES[3][0]:
+        elif self.value_type == self.TYPE_CHOICES[3][0]:
             return float(self.value)
 
     @classmethod
@@ -71,4 +69,3 @@ class ParameterModel(models.Model):
 
         #if none of the above return string
         return cls.TYPE_CHOICES[1][0]
-

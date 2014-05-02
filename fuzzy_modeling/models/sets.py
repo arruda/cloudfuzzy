@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import inspect
 
-from decimal import Decimal
-
 from django.db import models
 
 from django.contrib.contenttypes import generic
@@ -23,7 +21,10 @@ class SetModel(models.Model, PyFuzzyMixin):
     class Meta:
         app_label = 'fuzzy_modeling'
 
-    SET_CHOICES = get_choices_from_python_path_listing('fuzzy.set',ignores=['operations',])
+    SET_CHOICES = get_choices_from_python_path_listing(
+        'fuzzy.set',
+        ignores=['operations', ]
+    )
 
     set = models.CharField(_("Set"),
                 choices=SET_CHOICES,
@@ -51,22 +52,20 @@ class SetModel(models.Model, PyFuzzyMixin):
             import re
             p = self.parameters.all()[0]
             # change '(1,2),(3,4)' to ['', '1,2', ',', '3,4', '']
-            points =[]
+            points = []
             tmp = re.split("\[|\]", p.get_value())[1]
             tmp = re.split("\(|\)", tmp)
             for element in tmp:
                 if element != '' and element != ', ' and element != ',':
-                    x,y = element.split(',')
+                    x, y = element.split(',')
                     x = float(x)
                     y = float(y)
-                    points.append((x,y))
+                    points.append((x, y))
 
-            parameters_dict[p.name]= points
+            parameters_dict[p.name] = points
         else:
             for p in self.parameters.all():
                 parameters_dict[p.name] = p.get_value()
-
-
 
         set = SetClass(**parameters_dict)
         return set
@@ -80,9 +79,9 @@ class SetModel(models.Model, PyFuzzyMixin):
         set_model = cls()
 
         set_type = 'fuzzy.set.%s.%s' % (
-                pyfuzzy.__class__.__name__ ,
+                pyfuzzy.__class__.__name__,
                 pyfuzzy.__class__.__name__
-            )
+        )
         set_model.set = set_type
         set_model.save()
 
@@ -90,18 +89,17 @@ class SetModel(models.Model, PyFuzzyMixin):
         try:
             for arg in inspect.getargspec(pyfuzzy.__init__).args:
                 if arg != 'self':
-                    arg_value = getattr(pyfuzzy,arg)
+                    arg_value = getattr(pyfuzzy, arg)
                     arg_type = ParameterModel.get_type_from_python_type(arg_value)
                     set_model.parameters.create(
-                                name = arg,
-                                value = arg_value,
-                                value_type = arg_type
-                        )
+                                name=arg,
+                                value=arg_value,
+                                value_type=arg_type
+                    )
 
         # will raise this exception when the given type don't implement a __init__ function
         # (never overrided the object.__init__)
         except TypeError:
             pass
-
 
         return set_model

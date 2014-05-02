@@ -24,21 +24,20 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
 
     name = models.CharField(_("Name"), blank=True, null=True, max_length=250)
 
-    set =   models.ForeignKey( SetModel  )
-    com =   models.ForeignKey( NormModel , null=True, blank=True)
+    set = models.ForeignKey(SetModel)
+    com = models.ForeignKey(NormModel, null=True, blank=True)
 
-    ivar =   models.ForeignKey( InputVariableModel , null=True, blank=True)
-    ovar =   models.ForeignKey( OutputVariableModel , null=True, blank=True)
-
+    ivar = models.ForeignKey(InputVariableModel, null=True, blank=True)
+    ovar = models.ForeignKey(OutputVariableModel, null=True, blank=True)
 
     def get_pyfuzzy(self):
         """
         Return the Pyfuzzy class of this model
         """
-        set  = self.set.get_pyfuzzy()
-        com  = self.com.get_pyfuzzy() if self.com else None
+        set = self.set.get_pyfuzzy()
+        com = self.com.get_pyfuzzy() if self.com else None
         kwargs = {
-            'set':set,
+            'set': set,
         }
         if com:
             kwargs['COM'] = com
@@ -57,8 +56,8 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
             name = None
 
         adj_model = cls(
-                name = name
-            )
+                name=name
+        )
 
         # SET
         set_model = cls.set.field.related.parent_model.from_pyfuzzy(pyfuzzy.set)
@@ -71,7 +70,6 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
 
         adj_model.save()
         return adj_model
-
 
     def __unicode__(self):
         return self.name

@@ -13,7 +13,6 @@ from fuzzy.System import System
 
 class SystemModelTest(TestCase, ResetMock):
 
-
     def setUp(self):
         # self.aluno = mommy.make_one(Aluno)
         # from fuzzy_modeling.models.systems import SystemModel as SystemModelOriginal
@@ -30,7 +29,7 @@ class SystemModelTest(TestCase, ResetMock):
 
     def _named_and_pyfuzzymixin_mock(self, name):
         """
-        mock a variable or  to be an object that has attr name and a get_pyfuzzy that returns this name
+        mock a variable or to be an object that has attr name and a get_pyfuzzy that returns this name
         """
         var = mock.Mock()
         var.name = name

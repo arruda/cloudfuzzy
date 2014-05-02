@@ -28,10 +28,10 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
         # order_insertion_by = ['id']
 
     OPERATOR_TYPES = (
-        ('fuzzy.operator.Compound.Compound',_('Compound')),
-        ('fuzzy.operator.Const.Const',_('Const')),
-        ('fuzzy.operator.Input.Input',_('Input')),
-        ('fuzzy.operator.Not.Not',_('Not')),
+        ('fuzzy.operator.Compound.Compound', _('Compound')),
+        ('fuzzy.operator.Const.Const', _('Const')),
+        ('fuzzy.operator.Input.Input', _('Input')),
+        ('fuzzy.operator.Not.Not', _('Not')),
     )
 
     operator_type = models.CharField(_("Operator Type"),
@@ -42,14 +42,26 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
             )
 
     compound_norm = models.ForeignKey(NormModel, null=True, blank=True)
-    compound_inputs = TreeForeignKey('self',related_name="compound_inputs_children",null=True,blank=True, verbose_name=_('Input'))
+    compound_inputs = TreeForeignKey(
+        'self',
+        related_name="compound_inputs_children",
+        null=True,
+        blank=True,
+        verbose_name=_('Input')
+    )
 
-    const_value = models.DecimalField(_("Constant Value"),max_digits=10, decimal_places=2,default=float("0"), blank=True, null=True)
+    const_value = models.DecimalField(
+        _("Constant Value"),
+        max_digits=10,
+        decimal_places=2,
+        default=float("0"),
+        blank=True,
+        null=True
+    )
 
     input_adjective = models.ForeignKey(AdjectiveModel, blank=True, null=True)
 
     not_input = models.ForeignKey('self', blank=True, null=True, related_name='not_input_set')
-
 
     def _get_pyfuzzy_compound(self):
         """
@@ -110,9 +122,6 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
 
         return None
 
-
-
-
     @classmethod
     def _from_pyfuzzy_compound(cls, pyfuzzy):
         op_model = cls(operator_type='fuzzy.operator.Compound.Compound')
@@ -127,10 +136,8 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
             op_i_model = cls.from_pyfuzzy(op_input)
             op_model.compound_inputs_children.add(op_i_model)
 
-
         op_model.save()
         return op_model
-
 
     @classmethod
     def _from_pyfuzzy_const(cls, pyfuzzy):
@@ -138,7 +145,6 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
 
         op_model.save()
         return op_model
-
 
     @classmethod
     def _from_pyfuzzy_input(cls, pyfuzzy):
@@ -181,4 +187,4 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
             return cls._from_pyfuzzy_not(pyfuzzy)
 
     def __unicode__(self):
-        return "%s - %s" %  (self.get_operator_type_display(), self.id)
+        return "%s - %s" % (self.get_operator_type_display(), self.id)

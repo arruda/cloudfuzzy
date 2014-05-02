@@ -12,7 +12,10 @@ system_urls = patterns('',
 )
 
 user_urls = patterns('',
-    url(r'^/(?P<username>[0-9a-zA-Z_-]+)/systems$', UserSystemList.as_view(), name='usersystem-list'),
+    url(r'^/(?P<username>[0-9a-zA-Z_-]+)/systems$',
+        UserSystemList.as_view(),
+        name='usersystem-list'),
+
     url(r'^/(?P<username>[0-9a-zA-Z_-]+)$', UserDetail.as_view(), name='user-detail'),
     url(r'^$', UserList.as_view(), name='user-list')
 )

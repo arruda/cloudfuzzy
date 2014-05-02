@@ -1,27 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
-
 from django.db import models
-
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
 
 from django.utils.translation import ugettext_lazy as _
 
-
-from fuzzy.System import System
 from fuzzy.Variable import Variable
 from fuzzy.InputVariable import InputVariable
 from fuzzy.OutputVariable import OutputVariable
-from fuzzy.Adjective import Adjective
-
 
 from fuzzy_modeling.models.systems import SystemModel
 from fuzzy_modeling.models.defuzzifys import DefuzzifyModel
 
 from fuzzy_modeling.models.utils import PyFuzzyMixin
 from fuzzy_modeling.utils import get_class_by_python_path, get_choices_from_python_path_listing
+
 
 class VariableModel(models.Model, PyFuzzyMixin):
     """
@@ -35,17 +27,29 @@ class VariableModel(models.Model, PyFuzzyMixin):
     name = models.CharField(_("Name"), blank=False, null=False, max_length=250)
 
     description = models.TextField(_("Description"))
-    min = models.DecimalField(_("Min"),max_digits=10, decimal_places=2,default=float("0"))
-    max = models.DecimalField(_("Max"),max_digits=10, decimal_places=2,default=float("0"))
+    min = models.DecimalField(
+        _("Min"),
+        max_digits=10,
+        decimal_places=2,
+        default=float("0")
+    )
+
+    max = models.DecimalField(
+        _("Max"),
+        max_digits=10,
+        decimal_places=2,
+        default=float("0")
+    )
     unit = models.CharField(_("Unit"), max_length=250)
 
-    system = models.ForeignKey(SystemModel, blank=True, null=True) #null = true so that it can be created by parts
+    #null = true so that it can be created by parts
+    system = models.ForeignKey(SystemModel, blank=True, null=True)
 
     def get_pyfuzzy(self):
         """
         Return the Pyfuzzy class of this model
         """
-        var = Variable(description=self.description,min=self.min, max=self.max, unit=self.unit)
+        var = Variable(description=self.description, min=self.min, max=self.max, unit=self.unit)
         return var
 
     def __unicode__(self):
@@ -60,19 +64,22 @@ class InputVariableModel(VariableModel, PyFuzzyMixin):
     class Meta(VariableModel.Meta):
         abstract = False
 
-    FUZZIFY_CHOICES = get_choices_from_python_path_listing('fuzzy.fuzzify',ignores=['Base',])
+    FUZZIFY_CHOICES = get_choices_from_python_path_listing(
+        'fuzzy.fuzzify',
+        ignores=['Base', ]
+    )
     # (
     #     ('fuzzy.fuzzify.Plain.Plain', _("Plain")),
     #     ('fuzzy.fuzzify.Dict.Dict', _("Dict")),
     # )
 
-
-    fuzzify = models.CharField(_("Fuzzify"),
-                choices=FUZZIFY_CHOICES,
-                max_length=250,
-                blank=False, null=False,
-                default=FUZZIFY_CHOICES[0][0]
-            )
+    fuzzify = models.CharField(
+        _("Fuzzify"),
+        choices=FUZZIFY_CHOICES,
+        max_length=250,
+        blank=False, null=False,
+        default=FUZZIFY_CHOICES[0][0]
+    )
 
     def get_pyfuzzy(self):
         """
@@ -99,12 +106,12 @@ class InputVariableModel(VariableModel, PyFuzzyMixin):
         Return the model representation of an instance of the pyfuzzy attr
         """
         ivar_model = cls(
-                name = pyfuzzy.name,
-                description = pyfuzzy.description,
-                min = pyfuzzy.min,
-                max = pyfuzzy.max,
-                unit = pyfuzzy.unit
-            )
+            name=pyfuzzy.name,
+            description=pyfuzzy.description,
+            min=pyfuzzy.min,
+            max=pyfuzzy.max,
+            unit=pyfuzzy.unit
+        )
         ivar_model.save()
 
         # setting the correct fuzzify choice value
@@ -122,6 +129,7 @@ class InputVariableModel(VariableModel, PyFuzzyMixin):
         ivar_model.save()
         return ivar_model
 
+
 class OutputVariableModel(VariableModel, PyFuzzyMixin):
     """
     A Fuzzy output variable model
@@ -130,8 +138,7 @@ class OutputVariableModel(VariableModel, PyFuzzyMixin):
     class Meta(VariableModel.Meta):
         abstract = False
 
-
-    defuzzify = models.ForeignKey( DefuzzifyModel )
+    defuzzify = models.ForeignKey(DefuzzifyModel)
 
     def get_pyfuzzy(self):
         """
@@ -154,12 +161,12 @@ class OutputVariableModel(VariableModel, PyFuzzyMixin):
         Return the model representation of an instance of the pyfuzzy attr
         """
         ovar_model = cls(
-                name = pyfuzzy.name,
-                description = pyfuzzy.description,
-                min = pyfuzzy.min,
-                max = pyfuzzy.max,
-                unit = pyfuzzy.unit
-            )
+            name=pyfuzzy.name,
+            description=pyfuzzy.description,
+            min=pyfuzzy.min,
+            max=pyfuzzy.max,
+            unit=pyfuzzy.unit
+        )
 
         # defuzzify
         defuzz_model = cls.defuzzify.field.related.parent_model.from_pyfuzzy(pyfuzzy.defuzzify)

@@ -19,10 +19,7 @@ from fuzzy.set.ZFunction import ZFunction
 from fuzzy.set.PiFunction import PiFunction
 
 
-
-
 class SetModelTest(TestCase, ResetMock):
-
 
     # def setUp(self):
     #     pass

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from decimal import Decimal
 
 from django.db import models
 
@@ -15,6 +14,7 @@ from fuzzy_modeling.models.operators import OperatorModel
 from fuzzy.Rule import Rule
 from fuzzy_modeling.models.utils import PyFuzzyMixin
 
+
 class RuleModel(models.Model, PyFuzzyMixin):
     """
     A Fuzzy Rule model
@@ -29,9 +29,15 @@ class RuleModel(models.Model, PyFuzzyMixin):
     cer = models.ForeignKey(NormModel)
     operator = models.ForeignKey(OperatorModel)
 
-    certainty = models.DecimalField(_("Certainty"),max_digits=10, decimal_places=2,default=float("1"))
+    certainty = models.DecimalField(
+        _("Certainty"),
+        max_digits=10,
+        decimal_places=2,
+        default=float("1")
+    )
 
-    system = models.ForeignKey(SystemModel, blank=True, null=True) # set to true so that it can be made by parts
+    # set to true so that it can be made by parts
+    system = models.ForeignKey(SystemModel, blank=True, null=True)
 
     def get_pyfuzzy(self):
         """
@@ -41,7 +47,12 @@ class RuleModel(models.Model, PyFuzzyMixin):
         cer = self.cer.get_pyfuzzy()
         operator = self.operator.get_pyfuzzy()
 
-        rule = Rule(adjective=adjective,operator=operator,certainty=self.certainty,CER=cer)
+        rule = Rule(
+            adjective=adjective,
+            operator=operator,
+            certainty=self.certainty,
+            CER=cer
+        )
 
         return rule
 

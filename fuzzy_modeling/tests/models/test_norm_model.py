@@ -11,9 +11,7 @@ from fuzzy_modeling.models.norms import NormModel
 from fuzzy_modeling.utils import get_class_by_python_path
 
 
-
 class NormModelTest(TestCase, ResetMock):
-
 
     # def setUp(self):
     #     pass
@@ -28,11 +26,11 @@ class NormModelTest(TestCase, ResetMock):
         """
         param = mock.Mock()
         param.name = name
-        param.get_value = lambda : value
+        param.get_value = lambda: value
         return param
 
 
-    def _mock_normModel(self, norm_type, init_kwargs = {}):
+    def _mock_normModel(self, norm_type, init_kwargs={}):
         self.norm_type = norm_type
         self.norm = NormModel(norm_type=norm_type)
 
@@ -45,13 +43,11 @@ class NormModelTest(TestCase, ResetMock):
 
         # mocking parameters (queryset)
         parameters_queryset = mock.Mock()
-        parameters_queryset.all = lambda : self.parameters_mock
-        self.set_pre_mock(NormModel,'parameters')
+        parameters_queryset.all = lambda: self.parameters_mock
+        self.set_pre_mock(NormModel, 'parameters')
         NormModel.parameters = parameters_queryset
 
-
         return self.norm
-
 
     def _get_init_args_dict_for_class(self, cls):
         import inspect
@@ -70,7 +66,6 @@ class NormModelTest(TestCase, ResetMock):
 
         return init_kwargs
 
-
     def _mock_norm_pyfuzzy(self, PyfuzzyNormClass, init_kwargs={}):
 
         # the expected pyfuzzy norm
@@ -78,8 +73,7 @@ class NormModelTest(TestCase, ResetMock):
 
         return pyfuzzy_set_expected
 
-
-    def _test_a_especific_norm_type_get_pyfuzzy(self,norm_type):
+    def _test_a_especific_norm_type_get_pyfuzzy(self, norm_type):
         PyfuzzyNormClass = get_class_by_python_path(norm_type)
 
         init_kwargs = self._get_init_args_dict_for_class(PyfuzzyNormClass)
@@ -113,13 +107,16 @@ class NormModelTest(TestCase, ResetMock):
 
         init_kwargs = self._get_init_args_dict_for_class(PyfuzzyNormClass)
 
-        pyfuzzy_norm = self._mock_norm_pyfuzzy(PyfuzzyNormClass, init_kwargs = init_kwargs)
+        pyfuzzy_norm = self._mock_norm_pyfuzzy(
+            PyfuzzyNormClass,
+            init_kwargs=init_kwargs
+        )
 
         new_norm = NormModel.from_pyfuzzy(pyfuzzy_norm)
 
+        pyfuzzy_norm_full_namespace = pyfuzzy_norm.__module__
+        pyfuzzy_norm_full_namespace += "." + pyfuzzy_norm.__class__.__name__
 
-
-        pyfuzzy_norm_full_namespace = pyfuzzy_norm.__module__ + "." + pyfuzzy_norm.__class__.__name__
         # are from the same class
         self.assertEquals(pyfuzzy_norm_full_namespace, new_norm.norm_type)
 
@@ -128,9 +125,8 @@ class NormModelTest(TestCase, ResetMock):
             param = new_norm.parameters.get(name=arg_name)
             self.assertEquals(arg_value, param.get_value())
 
-
     def test_norm_from_pyfuzzy_for_all_possible_norm_types(self):
-        " shoud return the correct corresponding NormModel for all the Norm types as pyfuzzy object "
+        "shoud return the correct corresponding NormModel for all the Norm types as pyfuzzy object "
 
         for norm_type in NormModel.NORM_CHOICES:
             self._test_a_especific_norm_type_from_pyfuzzy(norm_type[0])

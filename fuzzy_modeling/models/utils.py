@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class PyFuzzyMixin(object):
     """
     Base mixing class for pyfuzzy model representation

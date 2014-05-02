@@ -21,7 +21,10 @@ class NormModel(models.Model, PyFuzzyMixin):
     class Meta:
         app_label = 'fuzzy_modeling'
 
-    NORM_CHOICES = get_choices_from_python_path_listing('fuzzy.norm',ignores=['Norm','ParametricNorm',])
+    NORM_CHOICES = get_choices_from_python_path_listing(
+        'fuzzy.norm',
+        ignores=['Norm', 'ParametricNorm', ]
+    )
 
     norm_type = models.CharField(_("Norm Type"),
                 choices=NORM_CHOICES,
@@ -52,9 +55,9 @@ class NormModel(models.Model, PyFuzzyMixin):
         norm_model = cls()
 
         norm_type = 'fuzzy.norm.%s.%s' % (
-                pyfuzzy.__class__.__name__ ,
+                pyfuzzy.__class__.__name__,
                 pyfuzzy.__class__.__name__
-            )
+        )
         norm_model.norm_type = norm_type
         norm_model.save()
 
@@ -62,13 +65,13 @@ class NormModel(models.Model, PyFuzzyMixin):
         try:
             for arg in inspect.getargspec(pyfuzzy.__init__).args:
                 if arg != 'self':
-                    arg_value = getattr(pyfuzzy,arg)
+                    arg_value = getattr(pyfuzzy, arg)
                     arg_type = ParameterModel.get_type_from_python_type(arg_value)
                     norm_model.parameters.create(
-                                name = arg,
-                                value = arg_value,
-                                value_type = arg_type
-                        )
+                                name=arg,
+                                value=arg_value,
+                                value_type=arg_type
+                    )
 
         # will raise this exception when the given type don't implement a __init__ function
         # (never overrided the object.__init__)
