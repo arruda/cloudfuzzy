@@ -8,6 +8,7 @@ from rest_framework import generics, permissions
 from fuzzy_modeling.models import SystemModel
 
 from .serializers import SystemModelSerializer, UserSerializer
+from .permissions import SystemAuthorPermission
 
 
 User = get_user_model()
@@ -18,7 +19,7 @@ class SystemMixin(object):
     model = SystemModel
     serializer_class = SystemModelSerializer
     permission_classes = [
-        permissions.AllowAny
+        SystemAuthorPermission
     ]
 
     def pre_save(self, obj):
