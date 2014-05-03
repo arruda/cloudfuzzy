@@ -19,6 +19,7 @@ class SystemMixin(object):
     model = SystemModel
     serializer_class = SystemModelSerializer
     permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
         SystemAuthorPermission
     ]
 
@@ -26,6 +27,13 @@ class SystemMixin(object):
         """Force user to the current request user on save"""
         obj.user = self.request.user
         return super(SystemMixin, self).pre_save(obj)
+
+    def get_queryset(self):
+        """
+        Only show the systems of the given user
+        """
+
+        return self.model._default_manager.filter(user=self.request.user)
 
 
 class SystemList(SystemMixin, generics.ListCreateAPIView):
