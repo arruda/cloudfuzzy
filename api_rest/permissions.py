@@ -14,32 +14,35 @@ class SafeMethodsOnlyPermission(permissions.BasePermission):
 
 
 class SystemAuthorPermission(permissions.BasePermission):
-    """only the user can modify existing instances"""
+    """
+        Permissions in the object only for the object owner
+    """
 
-    def has_permission(self, request, view):
-        return self.has_object_permission(request, view)
+    def has_object_permission(self, request, view, obj):
+        # Write permissions are only allowed to the owner of the snippet.
+        return obj.user == request.user
 
-    def has_object_permission(self, request, view, obj=None):
-        if obj is None:
-            # Either a list or a create, so no author
-            can_edit = True
-        else:
-            can_edit = request.user == obj.user
+    # def has_object_permission(self, request, view, obj=None):
+    #     if obj is None:
+    #         # Either a list or a create, so no author
+    #         can_edit = True
+    #     else:
+    #         can_edit = request.user == obj.user
 
-        return can_edit
+    #     return can_edit
 
 
-class SystemAuthorCanEditPermission(permissions.BasePermission):
-    """only the user can modify existing instances"""
+# class SystemAuthorCanEditPermission(permissions.BasePermission):
+#     """only the user can modify existing instances"""
 
-    def has_permission(self, request, view):
-        return self.has_object_permission(request, view)
+#     def has_permission(self, request, view):
+#         return self.has_object_permission(request, view)
 
-    def has_object_permission(self, request, view, obj=None):
-        if obj is None:
-            # Either a list or a create, so no author
-            can_edit = True
-        else:
-            can_edit = request.user == obj.user
+#     def has_object_permission(self, request, view, obj=None):
+#         if obj is None:
+#             # Either a list or a create, so no author
+#             can_edit = True
+#         else:
+#             can_edit = request.user == obj.user
 
-        return can_edit or super(SystemAuthorCanEditPermission, self).has_object_permission(request, view, obj)
+#         return can_edit or super(SystemAuthorCanEditPermission, self).has_object_permission(request, view, obj)
