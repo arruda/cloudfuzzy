@@ -5,7 +5,7 @@ django-mptt==0.6.0
 django-h5bp==0.3
 
 # REST API
-djangorestframework
+djangorestframework==2.3.13
 
 
 # My ANTLR3 for python github repo
