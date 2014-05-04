@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions
 
 from fuzzy_modeling.models import SystemModel
+from rest_framework import viewsets
 
 from .serializers import SystemModelSerializer, UserSerializer
 from .permissions import SystemAuthorPermission
@@ -14,7 +15,7 @@ from .permissions import SystemAuthorPermission
 User = get_user_model()
 
 
-class SystemMixin(object):
+class SystemViewSet(viewsets.ModelViewSet):
 
     model = SystemModel
     serializer_class = SystemModelSerializer
@@ -26,7 +27,7 @@ class SystemMixin(object):
     def pre_save(self, obj):
         """Force user to the current request user on save"""
         obj.user = self.request.user
-        return super(SystemMixin, self).pre_save(obj)
+        return super(SystemViewSet, self).pre_save(obj)
 
     def get_queryset(self):
         """
@@ -36,12 +37,12 @@ class SystemMixin(object):
         return self.model._default_manager.filter(user__username=self.request.user.username)
 
 
-class SystemList(SystemMixin, generics.ListCreateAPIView):
-    pass
+# class SystemList(SystemMixin, generics.ListCreateAPIView):
+#     pass
 
 
-class SystemDetail(SystemMixin, generics.RetrieveUpdateDestroyAPIView):
-    pass
+# class SystemDetail(SystemMixin, generics.RetrieveUpdateDestroyAPIView):
+#     pass
 
 
 class UserList(generics.ListCreateAPIView):
