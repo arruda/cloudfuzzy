@@ -34,15 +34,8 @@ class SystemViewSet(viewsets.ModelViewSet):
         Only show the systems of the given user
         """
 
-        return self.model._default_manager.filter(user__username=self.request.user.username)
-
-
-# class SystemList(SystemMixin, generics.ListCreateAPIView):
-#     pass
-
-
-# class SystemDetail(SystemMixin, generics.RetrieveUpdateDestroyAPIView):
-#     pass
+        queryset = super(UserSystemList, self).get_queryset()
+        return queryset.filter(user__username=self.request.user.username)
 
 
 class UserList(generics.ListCreateAPIView):
