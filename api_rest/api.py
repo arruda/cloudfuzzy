@@ -9,7 +9,7 @@ from fuzzy_modeling.models import SystemModel
 from rest_framework import viewsets
 
 from .serializers import SystemModelSerializer, UserSerializer
-from .permissions import SystemAuthorPermission
+from .permissions import SystemAuthorPermission, OwnUserPermission
 
 
 User = get_user_model()
@@ -34,22 +34,20 @@ class SystemViewSet(viewsets.ModelViewSet):
         Only show the systems of the given user
         """
 
-        queryset = super(UserSystemList, self).get_queryset()
+        queryset = super(SystemViewSet, self).get_queryset()
         return queryset.filter(user__username=self.request.user.username)
 
 
-class UserList(generics.ListCreateAPIView):
-    model = User
-    serializer_class = UserSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
+class UserViewSet(viewsets.ModelViewSet):
 
-
-class UserDetail(generics.RetrieveAPIView):
     model = User
     serializer_class = UserSerializer
     lookup_field = 'username'
+
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        OwnUserPermission
+    ]
 
 
 class UserSystemList(generics.ListAPIView):

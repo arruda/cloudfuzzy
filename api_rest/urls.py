@@ -6,21 +6,20 @@ from django.conf.urls import patterns, include, url
 from rest_framework.routers import DefaultRouter
 
 from .api import SystemViewSet
-from .api import UserList, UserDetail, UserSystemList
+from .api import UserViewSet
+from .api import UserSystemList
 
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
 router.register(r'systems', SystemViewSet)
+router.register(r'users', UserViewSet)
 
 
 user_urls = patterns('',
     url(r'^/(?P<username>[0-9a-zA-Z_-]+)/systems$',
         UserSystemList.as_view(),
         name='usersystem-list'),
-
-    url(r'^/(?P<username>[0-9a-zA-Z_-]+)$', UserDetail.as_view(), name='user-detail'),
-    url(r'^$', UserList.as_view(), name='user-list')
 )
 
 urlpatterns = patterns('',
