@@ -23,9 +23,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SystemModelSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
-    # user = serializers.HyperlinkedRelatedField(view_name='user-detail',
-    #                                               lookup_field='username')
+    # user = UserSerializer(required=False)
+    user = serializers.HyperlinkedRelatedField(view_name='user-detail',
+                                              lookup_field='username')
 
     def get_validation_exclusions(self):
         # Need to exclude `user`
