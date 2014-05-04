@@ -33,7 +33,7 @@ class SystemMixin(object):
         Only show the systems of the given user
         """
 
-        return self.model._default_manager.filter(user=self.request.user)
+        return self.model._default_manager.filter(user__username=self.request.user.username)
 
 
 class SystemList(SystemMixin, generics.ListCreateAPIView):
