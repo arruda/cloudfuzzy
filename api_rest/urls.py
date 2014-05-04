@@ -7,13 +7,15 @@ from rest_framework.routers import DefaultRouter
 
 from .api import SystemViewSet
 from .api import UserViewSet
+from .api import InputVariableViewSet
 from .api import UserSystemList
 
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
-router.register(r'systems', SystemViewSet)
 router.register(r'users', UserViewSet)
+router.register(r'systems', SystemViewSet)
+router.register(r'input-variables', InputVariableViewSet)
 
 
 user_urls = patterns('',

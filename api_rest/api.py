@@ -4,11 +4,13 @@ from __future__ import absolute_import
 from django.contrib.auth import get_user_model
 
 from rest_framework import generics, permissions
-
-from fuzzy_modeling.models import SystemModel
 from rest_framework import viewsets
 
+from fuzzy_modeling.models import SystemModel, InputVariableModel
+
 from .serializers import SystemModelSerializer, UserSerializer
+from .serializers import InputVariableModelSerializer
+
 from .permissions import SystemAuthorPermission, OwnUserPermission
 
 
@@ -57,3 +59,13 @@ class UserSystemList(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(UserSystemList, self).get_queryset()
         return queryset.filter(user__username=self.kwargs.get('username'))
+
+
+class InputVariableViewSet(viewsets.ModelViewSet):
+    model = InputVariableModel
+    serializer_class = InputVariableModelSerializer
+
+    # permission_classes = [
+    #     permissions.IsAuthenticatedOrReadOnly,
+    #     OwnUserPermission
+    # ]
