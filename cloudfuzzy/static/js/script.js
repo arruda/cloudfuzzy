@@ -18,7 +18,19 @@
 
   app.controller('AppController', [
     '$scope', 'System', function($scope, System) {
-      return $scope.systems = System.query();
+      $scope.systems = System.query();
+      $scope.a_system = System.get({
+        id: 2
+      });
+      return $scope.get = function(system) {
+        console.log('1');
+        return System.get({
+          id: system.id
+        }).$promise.then(function(results) {
+          console.log('2');
+          return $scope.a_system = results;
+        });
+      };
     }
   ]);
 

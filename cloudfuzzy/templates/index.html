@@ -9,11 +9,23 @@
 
     {% verbatim %}
     <div class="col-lg-12" ng-repeat="system in systems">
-        <h3><a href="{{ system.url }}">{{ system.name }}</a></h3>
+        <h3><a href="{{ system.url }}" >{{ system.name }}</a></h3>
 
         <p>
             {{ system.description }}
         </p>
+
+        <button class="btn btn-default" ng-click="get(system)">get</button>
+    </div>
+    {% endverbatim %}
+    {% verbatim %}
+    <div class="col-lg-12" >
+        <h3><a href="{{ a_system.url }}" >{{ a_system.name }}</a></h3>
+
+        <p>
+            {{ a_system.description }}
+        </p>
+
     </div>
     {% endverbatim %}
 
