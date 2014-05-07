@@ -2,12 +2,13 @@ app = angular.module 'cloudfuzzy.app.systems', ['cloudfuzzy.api']
 
 app.controller 'AppController', ['$scope', 'System', ($scope, System) ->
 
-    $scope.systems = System.query()
+    $scope.obj_list = System.query()
+    $scope.detailed_obj = null
 
-    $scope.a_system = System.get(id: 2)
-    $scope.get = (system) ->
+    $scope.get = (object) ->
         console.log '1'
-        System.get(id: system.id).$promise.then (results) ->
+        System.get(id: object.id).$promise.then (result) ->
             console.log '2'
-            $scope.a_system = results
+            $scope.obj_list = null
+            $scope.detailed_obj = result
 ]

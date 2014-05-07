@@ -18,17 +18,16 @@
 
   app.controller('AppController', [
     '$scope', 'System', function($scope, System) {
-      $scope.systems = System.query();
-      $scope.a_system = System.get({
-        id: 2
-      });
-      return $scope.get = function(system) {
+      $scope.obj_list = System.query();
+      $scope.detailed_obj = null;
+      return $scope.get = function(object) {
         console.log('1');
         return System.get({
-          id: system.id
-        }).$promise.then(function(results) {
+          id: object.id
+        }).$promise.then(function(result) {
           console.log('2');
-          return $scope.a_system = results;
+          $scope.obj_list = null;
+          return $scope.detailed_obj = result;
         });
       };
     }
