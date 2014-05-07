@@ -14,6 +14,19 @@
 (function() {
   var app;
 
+  app = angular.module('cloudfuzzy.app.systems', ['cloudfuzzy.api']);
+
+  app.controller('AppController', [
+    '$scope', 'System', function($scope, System) {
+      return $scope.systems = System.query();
+    }
+  ]);
+
+}).call(this);
+
+(function() {
+  var app;
+
   app = angular.module('cloudfuzzy.app.users', ['cloudfuzzy.api']);
 
   app.controller('AppController', [

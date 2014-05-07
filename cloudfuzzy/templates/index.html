@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block ng_app %}cloudfuzzy.app.users{% endblock %}
+{% block ng_app %}cloudfuzzy.app.systems{% endblock %}
 {% block ng_controller %}AppController{% endblock %}
 
 {% block controller-content %}
@@ -9,15 +9,13 @@
 
     <div class="col-lg-12">
         {% verbatim %}
-            <div class="panel" ng-repeat="user in users">
+            <div class="panel" ng-repeat="system in systems">
                 <div class="panel-heading clearfix">
-                    <h3 class="panel-title">{{ user.username }}</h3>
+                    <h3 class="panel-title">{{ system.name }}</h3>
                 </div>
 
                 <p class="well">
-                <span class="system" ng-repeat="system in systems[user.username]">
                     {{ system.description }}
-                </span>
                 </p>
             </div>
         {% endverbatim %}
