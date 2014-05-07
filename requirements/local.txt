@@ -1,0 +1,5 @@
+# Local development dependencies go here
+-r base.txt
+
+#testing
+mock==1.0.1
