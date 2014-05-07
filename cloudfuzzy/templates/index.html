@@ -9,10 +9,10 @@
 
     {% verbatim %}
     <div class="col-lg-12" ng-repeat="object in obj_list">
-        <h3><a href="{{ object.url }}" >{{ object.name }}</a></h3>
+        <h3>{{ object.name }}</h3>
 
         <p>
-            {{ system.description }}
+            {{ object.description }}
         </p>
 
         <button class="btn btn-default" ng-click="get(object)">Detail</button>
@@ -22,7 +22,7 @@
 
     {% verbatim %}
     <div class="col-lg-12" ng-if="detailed_obj" >
-        <h3><a href="{{ detailed_obj.url }}" >{{ detailed_obj.name }}</a></h3>
+        <h3>{{ detailed_obj.name }}</h3>
 
         <p>
             {{ detailed_obj.description }}
