@@ -4,3 +4,5 @@ db.sqlite*
 node_modules
 
 *.sublime-*
+.coverage
+htmlcov/
