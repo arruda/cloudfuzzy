@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', TemplateView.as_view(template_name="index.html"), name='index'),
+    url(r'^systems/$', TemplateView.as_view(template_name="systems/list.html"), name='systems'),
 
     (r'^api/', include('api_rest.urls')),
 
