@@ -26,6 +26,11 @@ class SystemModelSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.HyperlinkedRelatedField(view_name='user-detail',
                                               lookup_field='username')
 
+    html_template = serializers.HyperlinkedIdentityField(
+            view_name='systemmodel-html-template',
+            format='html'
+    )
+
     def get_validation_exclusions(self):
         # Need to exclude `user`
         # since we'll add that later based off the request
@@ -34,7 +39,15 @@ class SystemModelSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SystemModel
-        fields = ('id', 'url', 'name', 'description', 'user', 'inputvariablemodel_set', )
+        fields = (
+            'id',
+            'url',
+            'name',
+            'description',
+            'user',
+            'inputvariablemodel_set',
+            'html_template'
+        )
 
 
 class InputVariableModelSerializer(serializers.HyperlinkedModelSerializer):

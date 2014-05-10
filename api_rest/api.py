@@ -2,9 +2,13 @@
 from __future__ import absolute_import
 
 from django.contrib.auth import get_user_model
+from django.template import RequestContext , loader
 
+from rest_framework import renderers
 from rest_framework import generics, permissions
 from rest_framework import viewsets
+from rest_framework.decorators import link
+from rest_framework.response import Response
 
 from fuzzy_modeling.models import SystemModel, InputVariableModel
 
@@ -17,7 +21,25 @@ from .permissions import SystemAuthorPermission, OwnUserPermission
 User = get_user_model()
 
 
-class SystemViewSet(viewsets.ModelViewSet):
+class BaseHTMLViewSet(object):
+
+    template_name = "template.html"
+
+    def get_html_request_context(self, request):
+        return {}
+
+    @link(renderer_classes=(renderers.StaticHTMLRenderer,))
+    def html_template(self, request, *args, **kwargs):
+        """
+        Return the template html for angular js to deal with
+        """
+        t = loader.get_template(self.template_name)
+        c = RequestContext(request, self.get_html_request_context(request))
+
+        return Response(t.render(c))
+
+
+class SystemViewSet(BaseHTMLViewSet, viewsets.ModelViewSet):
 
     model = SystemModel
     serializer_class = SystemModelSerializer
@@ -25,6 +47,7 @@ class SystemViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         SystemAuthorPermission
     ]
+    template_name = "_systems.html"
 
     def pre_save(self, obj):
         """Force user to the current request user on save"""
