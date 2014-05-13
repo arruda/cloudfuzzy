@@ -1,6 +1,6 @@
 app = angular.module 'cloudfuzzy.app.systems', ['cloudfuzzy.api']
 
-app.controller 'list', ['$scope', 'System', ($scope, System) ->
+app.controller 'systemListCtrl', ['$scope', 'System', ($scope, System) ->
 
     $scope.systems = System.query()
 ]

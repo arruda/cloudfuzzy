@@ -4,6 +4,7 @@
     "dependencies": {
         "angular": "1.2.13",
         "angular-resource": "1.2.13",
+        "angular-route": "1.2.13",
         "underscore": "",
         "bootstrap": ">=3.0"
     },

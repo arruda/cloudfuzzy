@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block main-container %}
+<div ng-app="{% block ng_app %}cloudfuzzy.app{% endblock %}">
+
+<script type=text/ng-template id="home.html">
+    <!-- Home -->
+    <p>
+        Essa eh a home
+    </p>
+</script>
+    <div ng-view>
+        {% block controller-content %}<p>aaa</p>{% endblock %}
+    </div>
+</div>
+
+ {% endblock %}

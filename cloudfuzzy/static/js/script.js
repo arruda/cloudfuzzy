@@ -1,4 +1,22 @@
 (function() {
+  var config, dependencies;
+
+  dependencies = ['ngRoute', 'cloudfuzzy.app.systems'];
+
+  config = function($routeProvider) {
+    return $routeProvider.when('/', {
+      templateUrl: 'home.html',
+      controller: 'systemListCtrl'
+    }).otherwise({
+      redirectTo: '/'
+    });
+  };
+
+  angular.module('cloudfuzzy.app', dependencies).config(['$routeProvider', config]);
+
+}).call(this);
+
+(function() {
   var app;
 
   app = angular.module('cloudfuzzy.app.static', ['cloudfuzzy.api']);
@@ -16,7 +34,7 @@
 
   app = angular.module('cloudfuzzy.app.systems', ['cloudfuzzy.api']);
 
-  app.controller('list', [
+  app.controller('systemListCtrl', [
     '$scope', 'System', function($scope, System) {
       return $scope.systems = System.query();
     }
