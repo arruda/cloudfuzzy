@@ -5,10 +5,10 @@
 
   config = function($routeProvider) {
     return $routeProvider.when('/', {
-      templateUrl: 'home.html',
+      templateUrl: 'list.html',
       controller: 'systemListCtrl'
     }).otherwise({
-      redirectTo: '/'
+      redirectTo: '/s'
     });
   };
 
@@ -30,12 +30,24 @@
 }).call(this);
 
 (function() {
-  var app;
+  var app, config, dependencies;
 
-  app = angular.module('cloudfuzzy.app.systems', ['cloudfuzzy.api']);
+  dependencies = ['ngRoute', 'cloudfuzzy.api'];
+
+  config = function($routeProvider) {
+    return $routeProvider.when('/', {
+      templateUrl: 'list.html',
+      controller: 'systemListCtrl'
+    }).otherwise({
+      redirectTo: '/edit'
+    });
+  };
+
+  app = angular.module('cloudfuzzy.app.systems', dependencies).config(['$routeProvider', config]);
 
   app.controller('systemListCtrl', [
     '$scope', 'System', function($scope, System) {
+      console.log("ab");
       return $scope.systems = System.query();
     }
   ]);

@@ -10,10 +10,10 @@ config = ($routeProvider) ->
   # $locationProvider.html5Mode(true)
   $routeProvider
   .when '/',
-    templateUrl: 'home.html'
+    templateUrl: 'list.html'
     controller: 'systemListCtrl'
   .otherwise
-    redirectTo: '/'
+    redirectTo: '/s'
 
 # Create app module and configure it
 angular

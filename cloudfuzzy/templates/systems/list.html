@@ -1,36 +1,20 @@
 {% extends "base.html" %}
 
-{% block ng_app %}cloudfuzzy.app.systems{% endblock %}
-{% block ng_controller %}list{% endblock %}
 
-{% block controller-content %}
+{% block main-container %}
+<div ng-app="{% block ng_app %}cloudfuzzy.app.systems{% endblock %}">
 
-<div class="row">
-
+<script type=text/ng-template id="list.html">
     {% verbatim %}
     <div class="col-lg-12" ng-repeat="system in systems">
         <h3>{{ system.name }}</h3>
 
     </div>
     {% endverbatim %}
-
-
+</script>
+    <div ng-view>
+        {% block controller-content %}<p>aaa</p>{% endblock %}
+    </div>
 </div>
-{% comment %}
-        <button class="btn btn-default" ng-click="get(system)">Detail</button>
 
-
-app.controller 'detail', ['$scope', 'System', ($scope, System) ->
-
-    $scope.system = null
-
-    $scope.get = (object) ->
-        console.log '1'
-        System.get(id: object.id).$promise.then (result) ->
-            console.log '2'
-            $scope.obj_list = null
-            $scope.detailed_obj = result
-]
-
-{% endcomment %}
-{% endblock %}
+ {% endblock %}

@@ -2,13 +2,15 @@
 
 
 {% block main-container %}
-<div ng-app="{% block ng_app %}cloudfuzzy.app{% endblock %}">
+<div ng-app="{% block ng_app %}cloudfuzzy.app.systems{% endblock %}">
 
-<script type=text/ng-template id="home.html">
-    <!-- Home -->
-    <p>
-        Essa eh a home
-    </p>
+<script type=text/ng-template id="list.html">
+    {% verbatim %}
+    <div class="col-lg-12" ng-repeat="system in systems">
+        <h3>{{ system.name }}</h3>
+
+    </div>
+    {% endverbatim %}
 </script>
     <div ng-view>
         {% block controller-content %}<p>aaa</p>{% endblock %}
