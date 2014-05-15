@@ -15,7 +15,7 @@ from fuzzy_modeling.models import SystemModel, InputVariableModel
 from .serializers import SystemModelSerializer, UserSerializer
 from .serializers import InputVariableModelSerializer
 
-from .permissions import SystemAuthorPermission, OwnUserPermission
+from .permissions import SystemAuthorPermission, OwnUserPermission, AuthorPermission
 
 
 User = get_user_model()
@@ -41,11 +41,12 @@ class BaseHTMLViewSet(object):
 
 class SystemViewSet(BaseHTMLViewSet, viewsets.ModelViewSet):
 
+    user_path = 'user'
     model = SystemModel
     serializer_class = SystemModelSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        SystemAuthorPermission
+        AuthorPermission
     ]
     template_name = "_systems.html"
 
@@ -85,10 +86,11 @@ class UserSystemList(generics.ListAPIView):
 
 
 class InputVariableViewSet(viewsets.ModelViewSet):
+    user_path = 'system.user'
     model = InputVariableModel
     serializer_class = InputVariableModelSerializer
 
-    # permission_classes = [
-    #     permissions.IsAuthenticatedOrReadOnly,
-    #     OwnUserPermission
-    # ]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        AuthorPermission
+    ]
