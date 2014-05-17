@@ -94,3 +94,11 @@ class InputVariableViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         AuthorPermission
     ]
+
+    def get_queryset(self):
+        """
+        Only show the objects list of the given user
+        """
+
+        queryset = super(InputVariableViewSet, self).get_queryset()
+        return queryset.filter(system__user__username=self.request.user.username)
