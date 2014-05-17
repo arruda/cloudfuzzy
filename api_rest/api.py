@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 
 from django.contrib.auth import get_user_model
-from django.template import RequestContext , loader
+from django.template import RequestContext, loader
 
 from rest_framework import renderers
 from rest_framework import generics, permissions
@@ -15,7 +15,7 @@ from fuzzy_modeling.models import SystemModel, InputVariableModel
 from .serializers import SystemModelSerializer, UserSerializer
 from .serializers import InputVariableModelSerializer
 
-from .permissions import SystemAuthorPermission, OwnUserPermission, AuthorPermission
+from .permissions import OwnUserPermission, AuthorPermission
 
 
 User = get_user_model()
