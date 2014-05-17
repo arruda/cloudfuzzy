@@ -10,10 +10,10 @@ from rest_framework import viewsets
 from rest_framework.decorators import link
 from rest_framework.response import Response
 
-from fuzzy_modeling.models import SystemModel, InputVariableModel
+from fuzzy_modeling.models import SystemModel, InputVariableModel, OutputVariableModel
 
 from .serializers import SystemModelSerializer, UserSerializer
-from .serializers import InputVariableModelSerializer
+from .serializers import InputVariableModelSerializer, OutputVariableModelSerializer
 
 from .permissions import OwnUserPermission, AuthorPermission
 
@@ -39,13 +39,39 @@ class BaseHTMLViewSet(object):
         return Response(t.render(c))
 
 
+class UserViewSet(viewsets.ModelViewSet):
+
+    model = User
+    serializer_class = UserSerializer
+    lookup_field = 'username'
+
+    permission_classes = [
+        permissions.IsAuthenticated,
+        OwnUserPermission
+    ]
+
+
+class UserSystemList(generics.ListAPIView):
+    model = SystemModel
+    serializer_class = SystemModelSerializer
+
+    permission_classes = [
+        permissions.IsAuthenticated,
+        OwnUserPermission
+    ]
+
+    def get_queryset(self):
+        queryset = super(UserSystemList, self).get_queryset()
+        return queryset.filter(user__username=self.kwargs.get('username'))
+
+
 class SystemViewSet(BaseHTMLViewSet, viewsets.ModelViewSet):
 
     user_path = 'user'
     model = SystemModel
     serializer_class = SystemModelSerializer
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.IsAuthenticated,
         AuthorPermission
     ]
     template_name = "_systems.html"
@@ -64,34 +90,13 @@ class SystemViewSet(BaseHTMLViewSet, viewsets.ModelViewSet):
         return queryset.filter(user__username=self.request.user.username)
 
 
-class UserViewSet(viewsets.ModelViewSet):
-
-    model = User
-    serializer_class = UserSerializer
-    lookup_field = 'username'
-
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        OwnUserPermission
-    ]
-
-
-class UserSystemList(generics.ListAPIView):
-    model = SystemModel
-    serializer_class = SystemModelSerializer
-
-    def get_queryset(self):
-        queryset = super(UserSystemList, self).get_queryset()
-        return queryset.filter(user__username=self.kwargs.get('username'))
-
-
 class InputVariableViewSet(viewsets.ModelViewSet):
     user_path = 'system.user'
     model = InputVariableModel
     serializer_class = InputVariableModelSerializer
 
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.IsAuthenticated,
         AuthorPermission
     ]
 
@@ -101,4 +106,23 @@ class InputVariableViewSet(viewsets.ModelViewSet):
         """
 
         queryset = super(InputVariableViewSet, self).get_queryset()
+        return queryset.filter(system__user__username=self.request.user.username)
+
+
+class OutputVariableViewSet(viewsets.ModelViewSet):
+    user_path = 'system.user'
+    model = OutputVariableModel
+    serializer_class = OutputVariableModelSerializer
+
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AuthorPermission
+    ]
+
+    def get_queryset(self):
+        """
+        Only show the objects list of the given user
+        """
+
+        queryset = super(OutputVariableViewSet, self).get_queryset()
         return queryset.filter(system__user__username=self.request.user.username)

@@ -8,6 +8,7 @@ from rest_framework.routers import DefaultRouter
 from .api import SystemViewSet
 from .api import UserViewSet
 from .api import InputVariableViewSet
+from .api import OutputVariableViewSet
 from .api import UserSystemList
 
 
@@ -16,6 +17,7 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'systems', SystemViewSet)
 router.register(r'input-variables', InputVariableViewSet)
+router.register(r'output-variables', OutputVariableViewSet)
 
 
 user_urls = patterns('',
