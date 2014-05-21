@@ -137,7 +137,6 @@ class OutputVariableViewSet(viewsets.ModelViewSet):
 
 
 class DefuzzifyModelViewSet(viewsets.ModelViewSet):
-    user_path = 'output_variable_set.system.user'
     model = DefuzzifyModel
     serializer_class = DefuzzifyModelSerializer
 
@@ -147,7 +146,7 @@ class DefuzzifyModelViewSet(viewsets.ModelViewSet):
     ]
 
     def get_obj_user(self, obj):
-        return obj.output_variable_set()[0].system.user
+        return obj.output_variable.system.user
 
     def get_queryset(self):
         """
@@ -155,4 +154,4 @@ class DefuzzifyModelViewSet(viewsets.ModelViewSet):
         """
 
         queryset = super(DefuzzifyModelViewSet, self).get_queryset()
-        return queryset.filter(system__user__username=self.request.user.username)
+        return queryset.filter(output_variable__system__user__username=self.request.user.username)

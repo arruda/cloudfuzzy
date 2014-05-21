@@ -9,6 +9,7 @@ from .api import SystemViewSet
 from .api import UserViewSet
 from .api import InputVariableViewSet
 from .api import OutputVariableViewSet
+from .api import DefuzzifyModelViewSet
 from .api import UserSystemList
 
 
@@ -18,6 +19,7 @@ router.register(r'users', UserViewSet)
 router.register(r'systems', SystemViewSet)
 router.register(r'input-variables', InputVariableViewSet)
 router.register(r'output-variables', OutputVariableViewSet)
+router.register(r'defuzzify', DefuzzifyModelViewSet)
 
 
 user_urls = patterns('',
