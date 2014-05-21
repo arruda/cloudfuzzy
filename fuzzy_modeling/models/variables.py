@@ -138,7 +138,7 @@ class OutputVariableModel(VariableModel, PyFuzzyMixin):
     class Meta(VariableModel.Meta):
         abstract = False
 
-    defuzzify = models.ForeignKey(DefuzzifyModel)
+    defuzzify = models.ForeignKey(DefuzzifyModel, related_name='output_variable_set')
 
     def get_pyfuzzy(self):
         """

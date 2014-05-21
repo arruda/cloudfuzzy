@@ -10,10 +10,12 @@ from rest_framework import viewsets
 from rest_framework.decorators import link
 from rest_framework.response import Response
 
-from fuzzy_modeling.models import SystemModel, InputVariableModel, OutputVariableModel
+from fuzzy_modeling.models import SystemModel, InputVariableModel, OutputVariableModel,\
+    DefuzzifyModel
 
 from .serializers import SystemModelSerializer, UserSerializer
 from .serializers import InputVariableModelSerializer, OutputVariableModelSerializer
+from .serializers import DefuzzifyModelSerializer
 
 from .permissions import OwnUserPermission, AuthorPermission
 
@@ -67,7 +69,6 @@ class UserSystemList(generics.ListAPIView):
 
 class SystemViewSet(BaseHTMLViewSet, viewsets.ModelViewSet):
 
-    user_path = 'user'
     model = SystemModel
     serializer_class = SystemModelSerializer
     permission_classes = [
@@ -75,6 +76,9 @@ class SystemViewSet(BaseHTMLViewSet, viewsets.ModelViewSet):
         AuthorPermission
     ]
     template_name = "_systems.html"
+
+    def get_obj_user(self, obj):
+        return obj.user
 
     def pre_save(self, obj):
         """Force user to the current request user on save"""
@@ -91,7 +95,6 @@ class SystemViewSet(BaseHTMLViewSet, viewsets.ModelViewSet):
 
 
 class InputVariableViewSet(viewsets.ModelViewSet):
-    user_path = 'system.user'
     model = InputVariableModel
     serializer_class = InputVariableModelSerializer
 
@@ -99,6 +102,9 @@ class InputVariableViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AuthorPermission
     ]
+
+    def get_obj_user(self, obj):
+        return obj.system.user
 
     def get_queryset(self):
         """
@@ -110,7 +116,6 @@ class InputVariableViewSet(viewsets.ModelViewSet):
 
 
 class OutputVariableViewSet(viewsets.ModelViewSet):
-    user_path = 'system.user'
     model = OutputVariableModel
     serializer_class = OutputVariableModelSerializer
 
@@ -119,10 +124,35 @@ class OutputVariableViewSet(viewsets.ModelViewSet):
         AuthorPermission
     ]
 
+    def get_obj_user(self, obj):
+        return obj.system.user
+
     def get_queryset(self):
         """
         Only show the objects list of the given user
         """
 
         queryset = super(OutputVariableViewSet, self).get_queryset()
+        return queryset.filter(system__user__username=self.request.user.username)
+
+
+class DefuzzifyModelViewSet(viewsets.ModelViewSet):
+    user_path = 'output_variable_set.system.user'
+    model = DefuzzifyModel
+    serializer_class = DefuzzifyModelSerializer
+
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AuthorPermission
+    ]
+
+    def get_obj_user(self, obj):
+        return obj.output_variable_set()[0].system.user
+
+    def get_queryset(self):
+        """
+        Only show the objects list of the given user
+        """
+
+        queryset = super(DefuzzifyModelViewSet, self).get_queryset()
         return queryset.filter(system__user__username=self.request.user.username)

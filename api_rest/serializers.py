@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from fuzzy_modeling.models import SystemModel, InputVariableModel, \
-    OutputVariableModel
+    OutputVariableModel, DefuzzifyModel
 
 
 User = get_user_model()
@@ -61,3 +61,9 @@ class OutputVariableModelSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OutputVariableModel
+
+
+class DefuzzifyModelSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = DefuzzifyModel
