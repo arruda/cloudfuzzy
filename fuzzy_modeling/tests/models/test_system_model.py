@@ -102,7 +102,8 @@ class SystemModelTest(TestCase, ResetMock):
 
 
 
-    def _createSystem(self):
+    @classmethod
+    def _createSystem(cls):
         import fuzzy.System
         system = fuzzy.System.System(description=
         """This fuzzy system is to control the inverted pendulum into an upright position as well as
@@ -331,6 +332,6 @@ class SystemModelTest(TestCase, ResetMock):
         }
 
         pyfuzzy_system_expected.calculate(i_dict1,output_dict1)
-        pyfuzzy_system_expected.calculate(i_dict2,output_dict2)
+        new_pyfuzzy_system.calculate(i_dict2,output_dict2)
 
         self.assertEquals(output_dict1['a'], output_dict2['a'])

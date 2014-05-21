@@ -153,6 +153,11 @@ class OutputVariableModel(VariableModel, PyFuzzyMixin):
             max=self.max,
             unit=self.unit
         )
+
+        adjs = self.adjectivemodel_set.all()
+        for adj in adjs:
+            ovar.adjectives[adj.name] = adj.get_pyfuzzy()
+
         return ovar
 
     @classmethod

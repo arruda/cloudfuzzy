@@ -64,7 +64,8 @@ class DefuzzifyModel(models.Model, PyFuzzyMixin):
             'ACC': acc
         }
         for p in self.parameters.all():
-            parameters_dict[p.name] = p.get_value()
+            if p.name != 'INF' and p.name != 'ACC':
+                parameters_dict[p.name] = p.get_value()
 
         defuzzify = DefuzzifyClass(**parameters_dict)
         return defuzzify

@@ -366,3 +366,5 @@ class DefuzzifyModelTest(TestCase, ResetMock):
         self.assertEquals(1, new_defuzzify.parameters.all().count())
         failsafe_param = new_defuzzify.parameters.get(name='failsafe')
         self.assertEquals(1.0, failsafe_param.get_value())
+
+
