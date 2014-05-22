@@ -1,0 +1,33 @@
+from fuzzy_modeling.tests.models.test_system_model import SystemModelTest
+f = SystemModelTest._createSystem
+
+fs = f()
+fs
+
+import math
+input_dict = {}
+input_dict["X"]       =  0.0  #: position [m]
+input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
+input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
+input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+i_dict1 = input_dict.copy()
+i_dict2 = input_dict.copy()
+
+output_dict1 = {
+'a' : 0.0 #: acceleration [m/s²]
+}
+output_dict2 = {
+'a' : 0.0 #: acceleration [m/s²]
+}
+fs2 = f()
+from fuzzy_modeling.models import SystemModel
+#nfsm = SystemModel.from_pyfuzzy(fs)
+nfsm = SystemModel.objects.get()
+
+nfs = nfsm.get_pyfuzzy()
+
+fs.calculate(i_dict1, output_dict1)
+fs2.calculate(i_dict2, output_dict2)
+nfs.calculate(i_dict2, output_dict2)
+fs.calculate(i_dict1, output_dict1)

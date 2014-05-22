@@ -336,11 +336,11 @@ class SystemModelTest(TestCase, ResetMock):
 
         pyfuzzy_system_expected.fuzzify(i_dict1)
         pyfuzzy_system_expected.inference()
-        # pyfuzzy_system_expected.defuzzify(output_dict1)
+        pyfuzzy_system_expected.defuzzify(output_dict1)
 
         new_pyfuzzy_system.fuzzify(i_dict2)
         new_pyfuzzy_system.inference()
-        # new_pyfuzzy_system.defuzzify(output_dict2)
+        new_pyfuzzy_system.defuzzify(output_dict2)
 
         for var_name, var in pyfuzzy_system_expected.variables.items():
             new_var = new_pyfuzzy_system.variables[var_name]
@@ -361,11 +361,11 @@ class SystemModelTest(TestCase, ResetMock):
             #: output
             else:
                 self._test_defuzzify(var.defuzzify, new_var.defuzzify)
+                import pdb; pdb.set_trace()
 
             var_value = var.getValue()
             new_var_value = new_var.getValue()
             # if var_value != new_var_value:
-            #     import pdb; pdb.set_trace()
 
             self.assertEquals(new_var_value, var_value)
 
@@ -423,8 +423,9 @@ class SystemModelTest(TestCase, ResetMock):
 
         try:
             cog = set.getCOG()
-        except:
-            self.assertRaises(Exception, new_set.getCOG)
+        except Exception, e:
+            # self.assertRaises(Exception, new_set.getCOG)
+            self.assertRaisesMessage(Exception, e.message, new_set.getCOG)
         else:
             new_cog = new_set.getCOG()
             self.assertEquals(new_cog, cog)
