@@ -827,7 +827,7 @@ class SystemModelTest(TestCase, ResetMock):
         )
         far_right.name = 'far right'
 
-        rule_model = RuleModel.from_pyfuzzy(far_right, system_model)
+        rule_model = RuleModel.from_pyfuzzy(far_right, new_pyfuzzy_system, system_model)
         new_rule = rule_model.get_pyfuzzy(new_pyfuzzy_system)
         new_rule.operator = Input(new_pyfuzzy_system.variables["Phi"].adjectives["up_more_right"])
         new_pyfuzzy_system.rules['far right'] = new_rule
