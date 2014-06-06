@@ -829,7 +829,7 @@ class SystemModelTest(TestCase, ResetMock):
 
         rule_model = RuleModel.from_pyfuzzy(far_right, new_pyfuzzy_system, system_model)
         new_rule = rule_model.get_pyfuzzy(new_pyfuzzy_system)
-        new_rule.operator = Input(new_pyfuzzy_system.variables["Phi"].adjectives["up_more_right"])
+        # new_rule.operator = Input(new_pyfuzzy_system.variables["Phi"].adjectives["up_more_right"])
         new_pyfuzzy_system.rules['far right'] = new_rule
 
         self._test_rules_adj_in_out_adjs(new_pyfuzzy_system)

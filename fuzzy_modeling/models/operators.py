@@ -63,13 +63,29 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
 
     not_input = models.ForeignKey('self', blank=True, null=True, related_name='not_input_set')
 
-    def _get_pyfuzzy_compound(self):
+    def _get_adj_instance(self, system):
+        """
+        Return an existing instance of the adjective that is been used in this operator.
+        Pyfuzzy needs the instances to be the same, so that when the inference is
+        runned it will keep consistent.
+        """
+        if self.input_adjective.ovar:
+            var_model = self.input_adjective.ovar
+        else:
+            var_model = self.input_adjective.ivar
+
+        var = system.variables[var_model.name]
+        adj = var.adjectives[self.input_adjective.name]
+
+        return adj
+
+    def _get_pyfuzzy_compound(self, system=None):
         """
         Return the Pyfuzzy class of this model for the Compound type
         """
         Compound = get_class_by_python_path(self.operator_type)
         norm = self.compound_norm.get_pyfuzzy()
-        inputs = [op.get_pyfuzzy() for op in self.get_children()]
+        inputs = [op.get_pyfuzzy(system=system) for op in self.get_children()]
 
         compound = Compound(norm, *inputs)
         return compound
@@ -84,41 +100,45 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
         const = Const(value)
         return const
 
-    def _get_pyfuzzy_input(self):
+    def _get_pyfuzzy_input(self, system=None):
         """
         Return the Pyfuzzy class of this model for the Input type
         """
         Input = get_class_by_python_path(self.operator_type)
-        adjective = self.input_adjective.get_pyfuzzy()
+
+        # try:
+        adjective = self._get_adj_instance(system)
+        # except:
+            # adjective = self.input_adjective.get_pyfuzzy()
 
         input_op = Input(adjective)
         return input_op
 
-    def _get_pyfuzzy_not(self):
+    def _get_pyfuzzy_not(self, system=None):
         """
         Return the Pyfuzzy class of this model for the Not type
         """
         Not = get_class_by_python_path(self.operator_type)
-        op = self.not_input.get_pyfuzzy()
+        op = self.not_input.get_pyfuzzy(system=system)
 
         not_op = Not(op)
         return not_op
 
-    def get_pyfuzzy(self):
+    def get_pyfuzzy(self, system=None):
         """
         Return the Pyfuzzy class of this model
         """
         if self.operator_type == 'fuzzy.operator.Compound.Compound':
-            return self._get_pyfuzzy_compound()
+            return self._get_pyfuzzy_compound(system=system)
 
         if self.operator_type == 'fuzzy.operator.Const.Const':
             return self._get_pyfuzzy_const()
 
         if self.operator_type == 'fuzzy.operator.Input.Input':
-            return self._get_pyfuzzy_input()
+            return self._get_pyfuzzy_input(system=system)
 
         if self.operator_type == 'fuzzy.operator.Not.Not':
-            return self._get_pyfuzzy_not()
+            return self._get_pyfuzzy_not(system=system)
 
         return None
 

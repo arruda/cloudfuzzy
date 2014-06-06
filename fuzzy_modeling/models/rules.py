@@ -60,7 +60,7 @@ class RuleModel(models.Model, PyFuzzyMixin):
         #     adjective = self.adjective.get_pyfuzzy()
 
         cer = self.cer.get_pyfuzzy()
-        operator = self.operator.get_pyfuzzy()
+        operator = self.operator.get_pyfuzzy(system=system)
 
         rule = Rule(
             adjective=adjective,
