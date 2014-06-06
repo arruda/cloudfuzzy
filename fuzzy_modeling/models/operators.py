@@ -152,9 +152,9 @@ class OperatorModel(MPTTModel, PyFuzzyMixin):
 
         # adj
         # try:
-        #     adj_model = cls.input_adjective.field.related.parent_model._get_existing_adjective_model(system, systemModel, pyfuzzy)
+        adj_model = cls.input_adjective.field.related.parent_model._get_existing_adjective_model(system, systemModel, pyfuzzy.adjective)
         # except:
-        adj_model = cls.input_adjective.field.related.parent_model.from_pyfuzzy(pyfuzzy.adjective)
+        #     adj_model = cls.input_adjective.field.related.parent_model.from_pyfuzzy(pyfuzzy.adjective)
 
         op_model.input_adjective = adj_model
         op_model.save()
