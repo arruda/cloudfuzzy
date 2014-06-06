@@ -400,8 +400,7 @@ class SystemModelTest(TestCase, ResetMock):
 
         membership = adj.getMembership()
         new_membership = new_adj.getMembership()
-        if membership != new_membership:
-            print '>>' + adj.name
+        # if membership != new_membership:
             # import pdb; pdb.set_trace()
 
         self.assertEquals(
@@ -427,8 +426,6 @@ class SystemModelTest(TestCase, ResetMock):
         for param_name in params:
             arg = getattr(set, param_name)
             new_arg = getattr(new_set, param_name)
-            print "points>>>", arg
-            print "new_points>>>", new_arg
             self.assertEquals(new_arg, arg)
 
         cog = None
@@ -502,7 +499,6 @@ class SystemModelTest(TestCase, ResetMock):
         self.assertIsInstance(new_rule, rule.__class__)
 
         self.assertEquals(rule.certainty, new_rule.certainty)
-        print "rule: ", rule.name
         self._test_adj(rule.adjective, new_rule.adjective)
         self._test_norm(rule.CER, new_rule.CER)
         self._test_norm(rule.CER, new_rule.CER)
@@ -526,7 +522,6 @@ class SystemModelTest(TestCase, ResetMock):
 
         elif operator.__class__.__name__ == 'Input':
 
-            print "op: INPUT"
             self._test_adj(operator.adjective, new_operator.adjective)
 
         elif operator.__class__.__name__ == 'Not':
@@ -840,6 +835,36 @@ class SystemModelTest(TestCase, ResetMock):
         input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
         input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
         input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+        i_dict1 = input_dict.copy()
+        i_dict2 = input_dict.copy()
+
+        output_dict1 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+        output_dict2 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+
+        pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
+        new_pyfuzzy_system.calculate(i_dict2, output_dict2)
+
+        self.assertEquals(output_dict1['a'], output_dict2['a'])
+
+
+    def test_system_from_pyfuzzy_with_other_input(self):
+        " shoud return the correct corresponding Model for the pyfuzzy object with another input"
+
+        pyfuzzy_system_expected = self._createSystem()
+
+        new_pyfuzzy_system = SystemModel.from_pyfuzzy(pyfuzzy_system_expected).get_pyfuzzy()
+
+        import math
+        input_dict = {}
+        input_dict["X"]       =  190.0  #: position [m]
+        input_dict["dX_dT"]   =  500.0 #: velocity [m/s]
+        input_dict["Phi"]     = math.radians(270.0) #: angle [rad]
+        input_dict["dPhi_dT"] = math.radians(90.0) #: angle velocity [rad/s]
 
         i_dict1 = input_dict.copy()
         i_dict2 = input_dict.copy()
