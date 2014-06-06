@@ -73,3 +73,16 @@ class AdjectiveModel(models.Model, PyFuzzyMixin):
 
     def __unicode__(self):
         return self.name
+
+    @classmethod
+    def _get_existing_adjective_model(cls, system, systemModel, adjective):
+        var_name = system.findAdjectiveName(adjective)[1]
+        var = system.variables[var_name]
+
+        #: input
+        if hasattr(var, 'fuzzify'):
+            vars_pks = systemModel.inputvariablemodel_set.all().values_list('pk', flat=True)
+            return AdjectiveModel.objects.get(name=adjective.name, ivar__in=vars_pks)
+        else:
+            vars_pks = systemModel.outputvariablemodel_set.all().values_list('pk', flat=True)
+            return AdjectiveModel.objects.get(name=adjective.name, ovar__in=vars_pks)

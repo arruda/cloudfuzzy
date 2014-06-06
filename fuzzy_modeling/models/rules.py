@@ -39,11 +39,26 @@ class RuleModel(models.Model, PyFuzzyMixin):
     # set to true so that it can be made by parts
     system = models.ForeignKey(SystemModel, blank=True, null=True)
 
-    def get_pyfuzzy(self):
+    def _get_adj_instance(self, system):
+        """
+        Return an existing instance of the adjective that is been used in this rule.
+        Pyfuzzy needs the instances to be the same, so that when the inference is
+        runned it will keep consistent.
+        """
+        ovar_model = self.adjective.ovar
+        ovar = system.variables[ovar_model.name]
+        adj = ovar.adjectives[self.adjective.name]
+        return adj
+
+    def get_pyfuzzy(self, system=None):
         """
         Return the Pyfuzzy class of this model
         """
-        adjective = self.adjective.get_pyfuzzy()
+        # try:
+        adjective = self._get_adj_instance(system)
+        # except:
+        #     adjective = self.adjective.get_pyfuzzy()
+
         cer = self.cer.get_pyfuzzy()
         operator = self.operator.get_pyfuzzy()
 
@@ -57,15 +72,27 @@ class RuleModel(models.Model, PyFuzzyMixin):
         return rule
 
     @classmethod
-    def from_pyfuzzy(cls, pyfuzzy):
+    def _get_existing_adjective_model(cls, systemModel, adjective):
+        output_vars_pks = systemModel.outputvariablemodel_set.all().values_list('pk', flat=True)
+        return AdjectiveModel.objects.get(name=adjective.name, ovar__in=output_vars_pks)
+
+    @classmethod
+    def from_pyfuzzy(cls, pyfuzzy, system=None, systemModel=None):
         """
         Return the model representation of an instance of the pyfuzzy attr
         """
         rule_model = cls(name=pyfuzzy.name, certainty=pyfuzzy.certainty)
         # rule_model.save()
 
+        adj_model = None
+        try:
+            adj_model = cls._get_existing_adjective_model(
+                            systemModel=systemModel,
+                            adjective=pyfuzzy.adjective)
+        except:
+            adj_model = cls.adjective.field.related.parent_model.from_pyfuzzy(pyfuzzy.adjective)
+
         # adj
-        adj_model = cls.adjective.field.related.parent_model.from_pyfuzzy(pyfuzzy.adjective)
         rule_model.adjective = adj_model
 
         # cer
@@ -73,7 +100,7 @@ class RuleModel(models.Model, PyFuzzyMixin):
         rule_model.cer = cer_model
 
         # operator
-        op_model = cls.operator.field.related.parent_model.from_pyfuzzy(pyfuzzy.operator)
+        op_model = cls.operator.field.related.parent_model.from_pyfuzzy(pyfuzzy.operator, system, systemModel)
         rule_model.operator = op_model
 
         rule_model.save()

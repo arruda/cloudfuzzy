@@ -48,7 +48,7 @@ class SystemModel(models.Model, PyFuzzyMixin):
             system.variables[ovar.name] = fuzzy_var
 
         for rule in self.rulemodel_set.all():
-            fuzzy_rule = rule.get_pyfuzzy()
+            fuzzy_rule = rule.get_pyfuzzy(system)
             system.rules[rule.name] = fuzzy_rule
 
         return system
@@ -83,7 +83,7 @@ class SystemModel(models.Model, PyFuzzyMixin):
         for r_name, rule in pyfuzzy.rules.items():
             # set the name of this var to be used latter
             rule.name = r_name
-            rule_model = system_model.rulemodel_set.model.from_pyfuzzy(rule)
+            rule_model = system_model.rulemodel_set.model.from_pyfuzzy(rule, system_model)
             system_model.rulemodel_set.add(rule_model)
 
         system_model.save()

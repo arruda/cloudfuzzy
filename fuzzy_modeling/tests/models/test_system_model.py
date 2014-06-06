@@ -35,7 +35,7 @@ class SystemModelTest(TestCase, ResetMock):
         """
         var = mock.Mock()
         var.name = name
-        var.get_pyfuzzy = lambda : name
+        var.get_pyfuzzy = lambda systme=None: name
         return var
 
     def _mock_systemModel(self):
@@ -314,7 +314,7 @@ class SystemModelTest(TestCase, ResetMock):
 
         new_pyfuzzy_system = SystemModel.from_pyfuzzy(pyfuzzy_system_expected).get_pyfuzzy()
 
-        # self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
+        self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
 
     def _test_new_vs_expected_fuzzy_sysem(self, new_pyfuzzy_system, pyfuzzy_system_expected):
         import math
@@ -377,6 +377,19 @@ class SystemModelTest(TestCase, ResetMock):
         new_pyfuzzy_system.calculate(i_dict2, output_dict2)
 
         self.assertEquals(output_dict1['a'], output_dict2['a'])
+
+    def _test_rules_adj_in_out_adjs(self, system):
+        "test if all the rules's adj are the same instance of an output adj"
+        outputs_adjs = []
+        for var_name, var in system.variables.items():
+            #: is output
+            if not hasattr(var, 'fuzzify'):
+                for adj_name, adj in var.adjectives.items():
+                    outputs_adjs.append(adj)
+
+        for rule_name, rule in system.rules.items():
+            self.assertIn(rule.adjective, outputs_adjs)
+
 
     def _test_adj(self, adj, new_adj):
         " test only a given adjective "
@@ -590,19 +603,44 @@ class SystemModelTest(TestCase, ResetMock):
 
         new_pyfuzzy_system.variables['a'] = acceleration
 
-        self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
+        import math
+        input_dict = {}
+        input_dict["X"]       =  0.0  #: position [m]
+        input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
+        input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
+        input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+        i_dict1 = input_dict.copy()
+        i_dict2 = input_dict.copy()
+
+        output_dict1 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+        output_dict2 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+
+        pyfuzzy_system_expected.fuzzify(i_dict1)
+        pyfuzzy_system_expected.inference()
+        pyfuzzy_system_expected.defuzzify(output_dict1)
+
+        new_pyfuzzy_system.fuzzify(i_dict2)
+        new_pyfuzzy_system.inference()
+        new_pyfuzzy_system.defuzzify(output_dict2)
+
+        pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
+        new_pyfuzzy_system.calculate(i_dict2, output_dict2)
+
+        self.assertNotEquals(output_dict1['a'], output_dict2['a'])
 
     def test_output_variable_changing_one_sets_only(self):
         " should return the correct output when changing all the sets to the new instance of same value "
-
-        from fuzzy_modeling.models import OutputVariableModel
 
         from fuzzy.norm.AlgebraicSum import AlgebraicSum
         from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
         from fuzzy.Adjective import Adjective
         from fuzzy.set.Polygon import Polygon
         from fuzzy.defuzzify.COG import COG
-        from fuzzy.OutputVariable import OutputVariable
 
         pyfuzzy_system_expected = self._createSystem()
 
@@ -619,4 +657,201 @@ class SystemModelTest(TestCase, ResetMock):
 
         new_pyfuzzy_system.variables['a'] = acceleration
 
-        self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
+        import math
+        input_dict = {}
+        input_dict["X"]       =  0.0  #: position [m]
+        input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
+        input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
+        input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+        i_dict1 = input_dict.copy()
+        i_dict2 = input_dict.copy()
+
+        output_dict1 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+        output_dict2 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+
+        pyfuzzy_system_expected.fuzzify(i_dict1)
+        pyfuzzy_system_expected.inference()
+        pyfuzzy_system_expected.defuzzify(output_dict1)
+
+        new_pyfuzzy_system.fuzzify(i_dict2)
+        new_pyfuzzy_system.inference()
+        new_pyfuzzy_system.defuzzify(output_dict2)
+
+        pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
+        new_pyfuzzy_system.calculate(i_dict2, output_dict2)
+
+        self.assertNotEquals(output_dict1['a'], output_dict2['a'])
+
+    def test_output_variable_changing_one_set_and_rule(self):
+        " should return the correct output when changing all the sets to the new instance of same value, and changing the corresponding rule "
+
+        from fuzzy_modeling.models import OutputVariableModel
+
+        from fuzzy.norm.AlgebraicSum import AlgebraicSum
+        from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
+        from fuzzy.Adjective import Adjective
+        from fuzzy.set.Polygon import Polygon
+        from fuzzy.defuzzify.COG import COG
+
+        pyfuzzy_system_expected = self._createSystem()
+
+        new_pyfuzzy_system = self._createSystem()
+
+        INF = AlgebraicProduct()
+        ACC = AlgebraicSum()
+        COM = AlgebraicSum()
+        COG = COG(INF=INF, ACC=ACC, failsafe=0., segment_size=0.5)
+
+        acceleration = new_pyfuzzy_system.variables['a']
+
+        acceleration.adjectives['right_fast'] = a_right_fast = Adjective(Polygon([(10.,0.),(20.,1.),(50.,0.)]),COM=COM)
+
+        new_pyfuzzy_system.rules['far right'].adjective = a_right_fast
+
+        import math
+        input_dict = {}
+        input_dict["X"]       =  0.0  #: position [m]
+        input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
+        input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
+        input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+        i_dict1 = input_dict.copy()
+        i_dict2 = input_dict.copy()
+
+        output_dict1 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+        output_dict2 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+
+        pyfuzzy_system_expected.fuzzify(i_dict1)
+        pyfuzzy_system_expected.inference()
+        pyfuzzy_system_expected.defuzzify(output_dict1)
+
+        new_pyfuzzy_system.fuzzify(i_dict2)
+        new_pyfuzzy_system.inference()
+        new_pyfuzzy_system.defuzzify(output_dict2)
+
+        pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
+        new_pyfuzzy_system.calculate(i_dict2, output_dict2)
+
+        self.assertEquals(output_dict1['a'], output_dict2['a'])
+        self._test_rules_adj_in_out_adjs(new_pyfuzzy_system)
+
+    def test_rule_has_same_adjs_as_output_only(self):
+        " check if a rule has the same adjectives as the output"
+
+        pyfuzzy_system_expected = self._createSystem()
+        new_pyfuzzy_system = SystemModel.from_pyfuzzy(pyfuzzy_system_expected).get_pyfuzzy()
+
+        self._test_rules_adj_in_out_adjs(pyfuzzy_system_expected)
+        self._test_rules_adj_in_out_adjs(new_pyfuzzy_system)
+
+    def test_system_from_pyfuzzy_changing_a_single_rule(self):
+        "test if work changing a single rule"
+
+        from fuzzy.Rule import Rule
+        from fuzzy.operator.Input import Input
+        from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
+
+        CER = AlgebraicProduct()
+
+        pyfuzzy_system_expected = self._createSystem()
+        new_pyfuzzy_system = self._createSystem()
+
+        a_right_fast = new_pyfuzzy_system.variables["a"].adjectives["right_fast"]
+
+        far_right = Rule(
+            adjective=a_right_fast,
+            # it gets its value from here
+            operator=Input(new_pyfuzzy_system.variables["Phi"].adjectives["up_more_right"]),
+            CER=CER
+        )
+
+        new_pyfuzzy_system.rules['far right'] = far_right
+        self._test_rules_adj_in_out_adjs(new_pyfuzzy_system)
+
+        import math
+        input_dict = {}
+        input_dict["X"]       =  0.0  #: position [m]
+        input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
+        input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
+        input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+        i_dict1 = input_dict.copy()
+        i_dict2 = input_dict.copy()
+
+        output_dict1 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+        output_dict2 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+
+        pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
+        new_pyfuzzy_system.calculate(i_dict2, output_dict2)
+
+        self.assertEquals(output_dict1['a'], output_dict2['a'])
+
+    def test_system_from_pyfuzzy_changing_a_single_rule_from_model(self):
+        "test if work changing a single rule, but from model"
+
+        from fuzzy_modeling.models import RuleModel
+
+        from fuzzy.Rule import Rule
+        from fuzzy.operator.Input import Input
+        from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
+
+        CER = AlgebraicProduct()
+
+        pyfuzzy_system_expected = self._createSystem()
+        new_pyfuzzy_system = self._createSystem()
+        system_model = SystemModel.from_pyfuzzy(self._createSystem())
+
+        output_a = new_pyfuzzy_system.variables["a"]
+        output_a.name = 'a'
+        a_right_fast = output_a.adjectives["right_fast"]
+        a_right_fast.name = 'right_fast'
+
+        far_right = Rule(
+            adjective=a_right_fast,
+            # it gets its value from here
+            operator=Input(new_pyfuzzy_system.variables["Phi"].adjectives["up_more_right"]),
+            CER=CER
+        )
+        far_right.name = 'far right'
+
+        rule_model = RuleModel.from_pyfuzzy(far_right, system_model)
+        new_rule = rule_model.get_pyfuzzy(new_pyfuzzy_system)
+        new_rule.operator = Input(new_pyfuzzy_system.variables["Phi"].adjectives["up_more_right"])
+        new_pyfuzzy_system.rules['far right'] = new_rule
+
+        self._test_rules_adj_in_out_adjs(new_pyfuzzy_system)
+
+        import math
+        input_dict = {}
+        input_dict["X"]       =  0.0  #: position [m]
+        input_dict["dX_dT"]   =  0.0 #: velocity [m/s]
+        input_dict["Phi"]     = math.radians(45.0) #: angle [rad]
+        input_dict["dPhi_dT"] = math.radians(0.0) #: angle velocity [rad/s]
+
+        i_dict1 = input_dict.copy()
+        i_dict2 = input_dict.copy()
+
+        output_dict1 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+        output_dict2 = {
+        'a' : 0.0 #: acceleration [m/s²]
+        }
+
+        pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
+        new_pyfuzzy_system.calculate(i_dict2, output_dict2)
+
+        self.assertEquals(output_dict1['a'], output_dict2['a'])
