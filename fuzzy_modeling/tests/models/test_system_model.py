@@ -307,15 +307,16 @@ class SystemModelTest(TestCase, ResetMock):
 
         return system
 
-
-
     def test_system_from_pyfuzzy(self):
         " shoud return the correct corresponding Model for the pyfuzzy object "
 
         pyfuzzy_system_expected = self._createSystem()
+
         new_pyfuzzy_system = SystemModel.from_pyfuzzy(pyfuzzy_system_expected).get_pyfuzzy()
 
+        # self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
 
+    def _test_new_vs_expected_fuzzy_sysem(self, new_pyfuzzy_system, pyfuzzy_system_expected):
         import math
         input_dict = {}
         input_dict["X"]       =  0.0  #: position [m]
@@ -332,7 +333,6 @@ class SystemModelTest(TestCase, ResetMock):
         output_dict2 = {
         'a' : 0.0 #: acceleration [m/s²]
         }
-
 
         pyfuzzy_system_expected.fuzzify(i_dict1)
         pyfuzzy_system_expected.inference()
@@ -361,7 +361,7 @@ class SystemModelTest(TestCase, ResetMock):
             #: output
             else:
                 self._test_defuzzify(var.defuzzify, new_var.defuzzify)
-                import pdb; pdb.set_trace()
+                # import pdb; pdb.set_trace()
 
             var_value = var.getValue()
             new_var_value = new_var.getValue()
@@ -373,10 +373,10 @@ class SystemModelTest(TestCase, ResetMock):
             new_rule = new_pyfuzzy_system.rules[rule_name]
             self._test_rule(rule, new_rule)
 
-        # pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
-        # new_pyfuzzy_system.calculate(i_dict2, output_dict2)
+        pyfuzzy_system_expected.calculate(i_dict1, output_dict1)
+        new_pyfuzzy_system.calculate(i_dict2, output_dict2)
 
-        # self.assertEquals(output_dict1['a'], output_dict2['a'])
+        self.assertEquals(output_dict1['a'], output_dict2['a'])
 
     def _test_adj(self, adj, new_adj):
         " test only a given adjective "
@@ -526,3 +526,97 @@ class SystemModelTest(TestCase, ResetMock):
             new_op_call,
             msg="%s != %s in %s" % (op_call, new_op_call, operator)
         )
+
+    def test_set_only(self):
+        " should return the correct outout when only changing the set to a SetModel in th System "
+
+        from fuzzy_modeling.models import AdjectiveModel
+
+        pyfuzzy_system_expected = self._createSystem()
+
+        new_pyfuzzy_system = self._createSystem()
+
+        SystemModel.from_pyfuzzy(pyfuzzy_system_expected).get_pyfuzzy()
+
+        from fuzzy.norm.AlgebraicSum import AlgebraicSum
+        from fuzzy.Adjective import Adjective
+        from fuzzy.set.Polygon import Polygon
+
+        COM = AlgebraicSum()
+        a_stop = Adjective(Polygon([(-10., 0.), (0., 1.), (10., 0.)]), COM=COM)
+        a_stop.name = 'stop'
+
+        new_a_stop = AdjectiveModel.from_pyfuzzy(a_stop).get_pyfuzzy()
+        new_pyfuzzy_system.variables['a'].adjectives['stop'] = new_a_stop
+
+        self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
+
+    def test_output_variable_only(self):
+        " should return the correct outout when only changing the outputvar to a OutputVariableModel in th System "
+
+        from fuzzy_modeling.models import OutputVariableModel
+
+        from fuzzy.norm.AlgebraicSum import AlgebraicSum
+        from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
+        from fuzzy.Adjective import Adjective
+        from fuzzy.set.Polygon import Polygon
+        from fuzzy.defuzzify.COG import COG
+        from fuzzy.OutputVariable import OutputVariable
+
+        pyfuzzy_system_expected = self._createSystem()
+
+        new_pyfuzzy_system = self._createSystem()
+
+        INF = AlgebraicProduct()
+        ACC = AlgebraicSum()
+        COM = AlgebraicSum()
+        COG = COG(INF=INF, ACC=ACC, failsafe=0., segment_size=0.5)
+
+        acceleration = OutputVariable(
+            defuzzify=COG,
+            description='acceleration',
+            min=-50.,
+            max=50.,
+            unit='meter per second^2')
+
+        acceleration.adjectives['left_fast']  = a_left_fast  = Adjective(Polygon([(-50.,0.),(-20.,1.),(-10.,0.)]),COM=COM)
+        acceleration.adjectives['left_slow']  = a_left_slow  = Adjective(Polygon([(-20.,0.),(-10.,1.),(0.,0.)]),COM=COM)
+        acceleration.adjectives['stop']       = a_stop       = Adjective(Polygon([(-10.,0.),(0.,1.),(10.,0.)]),COM=COM)
+        acceleration.adjectives['right_slow'] = a_right_slow = Adjective(Polygon([(0.,0.),(10.,1.),(20.,0.)]),COM=COM)
+        acceleration.adjectives['right_fast'] = a_right_fast = Adjective(Polygon([(10.,0.),(20.,1.),(50.,0.)]),COM=COM)
+
+        acceleration.name = 'a'
+        new_acceleration = OutputVariableModel.from_pyfuzzy(acceleration).get_pyfuzzy()
+
+        new_pyfuzzy_system.variables['a'] = acceleration
+
+        self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
+
+    def test_output_variable_changing_one_sets_only(self):
+        " should return the correct output when changing all the sets to the new instance of same value "
+
+        from fuzzy_modeling.models import OutputVariableModel
+
+        from fuzzy.norm.AlgebraicSum import AlgebraicSum
+        from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
+        from fuzzy.Adjective import Adjective
+        from fuzzy.set.Polygon import Polygon
+        from fuzzy.defuzzify.COG import COG
+        from fuzzy.OutputVariable import OutputVariable
+
+        pyfuzzy_system_expected = self._createSystem()
+
+        new_pyfuzzy_system = self._createSystem()
+
+        INF = AlgebraicProduct()
+        ACC = AlgebraicSum()
+        COM = AlgebraicSum()
+        COG = COG(INF=INF, ACC=ACC, failsafe=0., segment_size=0.5)
+
+        acceleration = new_pyfuzzy_system.variables['a']
+
+        acceleration.adjectives['right_fast'] = a_right_fast = Adjective(Polygon([(10.,0.),(20.,1.),(50.,0.)]),COM=COM)
+
+        new_pyfuzzy_system.variables['a'] = acceleration
+
+        self._test_new_vs_expected_fuzzy_sysem(new_pyfuzzy_system, pyfuzzy_system_expected)
