@@ -35,6 +35,40 @@
 {% endblock %}
 
 
+
+{% block navbar-right %}
+        {% if user.is_authenticated %}
+        <form class="navbar-form navbar-right" action="{% url 'logout' %}">
+            <div class="form-group">
+              <span type="text" placeholder="Email" class="form-control">{{user}}</span>
+                <button type="submit" class="btn label-default">Sign out</button>
+            </div>
+        </form>
+        {% else %}
+        <form class="navbar-form navbar-right" action="{% url 'login' %}" method="POST">
+            <div class="form-group">
+              <input type="text" placeholder="Email" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control">
+            </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+        </form>
+        {% endif %}
+{% endblock %}
+
+{% block header %}
+    <a href="/"><span class="logo">CloudFuzzy</span></a>
+    <div id="container_login">
+        {% if user.is_authenticated %}
+            <a class="user" href="/">{{user}}</a>
+            <a class="login" href="/logout">Logout</a>
+        {% else %}
+            <a class="login" href="/login">Login</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
 {% block main-jumbotron %}
 {% endblock %}
 
@@ -62,264 +96,3 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-{% comment %}
-
-{% block js-imports %}
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/ICanHaz.js/0.10.3/ICanHaz.min.js"></script>
-<script>window.ich || document.write('<script src="{{ STATIC_URL }}js/backbone/ICanHaz.min.js"><\/script>')</script>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script>window._ || document.write('<script src="{{ STATIC_URL }}js/backbone/underscore-min.js"><\/script>')</script>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
-<script>window.Backbone || document.write('<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"><\/script>')</script>
-
-<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
-<script>window.jQuery.template || document.write('<script src="{{ STATIC_URL }}js/jquery.tmpl.min.js"><\/script>')</script>
-
-{% include '_sub-content-jqtmpl.html' %}
-
-{% endblock %}
-
-{% block header %}
-    <a href="/"><span class="logo">CloudFuzzy</span></a>
-    <div id="container_login">
-        {% if user.is_authenticated %}
-            <a class="user" href="/">{{user}}</a>
-            <a class="login" href="/logout">Logout</a>
-        {% else %}
-            <a class="login" href="/login">Login</a>
-        {% endif %}
-    </div>
-{% endblock %}
-
-{% block main-container %}
-    <nav id="menu">
-        {% block menu %}
-        <ul>
-            <li><a class="left_menu" href="/system/list">Back</a></li>
-            <li><a href="#">Verification</a></li>
-            <li><a href="#">Synthesis</a></li>
-            <li><a class="right_menu" href="/system/2/print">XFL</a></li>
-        </ul>
-        {% endblock %}
-    </nav>
-    <div id="content_wrapper">
-
-        <header class="content-header">
-            {% block content-header %}
-                bla
-            {% endblock %}
-        </header>
-        <section class="content-area">
-
-            {% block content-area %}
-
-                <section class="sub-full">
-                    <section class="sub-left">
-                        <section class="sub-content">
-                            <h3 class="sub-content-header">Types for Linguistic Variables</h3>
-
-
-                                    <p>There are no Types yet.<br>
-                                    Create a <a href="/system/2/type/new">new one!</a></p>
-
-                            <div class="actions">
-
-                                <form action="/system/2/type/new" method="GET">
-
-                                    <input type="submit" value="Add Type">
-
-                                </form>
-                            </div>
-                        </section>
-
-                        <section class="sub-content">
-                            <h3 class="sub-content-header">Types for Linguistic Variables2</h3>
-
-
-                                    <p>There are no Types yet.<br>
-                                    Create a <a href="/system/2/type/new">new one!</a></p>
-
-                            <div class="actions">
-
-                                <form action="/system/2/type/new" method="GET">
-
-                                    <input type="submit" value="Add Type">
-
-                                </form>
-                            </div>
-                        </section>
-                    </section>
-
-                    <section class="sub-right">
-                        <section class="sub-content">
-                            <h3 class="sub-content-header">Types for Linguistic Variables3</h3>
-
-
-                                    <p>There are no Types yet.<br>
-                                    Create a <a href="/system/2/type/new">new one!</a></p>
-
-                            <div class="actions">
-
-                                <form action="/system/2/type/new" method="GET">
-
-                                    <input type="submit" value="Add Type">
-
-                                </form>
-                            </div>
-                        </section>
-                    </section>
-                </section>
-
-                <section class="sub-full">
-                    <section class="sub-content">
-                        <h3 class="sub-content-header">Types for Linguistic Variables4</h3>
-
-
-                                <p id="test">There are no Types yet.<br>
-                                Create a <a href="/system/2/type/new">new one!</a></p>
-
-                        <div class="actions">
-
-                            <form action="/system/2/type/new" method="GET">
-
-                                <input type="submit" value="Add Type">
-
-                            </form>
-                        </div>
-                    </section>
-                </section>
-            {% endblock %}
-        </section>
-
-    </div>
-{% endblock %}
-
-{% block footer %}
-    <p>CloudFuzzy - The Online Fuzzy Toolbox Solution.</p>
-{% endblock %}
-
-{% block analytics %}
-{% endblock %}
-
-{% block jquery-docready %}
-{% endblock %}
-
-{% block jquery-winload %}{% endblock %}
-
-{% block js-onpage %}
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-};
-
-var csrftoken = getCookie('csrftoken');
-
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-function sameOrigin(url) {
-    // test that a given url is a same-origin URL
-    // url could be relative or scheme relative or absolute
-    var host = document.location.host; // host + port
-    var protocol = document.location.protocol;
-    var sr_origin = '//' + host;
-    var origin = protocol + sr_origin;
-    // Allow absolute or scheme relative URLs to same origin
-    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-        // or any other URL that isn't scheme relative or absolute i.e relative.
-        !(/^(\/\/|http:|https:).*/.test(url));
-}
-
-$.ajaxSetup({
-    crossDomain: false, // obviates need for sameOrigin test
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type)) {
-            xhr.setRequestHeader("X_CSRFTOKEN", csrftoken);
-        }
-    }
-});
-var re_p;
-function post_input_variable(){
-    re_p = $.ajax({
-      type: "POST",
-      //headers: {
-      //      "HTTP_X_CSRFTOKEN": csrftoken,
-      //},
-      contentType: "application/json; charset=utf-8",
-      url: 'http://localhost:8000/api/v1/input_variable/',
-      data: JSON.stringify({"description":"new desc", "fuzzify": "fuzzy.fuzzify.Plain.Plain", "max": "600", "min": "-600", "name": "new ivar", "unit": "degrees per second", "system": "/api/v1/system/1/"}),
-      dataType: 'json'
-    });
-};
-
-function post_system(){
-    $.ajax({
-      type: "POST",
-      contentType: "application/json; charset=utf-8",
-      url: 'http://localhost:8000/api/system/',
-      data: JSON.stringify({'description':'descricao do sistema'}),
-      dataType: 'json'
-    });
-};
-
-function put_system(){
-    $.ajax({
-      type: "PUT",
-      contentType: "application/json; charset=utf-8",
-      url: 'http://localhost:8000/api/system/2',
-      data: JSON.stringify({'description':'descricao do sistema2'}),
-      dataType: 'json'
-    });
-};
-
-function patch_system(){
-    $.ajax({
-      type: "PATCH",
-      contentType: "application/json; charset=utf-8",
-      url: 'http://localhost:8000/api/system/2',
-      data: JSON.stringify({'description':'descricao do sistema3'}),
-      dataType: 'json'
-    });
-};
-
-function delete_system(){
-    $.ajax({
-      type: "DELETE",
-      contentType: "application/json; charset=utf-8",
-      url: 'http://localhost:8000/api/system/2',
-      data: JSON.stringify({'description':'descricao do sistema2'}),
-      dataType: 'json'
-    });
-};
-{% endblock %}
-
-{% endcomment %}
