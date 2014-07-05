@@ -20,10 +20,12 @@
         </div>
     </div>
 
-    <div class="col-lg-12" ng-repeat="system in systems">
-        <h3>{{ system.name }}</h3>
-        <button ng:click="detail(system)">Detail</button>
+    <div class="row">
+        <div class="col-lg-4" ng-repeat="system in systems">
+            <h3>{{ system.name }}</h3>
+            <button ng:click="detail(system)">Detail</button>
 
+        </div>
     </div>
     {% endverbatim %}
 </script>
