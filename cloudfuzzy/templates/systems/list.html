@@ -6,6 +6,20 @@
 
 <script type=text/ng-template id="list.html">
     {% verbatim %}
+    <div class="row">
+        <div class="col-lg-4">
+        </div>
+        <div class="col-lg-4">
+            <div class="btn-group center-block">
+              <button type="button" class="btn btn-default">Left</button>
+              <button type="button" class="btn btn-default">Middle</button>
+              <button type="button" class="btn btn-default">Right</button>
+            </div>
+        </div>
+        <div class="col-lg-4">
+        </div>
+    </div>
+
     <div class="col-lg-12" ng-repeat="system in systems">
         <h3>{{ system.name }}</h3>
         <button ng:click="detail(system)">Detail</button>
@@ -24,6 +38,8 @@
     </div>
     {% endverbatim %}
 </script>
+
+
 
     <div ng-view>
         {% block controller-content %}<p>aaa</p>{% endblock %}
