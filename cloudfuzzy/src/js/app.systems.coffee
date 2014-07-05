@@ -9,7 +9,7 @@ config = ($routeProvider) ->
   .when '/',
     templateUrl: 'list.html'
     controller: 'systemListCtrl'
-  .when '/detail',
+  .when '/detail/:itemId',
     templateUrl: 'detail.html'
     controller: 'systemDetailCtrl'
   .otherwise
@@ -26,13 +26,15 @@ app = angular
 app.controller 'systemListCtrl', ['$scope', 'System', ($scope, System) ->
 
     $scope.detail = (system) ->
-        window.location = "#/detail";
+        window.location = "#/detail/" + system.id
 
     $scope.systems = System.query()
 ]
 
 
-app.controller 'systemDetailCtrl', ['$scope', 'System', ($scope, System) ->
-    $scope.system = System.query(id:system)
+app.controller 'systemDetailCtrl', ['$scope', 'System', '$routeParams', ($scope, System, $routeParams) ->
+    $scope.itemId = $routeParams.itemId
+    id = $scope.itemId
+    $scope.system = System.get(id:id)
 ]
 

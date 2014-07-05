@@ -38,6 +38,9 @@
     return $routeProvider.when('/', {
       templateUrl: 'list.html',
       controller: 'systemListCtrl'
+    }).when('/detail/:itemId', {
+      templateUrl: 'detail.html',
+      controller: 'systemDetailCtrl'
     }).otherwise({
       redirectTo: '/edit'
     });
@@ -47,8 +50,21 @@
 
   app.controller('systemListCtrl', [
     '$scope', 'System', function($scope, System) {
-      console.log("ab");
+      $scope.detail = function(system) {
+        return window.location = "#/detail/" + system.id;
+      };
       return $scope.systems = System.query();
+    }
+  ]);
+
+  app.controller('systemDetailCtrl', [
+    '$scope', 'System', '$routeParams', function($scope, System, $routeParams) {
+      var id;
+      $scope.itemId = $routeParams.itemId;
+      id = $scope.itemId;
+      return $scope.system = System.get({
+        id: id
+      });
     }
   ]);
 
