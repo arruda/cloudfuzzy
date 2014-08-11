@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'mptt',
+    'debug_toolbar',
     'django_h5bp',
     'cloudfuzzy',
     'fuzzy_modeling',
@@ -51,6 +52,19 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #debug toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.request',
 )
 
 ROOT_URLCONF = 'cloudfuzzy.urls'
@@ -117,3 +131,13 @@ if ON_HEROKU:
     DATABASES = {
         'default': dj_database_url.config(default='postgres://localhost')
     }
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+#settings this for debug tools
+INTERNAL_IPS = ('127.0.0.1', )
