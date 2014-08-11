@@ -29,7 +29,7 @@
   <ul class="nav navbar-nav">
     {% if request.user.is_authenticated %}
 
-    <li><a href="#">email@com.com</a></li>
+    <li><a href="#">{{ request.user.email }}</a></li>
     <li><span ><a class="btn btn-success sgin_bt_header" href="{% url 'logout' %}">Sign Out</a></span></li>
     {% else %}
     <li><span ><a class="btn btn-success sgin_bt_header" href="{% url 'login' %}">Sign In</a></span></li>
