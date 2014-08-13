@@ -5,7 +5,7 @@
 {% block page-title %}CloudFuzzy{% endblock %}
 {% block meta-description %}CloudFuzzy - The Online Fuzzy Toolbox Solution.{% endblock %}
 {% block meta-keywords %}{% endblock %}
-{% block meta-author %}{% endblock %}
+{% block meta-author %}Felipe Arruda Pontes{% endblock %}
 {% block meta-generator %}{% endblock %}
 {% block meta-extras %}{% endblock %}
 
@@ -30,9 +30,9 @@
     {% if request.user.is_authenticated %}
 
     <li><a href="#">{{ request.user.email }}</a></li>
-    <li><span ><a class="btn btn-success sgin_bt_header" href="{% url 'logout' %}">Sign Out</a></span></li>
+    <li><span ><a class="btn btn-default navbar-btn" href="{% url 'logout' %}">Sign Out</a></span></li>
     {% else %}
-    <li><span ><a class="btn btn-success sgin_bt_header" href="{% url 'login' %}">Sign In</a></span></li>
+    <li><span ><a class="btn btn-success navbar-btn" href="{% url 'login' %}">Sign In</a></span></li>
 
     {% endif %}
   </ul>
