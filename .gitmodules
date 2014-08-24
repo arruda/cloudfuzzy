@@ -1,0 +1,3 @@
+[submodule "dockers/compass"]
+	path = dockers/compass
+	url = git@github.com:arruda/docker-compass.git

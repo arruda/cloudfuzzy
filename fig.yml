@@ -1,6 +1,4 @@
-ruby:
-  build: dockers/ruby
+compass:
+  build: dockers/compass
   volumes:
-    - .:/project
-  # ports:
-  #   - "8001:8000"
+    - .:/home/deploy/project
