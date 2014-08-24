@@ -1,0 +1,6 @@
+ruby:
+  build: dockers/ruby
+  volumes:
+    - .:/project
+  # ports:
+  #   - "8001:8000"
