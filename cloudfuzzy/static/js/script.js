@@ -38,6 +38,9 @@
     return $routeProvider.when('/', {
       templateUrl: 'list.html',
       controller: 'systemListCtrl'
+    }).when('/new', {
+      templateUrl: 'new.html',
+      controller: 'systemNewCtrl'
     }).when('/detail/:itemId', {
       templateUrl: 'detail.html',
       controller: 'systemDetailCtrl'
@@ -51,8 +54,11 @@
   app.controller('systemListCtrl', [
     '$scope', 'System', function($scope, System) {
       $scope.detail = function(system) {
-        console.log("a");
         return window.location = "#/detail/" + system.id;
+      };
+      $scope["new"] = function() {
+        console.log("a");
+        return window.location = "#/new";
       };
       return $scope.systems = System.query();
     }
@@ -67,7 +73,22 @@
         id: id
       });
       return $scope.list = function() {
-        console.log("a");
+        return window.location = "#/";
+      };
+    }
+  ]);
+
+  app.controller('systemNewCtrl', [
+    '$scope', 'System', function($scope, System) {
+      $scope.addSystem = function() {
+        var system;
+        system = new System({
+          name: $scope.newSystemName
+        });
+        $scope.newSystemName = "";
+        return system.$save().then($scope.list);
+      };
+      return $scope.list = function() {
         return window.location = "#/";
       };
     }

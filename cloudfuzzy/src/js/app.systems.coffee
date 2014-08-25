@@ -9,6 +9,9 @@ config = ($routeProvider) ->
   .when '/',
     templateUrl: 'list.html'
     controller: 'systemListCtrl'
+  .when '/new',
+    templateUrl: 'new.html'
+    controller: 'systemNewCtrl'
   .when '/detail/:itemId',
     templateUrl: 'detail.html'
     controller: 'systemDetailCtrl'
@@ -26,8 +29,11 @@ app = angular
 app.controller 'systemListCtrl', ['$scope', 'System', ($scope, System) ->
 
     $scope.detail = (system) ->
-        console.log  "a"
         window.location = "#/detail/" + system.id
+
+    $scope.new = ->
+        console.log  "a"
+        window.location = "#/new"
 
     $scope.systems = System.query()
 ]
@@ -39,7 +45,18 @@ app.controller 'systemDetailCtrl', ['$scope', 'System', '$routeParams', ($scope,
     $scope.system = System.get(id:id)
 
     $scope.list = ->
-        console.log  "a"
         window.location = "#/"
 ]
 
+
+app.controller 'systemNewCtrl', ['$scope', 'System', ($scope, System) ->
+
+    $scope.addSystem = ->
+        system = new System(name: $scope.newSystemName)
+        $scope.newSystemName = ""
+        system.$save()
+        .then $scope.list
+
+    $scope.list = ->
+        window.location = "#/"
+]

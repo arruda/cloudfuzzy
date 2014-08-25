@@ -1,0 +1,9 @@
+{% extends "systems/_ng_base.html" %}
+
+{% block ng-content %}
+    {% verbatim %}
+    <div class="col-lg-12">
+        <input type="text" ng-model="newSystemName"> <button ng-click="addSystem()">Add</button>
+    </div>
+    {% endverbatim %}
+{% endblock ng-content %}
