@@ -13,7 +13,7 @@ config = ($routeProvider) ->
     templateUrl: 'detail.html'
     controller: 'systemDetailCtrl'
   .otherwise
-    redirectTo: '/edit'
+    redirectTo: '/'
 
 
 app = angular
@@ -26,6 +26,7 @@ app = angular
 app.controller 'systemListCtrl', ['$scope', 'System', ($scope, System) ->
 
     $scope.detail = (system) ->
+        console.log  "a"
         window.location = "#/detail/" + system.id
 
     $scope.systems = System.query()
@@ -36,5 +37,9 @@ app.controller 'systemDetailCtrl', ['$scope', 'System', '$routeParams', ($scope,
     $scope.itemId = $routeParams.itemId
     id = $scope.itemId
     $scope.system = System.get(id:id)
+
+    $scope.list = ->
+        console.log  "a"
+        window.location = "#/"
 ]
 

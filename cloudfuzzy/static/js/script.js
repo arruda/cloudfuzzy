@@ -42,7 +42,7 @@
       templateUrl: 'detail.html',
       controller: 'systemDetailCtrl'
     }).otherwise({
-      redirectTo: '/edit'
+      redirectTo: '/'
     });
   };
 
@@ -51,6 +51,7 @@
   app.controller('systemListCtrl', [
     '$scope', 'System', function($scope, System) {
       $scope.detail = function(system) {
+        console.log("a");
         return window.location = "#/detail/" + system.id;
       };
       return $scope.systems = System.query();
@@ -62,9 +63,13 @@
       var id;
       $scope.itemId = $routeParams.itemId;
       id = $scope.itemId;
-      return $scope.system = System.get({
+      $scope.system = System.get({
         id: id
       });
+      return $scope.list = function() {
+        console.log("a");
+        return window.location = "#/";
+      };
     }
   ]);
 
