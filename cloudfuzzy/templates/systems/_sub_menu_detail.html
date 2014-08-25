@@ -1,5 +1,6 @@
 {% extends "utils/_sub_menu.html" %}
 
+{% block ng-nav-header %}{% verbatim %}{{ system.name }}{% endverbatim %}{% endblock ng-nav-header %}
 {% block sub-nav-menu %}
         <button  type="button" class="btn btn-default navbar-btn" ng:click="list()">Voltar</button>
 {% endblock sub-nav-menu %}

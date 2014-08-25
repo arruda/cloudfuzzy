@@ -2,6 +2,9 @@
     <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
 
+        <div class="navbar-header">
+          <p class="navbar-text">{% block ng-nav-header %}Qualquer coisa{% endblock ng-nav-header %}</p>
+        </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="sub-navbar-collapse">
             {% block sub-nav-menu %}
