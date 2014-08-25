@@ -1,4 +1,8 @@
 compass:
   build: dockers/compass
   volumes:
-    - .:/home/deploy/project
+    - .:/home/compass/project
+grunt:
+  build: dockers/grunt
+  volumes:
+    - .:/home/grunt/project
