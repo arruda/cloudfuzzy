@@ -1,0 +1,13 @@
+{% include 'utils/_bread_crumb.html' %}
+
+{% include 'utils/_sub_menu.html' %}
+
+{% verbatim %}
+<div class="row">
+    <div class="col-lg-4" ng-repeat="system in systems">
+        <h3>{{ system.name }}</h3>
+        <button ng:click="detail(system)">Detail</button>
+
+    </div>
+</div>
+{% endverbatim %}
