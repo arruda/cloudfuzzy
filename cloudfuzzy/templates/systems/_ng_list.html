@@ -1,7 +1,8 @@
 {% extends "systems/_ng_base.html" %}
-{% block ng-nav %}{{block.super}}
+{% block ng-nav %}
+    {% include 'utils/_bread_crumb.html' %}
+    {% include 'systems/_sub_menu_list.html' %}
 {% endblock ng-nav %}
-
 
 {% block ng-content %}
     {% verbatim %}
