@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
     url(r'^$', TemplateView.as_view(template_name="index.html"), name='index'),
     url(r'^teste/$', TemplateView.as_view(template_name="teste.html"), name='index'),
-    url(r'^systems/$', TemplateView.as_view(template_name="systems/list.html"), name='systems'),
+    url(r'^systems/$', TemplateView.as_view(template_name="systems/base.html"), name='systems'),
 
     (r'^api/', include('api_rest.urls')),
 
