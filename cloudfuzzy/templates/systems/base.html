@@ -24,3 +24,16 @@
 </div>
 
  {% endblock %}
+
+{% block js-onpage %}
+{{block.super}}
+// Configure the current user
+var app = angular.module('cloudfuzzy.api');
+
+app.factory('AuthUser', function() {
+    return {
+        username: "{{ request.user.username|default:''|escapejs }}"
+    }
+});
+
+{% endblock js-onpage %}

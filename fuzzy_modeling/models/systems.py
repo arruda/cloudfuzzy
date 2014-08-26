@@ -2,6 +2,7 @@
 
 from django.db import models
 
+from django.core.exceptions import ValidationError
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -22,7 +23,7 @@ class SystemModel(models.Model, PyFuzzyMixin):
     class Meta:
         app_label = 'fuzzy_modeling'
 
-    name = models.CharField(_("Name"), blank=True, null=True, max_length=250)
+    name = models.CharField(_("Name"), blank=False, null=False, max_length=250)
     description = models.TextField(_("Description"))
 
     user = models.ForeignKey(User,

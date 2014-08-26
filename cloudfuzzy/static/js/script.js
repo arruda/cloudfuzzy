@@ -79,14 +79,29 @@
   ]);
 
   app.controller('systemNewCtrl', [
-    '$scope', 'System', function($scope, System) {
-      $scope.addSystem = function() {
-        var system;
-        system = new System({
-          name: $scope.newSystemName
+    '$scope', 'System', 'User', 'AuthUser', function($scope, System, User, AuthUser) {
+      var user;
+      $scope.newSystem = new System();
+      user = User.get({
+        username: AuthUser.username
+      });
+      user.$promise.then(function(result) {
+        console.log('a');
+        $scope.newSystem.user = user.url;
+        console.log("scope system user");
+        return console.log($scope.newSystem.user);
+      });
+      $scope.save = function() {
+        console.log(user);
+        console.log("scope system user");
+        console.log($scope.newSystem.user);
+        return $scope.newSystem.$save().then(function(result) {
+          console.log(result);
+          return window.location = "#/detail/" + result.id;
+        }, function(rejection) {
+          $scope.errors = rejection.data;
+          return console.log(rejection.data);
         });
-        $scope.newSystemName = "";
-        return system.$save().then($scope.list);
       };
       return $scope.list = function() {
         return window.location = "#/";

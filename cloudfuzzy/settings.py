@@ -141,3 +141,4 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 #settings this for debug tools
 INTERNAL_IPS = ('127.0.0.1', )
+APPEND_SLASH = False

@@ -14,7 +14,7 @@ from .api import UserSystemList
 
 
 # Create a router and register our viewsets with it.
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'users', UserViewSet)
 router.register(r'systems', SystemViewSet)
 router.register(r'input-variables', InputVariableViewSet)

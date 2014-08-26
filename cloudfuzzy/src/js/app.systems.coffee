@@ -49,13 +49,20 @@ app.controller 'systemDetailCtrl', ['$scope', 'System', '$routeParams', ($scope,
 ]
 
 
-app.controller 'systemNewCtrl', ['$scope', 'System', ($scope, System) ->
+app.controller 'systemNewCtrl', ['$scope', 'System','User', 'AuthUser', ($scope, System, User, AuthUser) ->
 
-    $scope.addSystem = ->
-        system = new System(name: $scope.newSystemName)
-        $scope.newSystemName = ""
-        system.$save()
-        .then $scope.list
+    $scope.newSystem = new System()
+    user = User.get(username:AuthUser.username)
+    user.$promise.then (result) ->
+        $scope.newSystem.user = user.url
+
+    $scope.save = ->
+        $scope.newSystem.$save().then (result) ->
+            # Clear any errors
+            window.location = "#/detail/" + result.id
+        , (rejection) ->
+            $scope.errors = rejection.data
+            console.log rejection.data
 
     $scope.list = ->
         window.location = "#/"

@@ -12,15 +12,19 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    systems = serializers.HyperlinkedIdentityField(
-                                                    'systems',
-                                                    view_name='usersystem-list',
-                                                    lookup_field='username'
-                                                )
+    url = serializers.HyperlinkedIdentityField(
+        view_name='user-detail',
+        lookup_field='username'
+    )
+    # systems = serializers.HyperlinkedIdentityField(
+    #                                                 'systems',
+    #                                                 view_name='usersystem-list',
+    #                                                 lookup_field='username'
+    #                                             )
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'systems', )
+        fields = ('id', 'url', 'username', 'first_name', 'last_name')
 
 
 class SystemModelSerializer(serializers.HyperlinkedModelSerializer):
