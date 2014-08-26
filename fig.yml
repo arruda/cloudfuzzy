@@ -5,4 +5,4 @@ compass:
 grunt:
   build: dockers/grunt
   volumes:
-    - .:/home/grunt/project
+    - .:/project

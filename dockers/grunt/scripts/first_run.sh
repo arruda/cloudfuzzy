@@ -1,7 +1,8 @@
 
 pre_start_action() {
-    npm install -g grunt-cli
+    npm install -g grunt-cli bower
     npm install
+    chmod -R 777 /project/cloudfuzzy/static
     bower install
 }
 
