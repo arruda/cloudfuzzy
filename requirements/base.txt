@@ -9,7 +9,7 @@ djangorestframework==2.3.13
 
 
 # My ANTLR3 for python github repo
-git+git://github.com/arruda/ANTLR3-python#egg=ANTLR3-python
+git+https://github.com/arruda/ANTLR3-python.git#egg=ANTLR3-python
 
 # My git clone of the pyfuzzy repo
-git+git://github.com/arruda/pyfuzzy#egg=pyfuzzy
+git+https://github.com/arruda/pyfuzzy.git#egg=pyfuzzy
