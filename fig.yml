@@ -1,4 +1,4 @@
 compass:
   build: dockers/compass
   volumes:
-    - .:/project
+    - .:/home/compass/project
