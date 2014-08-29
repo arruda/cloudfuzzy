@@ -2,28 +2,36 @@
 
 
 {% block main-container %}
-<div ng-app="{% block ng_app %}cloudfuzzy.app.systems{% endblock %}">
 
-<script type=text/ng-template id="list.html">
-    {% include 'systems/_ng_list.html' %}
-</script>
+    {% if request.user.is_authenticated %}
+        <div ng-app="{% block ng_app %}cloudfuzzy.app.systems{% endblock %}">
 
-
-<script type=text/ng-template id="detail.html">
-    {% include 'systems/_ng_detail.html' %}
-</script>
-
-<script type=text/ng-template id="new.html">
-    {% include 'systems/_ng_new.html' %}
-</script>
+        <script type=text/ng-template id="list.html">
+            {% include 'systems/_ng_list.html' %}
+        </script>
 
 
-    <div ng-view>
-        {% block controller-content %}{% endblock %}
-    </div>
-</div>
+        <script type=text/ng-template id="detail.html">
+            {% include 'systems/_ng_detail.html' %}
+        </script>
 
- {% endblock %}
+        <script type=text/ng-template id="new.html">
+            {% include 'systems/_ng_new.html' %}
+        </script>
+
+
+            <div ng-view>
+                {% block controller-content %}{% endblock %}
+            </div>
+        </div>
+
+    {% else %}
+
+        <div>
+        </div>
+
+    {% endif %}
+{% endblock %}
 
 {% block js-onpage %}
 {{block.super}}

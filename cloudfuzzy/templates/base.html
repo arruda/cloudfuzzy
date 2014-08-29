@@ -45,12 +45,19 @@
 
 
 {% block main-container %}
-<div ng-app="{% block ng_app %}cloudfuzzy.app.users{% endblock %}">
-    <div ng-controller="{% block ng_controller %}AppController{% endblock %}">
-        {% block controller-content %}{% endblock %}
-    </div>
-</div>
- {% endblock %}
+    {% if request.user.is_authenticated %}
+        <div ng-app="{% block ng_app %}cloudfuzzy.app.users{% endblock %}">
+            <div ng-controller="{% block ng_controller %}AppController{% endblock %}">
+                {% block controller-content %}{% endblock %}
+            </div>
+        </div>
+    {% else %}
+
+        <div>
+        </div>
+
+    {% endif %}
+{% endblock %}
 
 {% block footer %}
 <p>&copy; CloudFuzzy 2014</p>
