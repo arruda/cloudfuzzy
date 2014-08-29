@@ -1,6 +1,8 @@
 {% extends "utils/_sub_menu.html" %}
 
+{% load i18n %}
 {% block ng-nav-header %}Systems{% endblock ng-nav-header %}
 {% block sub-nav-menu %}
-        <button  type="button" class="btn btn-default navbar-btn" ng:click="list()">Voltar</button>
+        <button  type="button" class="btn btn-default navbar-btn" ng:click="list()">{% trans "Back" %}</button>
+        <button  type="button" class="btn btn-danger navbar-btn" ng:click="delete()">{% trans "Delete" %}</button>
 {% endblock sub-nav-menu %}
