@@ -18,7 +18,7 @@ pre_start_action
 
 post_start_action
 
-# Start Process
-echo "Starting My Proccess..."
+# Start runserver
+echo "Starting Django Dev..."
 
-$PROJ_DIR/manage.py runserver 0.0.0.0
+$PROJ_DIR/manage.py runserver 0.0.0.0:8000

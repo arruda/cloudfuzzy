@@ -6,3 +6,5 @@ djdev:
   build: dockers/django-dev
   volumes:
     - .:/project
+  ports:
+    - "8000:8000"
