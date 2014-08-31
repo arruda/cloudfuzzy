@@ -2,3 +2,7 @@ compass:
   build: dockers/compass
   volumes:
     - .:/home/compass/project
+djdev:
+  build: dockers/django-dev
+  volumes:
+    - .:/project
