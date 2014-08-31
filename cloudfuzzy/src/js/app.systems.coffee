@@ -15,6 +15,9 @@ config = ($routeProvider) ->
   .when '/detail/:itemId',
     templateUrl: 'detail.html'
     controller: 'systemDetailCtrl'
+  .when '/delete/:itemId',
+    templateUrl: 'delete.html'
+    controller: 'systemDeleteCtrl'
   .otherwise
     redirectTo: '/'
 
@@ -32,7 +35,6 @@ app.controller 'systemListCtrl', ['$scope', 'System', ($scope, System) ->
         window.location = "#/detail/" + system.id
 
     $scope.new = ->
-        console.log  "a"
         window.location = "#/new"
 
     $scope.systems = System.query()
@@ -46,6 +48,10 @@ app.controller 'systemDetailCtrl', ['$scope', 'System', '$routeParams', ($scope,
 
     $scope.list = ->
         window.location = "#/"
+
+    $scope.delete = (system) ->
+        console.log 'a'
+        window.location = "#/delete/" + system.id
 ]
 
 
@@ -66,4 +72,31 @@ app.controller 'systemNewCtrl', ['$scope', 'System','User', 'AuthUser', ($scope,
 
     $scope.list = ->
         window.location = "#/"
+]
+
+app.controller 'systemDeleteCtrl', ['$scope', 'System', '$routeParams', ($scope, System, $routeParams) ->
+    $scope.itemId = $routeParams.itemId
+    id = $scope.itemId
+    $scope.system = System.get(id:id)
+
+    $scope.list = ->
+        window.location = "#/"
+
+    $scope.delete = ->
+        console.log "delete"
+        $scope.system.$delete().then (result) ->
+
+            console.log "delete ok"
+            # Clear any errors
+            window.location = "#/"
+        , (rejection) ->
+            console.log "delete error"
+            $scope.errors = rejection.data
+            console.log rejection.data
+
+    $scope.list = ->
+        window.location = "#/"
+
+    $scope.detail = (system) ->
+        window.location = "#/detail/" + system.id
 ]

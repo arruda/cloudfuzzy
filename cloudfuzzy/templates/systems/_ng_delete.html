@@ -1,0 +1,23 @@
+{% extends "systems/_ng_base.html" %}
+{% block ng-nav %}
+    {% include 'systems/_bread_crumb_detail.html' %}
+    {% include 'systems/_sub_menu_detail.html' %}
+{% endblock ng-nav %}
+
+{% block ng-content %}
+    {% verbatim %}
+    <div class="col-lg-12">
+        <h3>Delete {{ system.name }}?</h3>
+        <form class="form-inline">
+            <div class="form-group">
+
+                <button class="btn btn-danger" ng-click="delete()">Yes</button>
+                <button class="btn btn-default" ng-click="detail(system)">No</button>
+            </div>
+            <p  ng-repeat="(name, errs) in errors" class="alert alert-danger"><strong>{{ name }}</strong>: {{ errs.join(', ') }}</p>
+        </form>
+
+
+    </div>
+    {% endverbatim %}
+{% endblock ng-content %}

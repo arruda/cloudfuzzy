@@ -44,6 +44,9 @@
     }).when('/detail/:itemId', {
       templateUrl: 'detail.html',
       controller: 'systemDetailCtrl'
+    }).when('/delete/:itemId', {
+      templateUrl: 'delete.html',
+      controller: 'systemDeleteCtrl'
     }).otherwise({
       redirectTo: '/'
     });
@@ -57,7 +60,6 @@
         return window.location = "#/detail/" + system.id;
       };
       $scope["new"] = function() {
-        console.log("a");
         return window.location = "#/new";
       };
       return $scope.systems = System.query();
@@ -72,8 +74,12 @@
       $scope.system = System.get({
         id: id
       });
-      return $scope.list = function() {
+      $scope.list = function() {
         return window.location = "#/";
+      };
+      return $scope["delete"] = function(system) {
+        console.log('a');
+        return window.location = "#/delete/" + system.id;
       };
     }
   ]);
@@ -86,17 +92,10 @@
         username: AuthUser.username
       });
       user.$promise.then(function(result) {
-        console.log('a');
-        $scope.newSystem.user = user.url;
-        console.log("scope system user");
-        return console.log($scope.newSystem.user);
+        return $scope.newSystem.user = user.url;
       });
       $scope.save = function() {
-        console.log(user);
-        console.log("scope system user");
-        console.log($scope.newSystem.user);
         return $scope.newSystem.$save().then(function(result) {
-          console.log(result);
           return window.location = "#/detail/" + result.id;
         }, function(rejection) {
           $scope.errors = rejection.data;
@@ -105,6 +104,37 @@
       };
       return $scope.list = function() {
         return window.location = "#/";
+      };
+    }
+  ]);
+
+  app.controller('systemDeleteCtrl', [
+    '$scope', 'System', '$routeParams', function($scope, System, $routeParams) {
+      var id;
+      $scope.itemId = $routeParams.itemId;
+      id = $scope.itemId;
+      $scope.system = System.get({
+        id: id
+      });
+      $scope.list = function() {
+        return window.location = "#/";
+      };
+      $scope["delete"] = function() {
+        console.log("delete");
+        return $scope.system.$delete().then(function(result) {
+          console.log("delete ok");
+          return window.location = "#/";
+        }, function(rejection) {
+          console.log("delete error");
+          $scope.errors = rejection.data;
+          return console.log(rejection.data);
+        });
+      };
+      $scope.list = function() {
+        return window.location = "#/";
+      };
+      return $scope.detail = function(system) {
+        return window.location = "#/detail/" + system.id;
       };
     }
   ]);
