@@ -140,5 +140,11 @@ DEBUG_TOOLBAR_CONFIG = {
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 #settings this for debug tools
-INTERNAL_IPS = ('127.0.0.1', )
+INTERNAL_IPS = ('127.0.0.1',)
 APPEND_SLASH = False
+
+
+def show_toolbar(request):
+    return True
+
+DEBUG_TOOLBAR_CONFIG.update({'SHOW_TOOLBAR_CALLBACK': 'cloudfuzzy.settings.show_toolbar',})
