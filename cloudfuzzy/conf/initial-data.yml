@@ -22,28 +22,54 @@ users:
 systems:
 
     - !!models.FuzzySystem
-        name:       test
-        description:   test
-        fileName:   test.xfl
+        name:       Truck
+        description:   truck
+        fileName:   truck.xfl
         filePath:   /vagrant/extraFiles/xfls/test@test.com
 
         user:       !!models.User
                             email: test@test.com
+
+    - !!models.FuzzySystem
+        name:       gesplan
+        description:   Gestao de Producao
+        fileName:   gesplan.xfl
+        filePath:   /vagrant/extraFiles/xfls/test@test.com
+
+        user:       !!models.User
+                            email: test@test.com
+
 # RulebaseCalls
 rulebasecalls:
 
     - !!models.RuleBaseCall
-        position:       1
-        xPos:   100
-        yPos:   100
+        position:       4
+        xPos:   153
+        yPos:   44
 
         system:       !!models.FuzzySystem
                             id: 1
 
     - !!models.RuleBaseCall
-        position:       0
-        xPos:   200
-        yPos:   200
+        position:       1
+        xPos:   153
+        yPos:   155
+
+        system:       !!models.FuzzySystem
+                            id: 1
+
+    - !!models.RuleBaseCall
+        position:       2
+        xPos:   153
+        yPos:   272
+
+        system:       !!models.FuzzySystem
+                            id: 1
+
+    - !!models.RuleBaseCall
+        position:       3
+        xPos:   523
+        yPos:   86
 
         system:       !!models.FuzzySystem
                             id: 1

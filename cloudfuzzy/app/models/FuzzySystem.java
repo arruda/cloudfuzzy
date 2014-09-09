@@ -215,6 +215,8 @@ public class FuzzySystem extends Model {
   *Returns the file for this FuzzySystem if exists, or null.
   */  
   public File getFile(){	  
+
+    System.out.println("filefp: "+ this.getFileFullPath());
 	  File file = new File(this.getFileFullPath());
 
 	  if(!file.isFile()){

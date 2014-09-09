@@ -370,7 +370,9 @@ footer {
 }
 
 .rulebasecall{
-	width: 100px;
+	width: auto;
+
+    min-width: 100px;
 	/*
 	min-width: 90px;
 	max-width: 200px;
