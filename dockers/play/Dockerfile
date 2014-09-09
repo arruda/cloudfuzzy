@@ -51,5 +51,5 @@ WORKDIR /project/cloudfuzzy
 
 EXPOSE 9000
 
-CMD /usr/bin/play "start -Dhttp.port=9000 -DapplyEvolutions.default=true"
+CMD rm /project/extraFiles/playdb.*; rm /project/cloudfuzzy/RUNNING_PID; /usr/bin/play "start -Dhttp.port=9000 -DapplyEvolutions.default=true"
 

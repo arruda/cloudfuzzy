@@ -43,7 +43,9 @@
                         <ul>
                         @for( i <- 0 to spec.getSystemModule().getInputs().length-1 ) {
                             <li>    
-                                @spec.getSystemModule().getInputs()(i).getName() @forms_util.actions_icons("#",routes.Systems.deleteVariable(fuzzySystem.id,i, models.Variable.INPUT).toString())
+                                @spec.getSystemModule().getInputs()(i).getName()
+                                (@spec.getSystemModule().getInputs()(i).getType().getName())
+                                @forms_util.actions_icons("#",routes.Systems.deleteVariable(fuzzySystem.id,i, models.Variable.INPUT).toString())
                             </li>
                          }
                         </ul>
@@ -59,7 +61,9 @@
                         <ul>
                         @for( i <- 0 to spec.getSystemModule().getOutputs().length-1 ) {
                             <li>    
-                                @spec.getSystemModule().getOutputs()(i).getName()  @forms_util.actions_icons("#",routes.Systems.deleteVariable(fuzzySystem.id,i, models.Variable.OUTPUT).toString())
+                                @spec.getSystemModule().getOutputs()(i).getName()
+                                (@spec.getSystemModule().getOutputs()(i).getType().getName())
+                                @forms_util.actions_icons("#",routes.Systems.deleteVariable(fuzzySystem.id,i, models.Variable.OUTPUT).toString())
                             </li>
                          }
                         </ul>
