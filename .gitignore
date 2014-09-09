@@ -14,3 +14,4 @@ cloudfuzzy/logs/*
 cloudfuzzy/project/project/target/config-classes/*
 .metadata/*
 cloudfuzzy/.gitignore
+cloudfuzzy/RUNNING_PID

@@ -1,0 +1,8 @@
+play:
+  build: ./dockers/play
+  ports:
+    - "9000:9000"
+  # environment:
+  #   - ON_PRODUCTION=true
+  volumes:
+    - .:/project
