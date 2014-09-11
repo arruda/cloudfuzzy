@@ -1,0 +1,41 @@
+operatorset operadores {
+  and xfl.min();
+  or xfl.max();
+  imp xfl.min();
+  also xfl.max();
+  defuz xfl.CenterOfArea();
+ }
+
+type tDificuldade [0.0,1.0;101] {
+  pequena xfl.triangle(-0.5,0.0,0.5);
+  media xfl.triangle(0.0,0.5,1.0);
+  alta xfl.triangle(0.5,1.0,1.5);
+ }
+
+type tNota [0.0,10.0;101] {
+  baixa xfl.triangle(-5.0,0.0,5.0);
+  media xfl.triangle(0.0,5.0,10.0);
+  alta xfl.triangle(5.0,10.0,15.0);
+ }
+
+type tConhecimento [0.0,1.0;101] {
+  insuficiente xfl.trapezoid(-0.01,0.0,0.2,0.5);
+  mediano xfl.triangle(0.2,0.5,0.8);
+  suficiente xfl.trapezoid(0.5,0.8,1.0,1.01);
+ }
+
+rulebase avaliacao (tConhecimento conhecimento, tDificuldade dificuldade : tNota nota) using operadores {
+  if(conhecimento == suficiente & dificuldade == pequena) -> nota = alta;
+  if(conhecimento == suficiente & dificuldade == media) -> nota = media;
+  if(conhecimento == suficiente & dificuldade == alta) -> nota = media;
+  if(conhecimento == mediano & dificuldade == pequena) -> nota = media;
+  if(conhecimento == mediano & dificuldade == media) -> nota = media;
+  if(conhecimento == mediano & dificuldade == alta) -> nota = baixa;
+  if(conhecimento == insuficiente & dificuldade == pequena) -> nota = media;
+  if(conhecimento == insuficiente & dificuldade == media) -> nota = baixa;
+  if(conhecimento == insuficiente & dificuldade == alta) -> nota = baixa;
+ }
+
+system (tConhecimento conhecimento, tDificuldade dificuldade : tNota nota) {
+  avaliacao(conhecimento, dificuldade : nota);
+ }

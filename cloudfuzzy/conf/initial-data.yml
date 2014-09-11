@@ -39,11 +39,20 @@ systems:
         user:       !!models.User
                             email: test@test.com
 
+    - !!models.FuzzySystem
+        name:       apresentacao
+        description:   Apresentacao seminario Fuzzy
+        fileName:   apresentacao.xfl
+        filePath:   /vagrant/extraFiles/xfls/test@test.com
+
+        user:       !!models.User
+                            email: test@test.com
+
 # RulebaseCalls
 rulebasecalls:
 
     - !!models.RuleBaseCall
-        position:       4
+        position:       0
         xPos:   153
         yPos:   44
 
@@ -73,3 +82,12 @@ rulebasecalls:
 
         system:       !!models.FuzzySystem
                             id: 1
+
+
+    - !!models.RuleBaseCall
+        position:       0
+        xPos:   330
+        yPos:   85
+
+        system:       !!models.FuzzySystem
+                            id: 3

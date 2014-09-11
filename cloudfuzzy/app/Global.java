@@ -67,6 +67,7 @@ public class Global extends GlobalSettings {
             	List<Object> systems =  all.get("systems");
               ((FuzzySystem)systems.get(0)).filePath = FuzzySystem.generateFilePath((FuzzySystem)systems.get(0));
               ((FuzzySystem)systems.get(1)).filePath = FuzzySystem.generateFilePath((FuzzySystem)systems.get(1));
+              ((FuzzySystem)systems.get(2)).filePath = FuzzySystem.generateFilePath((FuzzySystem)systems.get(2));
                 Ebean.save(systems);
                 
                 Ebean.save(all.get("rulebasecalls"));
