@@ -6,3 +6,6 @@ node_modules
 *.sublime-*
 .coverage
 htmlcov/
+
+# Sphinx
+docs/_build

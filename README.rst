@@ -44,7 +44,7 @@ Setup
 Play Version
 ------------
 Looking for the Play! framework version?
-Check this branch: [Play Branch](../../tree/play)
+Check this branch: `Play Branch <https://github.com/arruda/cloudfuzzy/tree/play>`_.
 
 
 LICENSE
