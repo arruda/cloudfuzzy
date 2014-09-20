@@ -8,3 +8,9 @@ djdev:
     - .:/project
   ports:
     - "8000:8000"
+test:
+  build: dockers/django-dev
+  volumes:
+    - .:/project
+  environment:
+    - MANAGE_CMD=test

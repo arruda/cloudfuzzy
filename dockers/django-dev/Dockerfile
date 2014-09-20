@@ -18,5 +18,6 @@ VOLUME ['/data','/project']
 
 WORKDIR /project
 
+ENV MANAGE_CMD runserver 0.0.0.0:8000
 EXPOSE 8000
 CMD /scripts/start.sh

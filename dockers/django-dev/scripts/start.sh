@@ -2,6 +2,7 @@
 # Stop on error
 set -e
 
+
 # where is the data dir (has to be a volume to persist the info if is the first run or not)
 DATA_DIR=/data
 
@@ -19,6 +20,7 @@ pre_start_action
 post_start_action
 
 # Start runserver
-echo "Starting Django Dev..."
+echo "Running ${MANAGE_CMD} in Django Dev..."
 
-$PROJ_DIR/manage.py runserver 0.0.0.0:8000
+$PROJ_DIR/manage.py ${MANAGE_CMD}
+#runserver 0.0.0.0:8000
